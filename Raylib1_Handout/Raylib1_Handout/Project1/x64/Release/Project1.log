@@ -1,8 +1,0 @@
-﻿  main.c
-C:\Users\haoshengl\Downloads\Raylib1_Handout\Raylib1_Handout\Project1\main.c(87,21): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
-C:\Users\haoshengl\Downloads\Raylib1_Handout\Raylib1_Handout\Project1\main.c(87,24): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
-  Generating code
-  Previous IPDB not found, fall back to full compilation.
-  All 1 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  Finished generating code
-  Project1.vcxproj -> C:\Users\haoshengl\Downloads\Raylib1_Handout\Raylib1_Handout\x64\Release\Project1.exe
