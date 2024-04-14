@@ -1,0 +1,17 @@
+﻿  main.c
+C:\Users\haosh\Downloads\Project1\Project1\main.c(93,61): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\haosh\Downloads\Project1\Project1\main.c(112,71): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\haosh\Downloads\Project1\Project1\main.c(167,35): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\haosh\Downloads\Project1\Project1\main.c(170,39): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\haosh\Downloads\Project1\Project1\main.c(171,40): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\haosh\Downloads\Project1\Project1\main.c(64,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\haosh\Downloads\Project1\Project1\main.c(67,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\haosh\Downloads\Project1\Project1\main.c(70,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\haosh\Downloads\Project1\Project1\main.c(72,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\haosh\Downloads\Project1\Project1\main.c(185,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\haosh\Downloads\Project1\Project1\main.c(191,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\haosh\Downloads\Project1\Project1\main.c(214,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\haosh\Downloads\Project1\Project1\main.c(215,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\haosh\Downloads\Project1\Project1\main.c(219,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\haosh\Downloads\Project1\Project1\main.c(220,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  Project1.vcxproj -> C:\Users\haosh\Downloads\Project1\x64\Debug\Project1.exe
