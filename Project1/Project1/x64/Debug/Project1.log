@@ -1,7 +1,0 @@
-﻿  main.c
-C:\Users\haosh\Downloads\Project1\Project1\main.c(58,61): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\haosh\Downloads\Project1\Project1\main.c(74,71): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\haosh\Downloads\Project1\Project1\main.c(34,1): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\haosh\Downloads\Project1\Project1\main.c(94,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\haosh\Downloads\Project1\Project1\main.c(100,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-  Project1.vcxproj -> C:\Users\haosh\Downloads\Project1\x64\Debug\Project1.exe
