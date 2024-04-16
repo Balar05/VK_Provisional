@@ -109,5 +109,6 @@ private:
 	std::unordered_map<int, Rectangle> dict_rect;
 
 	//Tile sheet
+	
 	const Texture2D* img_tiles;
 };
