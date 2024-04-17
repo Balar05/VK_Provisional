@@ -57,12 +57,14 @@ AppStatus Scene::Init()
 		LOG("Failed to allocate memory for Level");
 		return AppStatus::ERROR;
 	}
+	
 	//Initialise level
 	if (level->Initialise() != AppStatus::OK)
 	{
 		LOG("Failed to initialise Level");
 		return AppStatus::ERROR;
 	}
+	
 	//Load level
 	if (LoadLevel(1) != AppStatus::OK)
 	{
@@ -86,7 +88,7 @@ AppStatus Scene::LoadLevel(int stage)
 	ClearLevel();
 
 	size = LEVEL_WIDTH * LEVEL_HEIGHT;
-	if (stage == 0)
+	if (stage == 1)
 	{
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -103,7 +105,7 @@ AppStatus Scene::LoadLevel(int stage)
 		};
 		player->InitScore();
 	}
-	else if (stage == 1)
+	else if (stage == 2)
 	{
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -119,7 +121,7 @@ AppStatus Scene::LoadLevel(int stage)
 			4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 		};
 	}
-	else if (stage == 2)
+	else if (stage == 3)
 	{
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -135,7 +137,7 @@ AppStatus Scene::LoadLevel(int stage)
 			4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 		};
 	}
-	else if (stage == 3)
+	else if (stage == 4)
 	{
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

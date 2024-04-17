@@ -57,6 +57,9 @@
     <ClCompile Include="Source\StaticImage.cpp">
       <Filter>Render</Filter>
     </ClCompile>
+    <ClCompile Include="Source\LevelBackground.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Globals.h">
@@ -100,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="Source\StaticImage.h">
       <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LevelBackground.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
