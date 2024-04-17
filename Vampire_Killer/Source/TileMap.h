@@ -13,47 +13,40 @@ enum class Tile {
 	//  0: air tile
 	AIR = 0,
 
-	// 0 < id < 50: static tiles
+	// 0 < id < 10: static tiles
+	BLOCK_LEFT = 1, BLOCK_RIGHT = 2, BLOCK = 3, GRASS = 4,
+	STAIRS_LEFT = 5, STAIRS_RIGHT = 6, STAIRS_BOSS = 7,
+	CHEST = 8,
 
-	//Falta DOOR!
+	// 10 < id < 45: objects
 
-	BLOCK = 1, BLOCK_LEFT = 2, BLOCK_RIGHT = 3, STAIRS_LEFT = 4, STAIRS_RIGHT = 5, GRASS_BLOCK = 45,
-	CHEST = 6,
-
-	STAIRS_BOSS = 60,
-	
-	WHIP = 15, AXE = 16, KNIFE = 17,
-	BLUE_CROSS = 18, SILVER_CROSS = 19, GOLDEN_CROSS = 20,
-	SMALL_KEY = 21, BIG_KEY = 22,
-	WHITE_MONEY = 23, BLUE_MONEY = 24,
-	HOURGLASS = 25, HOLY_WATER = 26, STAFF = 27,
-	BLUE_ORB = 31,
-	BLUE_WATER = 32,
-	BOOTS = 33, RED_SHIELD = 34, GOLDEN_SHIELD = 35,
-	BLUE_RING = 36,
-	BLACK_BIBLE = 40, WHITE_BIBLE = 41,
-	WINGS = 42,
-	PARCHMENT = 43,
-	
-
-	HEART_SMALL = 10, HEART_BIG = 11, HEART_PLAIN = 12,
-	CANDLE_BIG = 7, CANDLE_SMALL = 8, FIRE_1 = 13, FIRE_2 = 14,
-	BOSS_ITEM1 = 28, BOSS_ITEM2 = 29, BOSS_ITEM3 = 30,
-	OBJECT_ANIM1 = 37, OBJECT_ANIM2 = 38, OBJECT_ANIM3 = 39,
-	BOSS_ATTACK = 44,
+	WHIP, AXE, KNIFE, BLUE_CROSS, HOURGLASS, HOLY_WATER,
+	STAFF, MONEY_WHITE, MONEY_BLUE, BLUE_ORB, BLUE_WATER, BOOTS,
+	RED_SHIELD, GOLDEN_SHIELD, BLUE_RING, BLACK_BIBLE, WHITE_BIBLE, WINGS,
+	SILVER_CROSS, GOLDEN_CROSS, PARCHMENT,
+	FIRE1, FIRE2,
+	CANDLE_BIG, CANDLE_SMALL,
+	OBJECT_ANIM1, OBJECT_ANIM2, OBJECT_ANIM3,
+	BOSS_ITEM1, BOSS_ITEM2, BOSS_ITEM3, BOSS_ATTACK,
+	GOLDEN_KEY, SILVER_KEY,
+	SMALL_HEART, BIG_HEART, PLAIN_HEART,
 
 	// id >= 100: entities' initial locations
 	PLAYER = 100,
 
 	//Intervals
-
-	STATIC_FIRST = BLOCK,
+	/*STATIC_FIRST = BLOCK_SQUARE1_TL,
+	STATIC_LAST = LASER_R,
+	SOLID_FIRST = BLOCK_SQUARE1_TL,
+	SOLID_LAST = BLOCK_BEAM_R,
+	SPECIAL_FIRST = DOOR,
+	SPECIAL_LAST = LASER,*/
+	STATIC_FIRST = BLOCK_LEFT,
 	STATIC_LAST = CHEST,
-	SOLID_FIRST = BLOCK,
-	SOLID_LAST = STAIRS_BOSS,
+	SOLID_FIRST = BLOCK_LEFT,
+	SOLID_LAST = CHEST,
 	SPECIAL_FIRST = WHIP,
-	SPECIAL_LAST = BOSS_ATTACK,
-
+	SPECIAL_LAST = PLAIN_HEART,
 	ENTITY_FIRST = PLAYER,
 	ENTITY_LAST = PLAYER
 };
@@ -83,7 +76,7 @@ public:
 	bool TestFalling(const AABB& box) const;
 
 	//Test if box is on ladder and update 'px' with the x-center position of the ladder
-	// TestOnLadder(const AABB& box, int* px) const;
+	//bool TestOnLadder(const AABB& box, int* px) const;
 
 	//Test if box is on ladder top and update 'px' with the x-center position of the ladder
 	//bool TestOnLadderTop(const AABB& box, int* px) const;
@@ -94,7 +87,7 @@ private:
 	Tile GetTileIndex(int x, int y) const;
 	bool IsTileSolid(Tile tile) const;
 	//bool IsTileLadderTop(Tile tile) const;
-	//bool IsTileLadder(Tile tile) const;
+	bool IsTileStair(Tile tile) const;
 	bool CollisionX(const Point& p, int distance) const;
 	bool CollisionY(const Point& p, int distance) const;
 	//int GetLadderCenterPos(int pixel_x, int pixel_y) const;
@@ -108,7 +101,8 @@ private:
 	//Dictionary of tile frames
 	std::unordered_map<int, Rectangle> dict_rect;
 
+	Sprite* laser;
+
 	//Tile sheet
-	
 	const Texture2D* img_tiles;
 };
