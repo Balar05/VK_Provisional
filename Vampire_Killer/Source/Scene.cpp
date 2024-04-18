@@ -99,6 +99,14 @@ AppStatus Scene::LoadLevel(int stage)
 		// Dibuja la parte correspondiente de la imagen completa
 		DrawTextureRec(background, source, { 0, 0 }, WHITE);
 	}
+	else if (stage >= 4 && stage < 7)
+	{
+		// Define la región de la imagen que corresponde al nivel actual
+		Rectangle source = { (stage - 4) * LEVEL_WIDTH * TILE_SIZE, (stage - 4) * LEVEL_WIDTH * TILE_SIZE, LEVEL_WIDTH * TILE_SIZE, LEVEL_HEIGHT * TILE_SIZE };
+
+		// Dibuja la parte correspondiente de la imagen completa
+		DrawTextureRec(background, source, { 0, 0 }, WHITE);
+	}
 	else
 	{
 		// Error: nivel no válido
@@ -108,13 +116,6 @@ AppStatus Scene::LoadLevel(int stage)
 
 	if (stage == 1)
 	{
-		//Rectangle source = { 0 * LEVEL_WIDTH*TILE_SIZE, 0 * LEVEL_HEIGHT*TILE_SIZE, 256, 176 }; // Solo necesitas un frame de altura para la textura de introducción
-		//Rectangle dest = { 0, 0, 256, 176 };
-		//DrawTexturePro(background, source, dest, { 0, 0 }, 0, WHITE);
-
-
-		//DrawTextureRec(background, { 0, 0, LEVEL_WIDTH*TILE_SIZE , LEVEL_HEIGHT*TILE_SIZE }, { 0, 0 }, WHITE);
-		
 		map = new int[size] {
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -239,7 +240,7 @@ void Scene::Update()
 	}
 	//Debug levels instantly
 	if (IsKeyPressed(KEY_ONE))		LoadLevel(1);
-	else if (IsKeyPressed(KEY_THREE))	LoadLevel(3);
+	else if (IsKeyPressed(KEY_FOUR))	LoadLevel(4);
 
 	level->Update();
 	player->Update();
