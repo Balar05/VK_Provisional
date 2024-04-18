@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "TileMap.h"
 #include "Object.h"
+#include "LevelBackground.h"
 
 enum class DebugMode { OFF, SPRITES_AND_HITBOXES, ONLY_HITBOXES, SIZE };
 
@@ -33,4 +34,8 @@ private:
 
     Camera2D camera;
     DebugMode debug;
+
+    Texture2D background;
+    Rectangle rc;
+    int currentStage;
 };

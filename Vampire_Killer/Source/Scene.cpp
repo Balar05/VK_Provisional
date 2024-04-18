@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "Globals.h"
 
-Scene::Scene()
+Scene::Scene() : currentStage(1)
 {
 	player = nullptr;
 	level = nullptr;
@@ -13,6 +13,8 @@ Scene::Scene()
 	camera.zoom = 1.0f;						//Default zoom
 
 	debug = DebugMode::OFF;
+
+	background = LoadTexture("images/Sprites/256x176 Levels.png");
 }
 Scene::~Scene()
 {
@@ -88,20 +90,43 @@ AppStatus Scene::LoadLevel(int stage)
 	ClearLevel();
 
 	size = LEVEL_WIDTH * LEVEL_HEIGHT;
+
+	if (stage >= 1 && stage < 4)
+	{
+		// Define la región de la imagen que corresponde al nivel actual
+		Rectangle source = { (stage - 1) * LEVEL_WIDTH * TILE_SIZE, 0, LEVEL_WIDTH * TILE_SIZE, LEVEL_HEIGHT * TILE_SIZE };
+
+		// Dibuja la parte correspondiente de la imagen completa
+		DrawTextureRec(background, source, { 0, 0 }, WHITE);
+	}
+	else
+	{
+		// Error: nivel no válido
+		LOG("Failed to load level, stage %d doesn't exist", stage);
+		return AppStatus::ERROR;
+	}
+
 	if (stage == 1)
 	{
+		//Rectangle source = { 0 * LEVEL_WIDTH*TILE_SIZE, 0 * LEVEL_HEIGHT*TILE_SIZE, 256, 176 }; // Solo necesitas un frame de altura para la textura de introducción
+		//Rectangle dest = { 0, 0, 256, 176 };
+		//DrawTexturePro(background, source, dest, { 0, 0 }, 0, WHITE);
+
+
+		//DrawTextureRec(background, { 0, 0, LEVEL_WIDTH*TILE_SIZE , LEVEL_HEIGHT*TILE_SIZE }, { 0, 0 }, WHITE);
+		
 		map = new int[size] {
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0/*fire*/, 0, 0, 0, 0, 0, 0, 0/*fire*/, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+			-1, -1, -1, -1, -1/*fire*/, -1, -1, -1, -1, -1, -1, -1/*fire*/, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 		};
 		player->InitScore();
 	}
@@ -223,6 +248,12 @@ void Scene::Update()
 void Scene::Render()
 {
 	BeginMode2D(camera);
+
+	if (currentStage >= 1 && currentStage <= 4)
+	{
+		Rectangle source = { (currentStage - 1) * LEVEL_WIDTH * TILE_SIZE, 0, LEVEL_WIDTH * TILE_SIZE, LEVEL_HEIGHT * TILE_SIZE };
+		DrawTextureRec(background, source, { 0, 0 }, WHITE);
+	}
 
 	level->Render();
 	if (debug == DebugMode::OFF || debug == DebugMode::SPRITES_AND_HITBOXES)
