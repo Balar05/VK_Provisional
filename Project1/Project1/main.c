@@ -51,6 +51,8 @@ int main(void)
     float currentFramebat_intro = 0;
     float currentFramebat_intro2 = 0;
     float framesCounter = 0;
+    float framesCounter2 = 0;
+    float framesSpeed2 = 1;
     float framesSpeed = 1;
     bool introPlayed = false;
     bool animation2Played = false;
@@ -69,7 +71,7 @@ int main(void)
     // Posición de la segunda animación
     Vector2 bat_introPosition = { screenWidth / 2 + 20, 130 }; // Posición inicial del murciélago
 
-    Vector2 bat_intro2Position = { screenWidth / 2 - 200, 200 }; // Posición inicial del murciélago
+    Vector2 bat_intro2Position = { screenWidth / 2 - 180, 200 }; // Posición inicial del murciélago
 
     SetTargetFPS(60);
 
@@ -98,14 +100,12 @@ int main(void)
         }
         else if (!animation2Played)
         {
-   
+            // Actualizar la animación 2
             framesCounter++;
             if (framesCounter >= (60 / framesSpeed))
             {
                 framesCounter = 0;
                 currentFrameAnimation2++;
-                currentFramebat_intro++;
-                currentFramebat_intro2++;
                 if (currentFrameAnimation2 >= totalFramesAnimation2)
                 {
                     framesSpeed = 10;
@@ -113,21 +113,6 @@ int main(void)
                     if (IsKeyDown(KEY_SPACE))
                         animation2Played = true;
                 }
-                else if (currentFramebat_intro >= totalFramesbat_intro)
-                {
-                    framesSpeed = 5;
-                    currentFramebat_intro = 0; 
-                }
-                else if (currentFramebat_intro2 >= totalFramesbat_intro2)
-                {
-                    framesSpeed = 5;
-                    currentFramebat_intro2 = 0; 
-                }
-            }
-            if (!music2Played)
-            {
-                PlayMusicStream(musicArray[0]);
-                music2Played = true;
             }
 
             // Movimiento del personaje hacia el centro
@@ -160,23 +145,55 @@ int main(void)
 
                 }
             }
-
-
-
-            // Actualizar la posición de la nube
-            cloudPosition.x -= 0.2; // Desplazar la nube hacia la izquierda
+            
+            else if (!animationbatPlayed)
+            {
+                framesCounter2++;
+                if (framesCounter2 >= (60 / framesSpeed2))
+                {
+                    framesCounter2 = 0;
+                    currentFramebat_intro++;
+                    currentFramebat_intro2++;
+                    if (currentFramebat_intro >= totalFramesbat_intro)
+                    {
+                        framesSpeed2 = 3;
+                        currentFramebat_intro = 0;
+                    }
+                    else if (currentFramebat_intro2 >= totalFramesbat_intro2)
+                    {
+                        framesSpeed2 = 3;
+                        currentFramebat_intro2 = 0;
+                    }
+                }
+            }
 
             // Actualizar la posición del murciélago
-            bat_introPosition.x -= 0.3; // Desplazar el murciélago hacia la izquierda
-            bat_intro2Position.x += 0.3;
- 
+            bat_introPosition.x -= 0.2; // Desplazar el murciélago hacia la izquierda
+            bat_intro2Position.x += 0.2;
+            bat_intro2Position.y -= 0.1;
+
+            // Actualizar los fotogramas de animación de los murciélagos
+            framesCounter2++;
+            if (framesCounter2 >= (60 / framesSpeed2))
+            {
+                framesCounter2 = 0;
+                currentFramebat_intro++;
+                currentFramebat_intro2++;
+                if (currentFramebat_intro >= totalFramesbat_intro)
+                {
+                    framesSpeed2 = 5;
+                    currentFramebat_intro = 0;
+                }
+                if (currentFramebat_intro2 >= totalFramesbat_intro2)
+                {
+                    framesSpeed2 = 5;
+                    currentFramebat_intro2 = 0;
+                }
+            }
+
         }
 
-        //if (!music2Played)
-        //{
-        //    PlayMusicStream(musicArray[0]);
-        //    music2Played = true;
-        //}
+        // Update Music Stream
         UpdateMusicStream(musicArray[0]);
 
         // Draw
@@ -199,7 +216,7 @@ int main(void)
             // Dibujar la animación del personaje
             if (characterFrontFacing)
             {
-                Rectangle sourceCharacter = { currentFrameCharacterFront * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE };
+                Rectangle sourceCharacter = { currentFrameCharacterFront * SPRITE_SIZE, 0, -SPRITE_SIZE, SPRITE_SIZE };
                 Rectangle destCharacter = { characterPosition.x + SPRITE_SIZE, characterPosition.y, SPRITE_SIZE * 2, SPRITE_SIZE * 2 };
                 DrawTexturePro(characterFront, sourceCharacter, destCharacter, (Vector2) { destCharacter.width / 2, destCharacter.height / 2 - 110 }, 0, WHITE);
             }
@@ -244,3 +261,4 @@ int main(void)
 
     return 0;
 }
+
