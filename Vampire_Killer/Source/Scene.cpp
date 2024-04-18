@@ -252,7 +252,7 @@ void Scene::Render()
 	if (currentStage >= 1 && currentStage <= 4)
 	{
 		Rectangle source = { (currentStage - 1) * LEVEL_WIDTH * TILE_SIZE, 0, LEVEL_WIDTH * TILE_SIZE, LEVEL_HEIGHT * TILE_SIZE };
-		DrawTextureRec(background, source, { 0, 0 }, WHITE);
+		DrawTextureRec(background, source, { 0, 16 }, WHITE); //Afegim 16 al vector de posició per baixar el background una tile.
 	}
 
 	level->Render();
