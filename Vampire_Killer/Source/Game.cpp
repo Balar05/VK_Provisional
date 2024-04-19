@@ -49,17 +49,15 @@ AppStatus Game::Initialise(float scale)
         return AppStatus::ERROR;
     }
 
-    soundArray[0] = LoadSound("resources/Audio/Whip-Sound Effect.wav");
+    soundArray[0] = LoadSound("Audio/Whip-Sound Effect.wav");
     musicArray[0] = LoadMusicStream("resources/Audio/Prologue.ogg");
-    background = LoadTexture("resources/sprites/space_background.png");
-    intro = LoadTexture("resources/images/Sprites/intro1.png");
-    animation2 = LoadTexture("resources/images/Sprites/intro2.png");
-    characterFront = LoadTexture("resources/images/Sprites/simonbelmont.png"); // Cargar la textura frontal del personaje
-    characterBack = LoadTexture("resources/images/Sprites/simonbelmont.png");  // Cargar la textura de espaldas del personaje
-    cloudTexture = LoadTexture("resources/images/Sprites/cloud.png");    // Cargar la textura de la nube
-    bat_intro = LoadTexture("resources/images/Sprites/batanim.png"); // Cargar la nueva textura
-    bat_intro2 = LoadTexture("resources/images/Sprites/batanim.png"); // Cargar la nueva textura
-
+    intro = LoadTexture("images/Sprites/intro1.png");
+    animation2 = LoadTexture("images/Sprites/intro2.png");
+    characterFront = LoadTexture("images/Sprites/simonbelmont.png"); // Cargar la textura frontal del personaje
+    characterBack = LoadTexture("images/Sprites/simonbelmont.png");  // Cargar la textura de espaldas del personaje
+    cloudTexture = LoadTexture("images/Sprites/cloud.png");    // Cargar la textura de la nube
+    bat_intro = LoadTexture("images/Sprites/batanim.png"); // Cargar la nueva textura
+    bat_intro2 = LoadTexture("images/Sprites/batanim.png"); // Cargar la nueva textura
 
     //Set the target frame rate for the application
     SetTargetFPS(60);
@@ -72,7 +70,7 @@ AppStatus Game::LoadResources()
 {
     ResourceManager& data = ResourceManager::Instance();
 
-    if (data.LoadTexture(Resource::IMG_MENU, "images/Sprites/272x224 intro 1.png") != AppStatus::OK)
+    if (data.LoadTexture(Resource::IMG_MENU, "images/Sprites/intro1.png") != AppStatus::OK)
     {
         return AppStatus::ERROR;
     }
@@ -275,47 +273,46 @@ void Game::Render()
 
     case GameState::INTRO:
         ClearBackground(RAYWHITE);
-        DrawTexture(background, 0, 0, WHITE);
         if (!introPlayed)
         {
             Rectangle source = { currentFrameIntro * EXPLOSION_SIZE, 0, EXPLOSION_SIZE, EXPLOSION_SIZE }; // Solo necesitas un frame de altura para la textura de introducción
             Rectangle dest = { WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 50, EXPLOSION_SIZE * 2, EXPLOSION_SIZE * 2 };
-            DrawTexturePro(intro, source, dest, Vector2 { dest.width / 2, dest.height / 2 }, 0, WHITE);
+            DrawTexturePro(intro, source, dest, Vector2{ dest.width / 2, dest.height / 2 }, 0, WHITE);
         }
         else if (!animation2Played)
         {
             Rectangle source = { currentFrameAnimation2 * EXPLOSION_SIZE, 0, EXPLOSION_SIZE, EXPLOSION_SIZE };
             Rectangle dest = { WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 50, EXPLOSION_SIZE * 2, EXPLOSION_SIZE * 2 };
-            DrawTexturePro(animation2, source, dest, Vector2 { dest.width / 2, dest.height / 2 }, 0, WHITE);
+            DrawTexturePro(animation2, source, dest, Vector2{ dest.width / 2, dest.height / 2 }, 0, WHITE);
 
             // Dibujar la animación del personaje
             if (characterFrontFacing)
             {
                 Rectangle sourceCharacter = { currentFrameCharacterFront * SPRITE_SIZE, 0, -SPRITE_SIZE, SPRITE_SIZE };
                 Rectangle destCharacter = { characterPosition.x + SPRITE_SIZE, characterPosition.y, SPRITE_SIZE * 2, SPRITE_SIZE * 2 };
-                DrawTexturePro(characterFront, sourceCharacter, destCharacter, Vector2 { destCharacter.width / 2, destCharacter.height / 2 - 110 }, 0, WHITE);
+                DrawTexturePro(characterFront, sourceCharacter, destCharacter, Vector2{ destCharacter.width / 2, destCharacter.height / 2 - 110 }, 0, WHITE);
             }
             else
             {
                 Rectangle sourceCharacter = { currentFrameCharacterBack * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE };
                 Rectangle destCharacter = { characterPosition.x, characterPosition.y, SPRITE_SIZE * 2, SPRITE_SIZE * 2 };
-                DrawTexturePro(characterBack, sourceCharacter, destCharacter, Vector2 { destCharacter.width / 2, destCharacter.height / 2 - 110 }, 0, WHITE);
+                DrawTexturePro(characterBack, sourceCharacter, destCharacter, Vector2{ destCharacter.width / 2, destCharacter.height / 2 - 110 }, 0, WHITE);
             }
 
             // Dibujar la nube (aumentada en tamaño)
             Rectangle cloudSource = { 0, 0, CLOUD_SIZE, CLOUD_SIZE };
             Rectangle cloudDest = { cloudPosition.x, cloudPosition.y, CLOUD_SIZE * 2, CLOUD_SIZE * 2 }; // Doble tamaño
-            DrawTexturePro(cloudTexture, cloudSource, cloudDest, Vector2 { cloudDest.width / 2, cloudDest.height / 2 - 60 }, 0, WHITE);
+            DrawTexturePro(cloudTexture, cloudSource, cloudDest, Vector2{ cloudDest.width / 2, cloudDest.height / 2 - 60 }, 0, WHITE);
 
             // Dibujar la segunda animación del murciélago
             Rectangle batSource1 = { (int)currentFramebat_intro * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE };
             Rectangle batDest1 = { (int)bat_introPosition.x, (int)bat_introPosition.y, SPRITE_SIZE * 2, SPRITE_SIZE * 2 };
-            DrawTexturePro(bat_intro, batSource1, batDest1, Vector2 { batDest1.width / 2, batDest1.height / 2 }, 0, WHITE);
+            DrawTexturePro(bat_intro, batSource1, batDest1, Vector2{ batDest1.width / 2, batDest1.height / 2 }, 0, WHITE);
 
             // Dibujar la segunda animación del murciélago
             Rectangle batSource2 = { (int)currentFramebat_intro2 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE };
             Rectangle batDest2 = { (int)bat_intro2Position.x, (int)bat_intro2Position.y, SPRITE_SIZE * 2, SPRITE_SIZE * 2 };
-            DrawTexturePro(bat_intro2, batSource2, batDest2, Vector2 { batDest2.width / 2, batDest2.height / 2 }, 0, WHITE);
+            DrawTexturePro(bat_intro2, batSource2, batDest2, Vector2{ batDest2.width / 2, batDest2.height / 2 }, 0, WHITE);
         }
         break;
 

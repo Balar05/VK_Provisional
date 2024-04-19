@@ -58,6 +58,7 @@ private:
     GameState state;
     Scene* scene;
     const Texture2D* img_menu;
+    const Texture2D* img_intro;
 
     //To work with original game units and then scale the result
     RenderTexture2D target;
