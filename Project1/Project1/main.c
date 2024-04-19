@@ -100,7 +100,7 @@ int main(void)
         }
         else if (!animation2Played)
         {
-            PlayMusicStream(musicArray[0]);
+    
             
             // Actualizar la animación 2
             framesCounter++;
@@ -117,13 +117,17 @@ int main(void)
                 }
             }
 
-            if (!music2Played)
-            {
-                float timePlayed = 0.0f;
+            if (!music2Played) {
+                PlayMusicStream(musicArray[0]);
+                float timePlayed = GetMusicTimePlayed(musicArray[0]);
+                // Actualiza la música en cada iteración del bucle principal
                 UpdateMusicStream(musicArray[0]);
-                timePlayed = GetMusicTimePlayed(musicArray[0]) / GetMusicTimeLength(musicArray[0]);
-                if (timePlayed > 1.0f) timePlayed = 1.0f;
-                
+
+                // Controla el tiempo de reproducción si es necesario
+                if (timePlayed > 6.5) {
+                    StopMusicStream(musicArray[0]);
+                    music2Played = true;
+                }
             }
             // Movimiento del personaje hacia el centro
             if (characterPosition.x > screenWidth / 2 && !characterStopped)
