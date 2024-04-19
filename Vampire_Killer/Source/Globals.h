@@ -25,7 +25,7 @@ void log(const char file[], int line, const char* text, ...);
 #define LEVEL_HEIGHT	11 //17
 
 //Entities animation delay
-#define ANIM_DELAY		6 //4
+#define ANIM_DELAY		10 //4
 
 #define EXPLOSION_SIZE 276
 #define SPRITE_SIZE 32

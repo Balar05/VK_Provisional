@@ -50,7 +50,7 @@ AppStatus Game::Initialise(float scale)
     }
 
     soundArray[0] = LoadSound("Audio/Whip-Sound Effect.wav");
-    musicArray[0] = LoadMusicStream("resources/Audio/Prologue.ogg");
+    musicArray[0] = LoadMusicStream("Audio/Prologue.ogg");
     intro = LoadTexture("images/Sprites/Intro 256x212.png");
     //animation2 = LoadTexture("images/Sprites/intro2.png");
     castle = LoadTexture("images/Sprites/Castle Background 256x212.png");
@@ -139,7 +139,9 @@ AppStatus Game::Update()
         }
         else if (!animation2Played)
         {
-            PlayMusicStream(musicArray[0]);
+            PlayMusicStream(musicArray[0]); // Reproducir la música después de cambiar al estado INTRO
+            // La reproducción de la música se ha movido al estado MAIN_MENU
+            // Reproduce la música aquí solo si necesitas reproducirla específicamente durante la segunda animación
 
             // Actualizar la animación 2
             framesCounter++;
@@ -163,12 +165,17 @@ AppStatus Game::Update()
                 timePlayed = GetMusicTimePlayed(musicArray[0]) / GetMusicTimeLength(musicArray[0]);
                 if (timePlayed > 1.0f) timePlayed = 1.0f;
 
+                // Verificar si la música ha terminado y la segunda animación también ha terminado
+                if (timePlayed >= 1.0f && currentFrameAnimation2 >= totalFramesAnimation2)
+                {
+                    state = GameState::PLAYING;
+                }
             }
             // Movimiento del personaje hacia el centro
             if (characterPosition.x > WINDOW_WIDTH / 2 && !characterStopped)
             {
-                //characterPosition.x -= 0.8f; // ajustar la velocidad
-                characterPosition.x = WINDOW_WIDTH / 2;
+                characterPosition.x -= 0.5f; // ajustar la velocidad
+                
             }
             else
             {
@@ -217,6 +224,7 @@ AppStatus Game::Update()
                 }
             }
 
+            cloudPosition.x -= 0.1;
             // Actualizar la posición del murciélago
             bat_introPosition.x -= 0.2; // Desplazar el murciélago hacia la izquierda
             bat_intro2Position.x += 0.2;
@@ -300,13 +308,13 @@ void Game::Render()
             {
                 Rectangle sourceCharacter = { currentFrameCharacterBack * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE };
                 Rectangle destCharacter = { characterPosition.x, characterPosition.y, SPRITE_SIZE, SPRITE_SIZE };
-                DrawTexturePro(characterBack, sourceCharacter, destCharacter, Vector2{ destCharacter.width, destCharacter.height - 110 }, 0, WHITE);
+                DrawTexturePro(characterBack, sourceCharacter, destCharacter, Vector2{ destCharacter.width - 20, destCharacter.height - 110 }, 0, WHITE);
             }
 
             // Dibujar la nube (aumentada en tamaño)
             Rectangle cloudSource = { 0, 0, CLOUD_SIZE, CLOUD_SIZE };
             Rectangle cloudDest = { cloudPosition.x, cloudPosition.y, CLOUD_SIZE, CLOUD_SIZE }; // Doble tamaño
-            DrawTexturePro(cloudTexture, cloudSource, cloudDest, Vector2{ cloudDest.width / 2, cloudDest.height / 2 - 60 }, 0, WHITE);
+            DrawTexturePro(cloudTexture, cloudSource, cloudDest, Vector2{ cloudDest.width / 2 - 35, cloudDest.height / 2 + 25 }, 0, WHITE);
 
             // Dibujar la segunda animación del murciélago
             Rectangle batSource1 = { (int)currentFramebat_intro * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE };
@@ -335,6 +343,16 @@ void Game::Render()
 
 void Game::Cleanup()
 {
+    // Unload resources
+    UnloadSound(soundArray[0]);
+    UnloadMusicStream(musicArray[0]);
+    UnloadTexture(background);
+    UnloadTexture(intro);
+    UnloadTexture(characterFront); // Descargar la textura frontal del personaje
+    UnloadTexture(characterBack);  // Descargar la textura de espaldas del personaje
+    UnloadTexture(cloudTexture);    // Descargar la textura de la nube
+    UnloadTexture(bat_intro); // Descargar la nueva textura
+    CloseAudioDevice();
     UnloadResources();
     CloseWindow();
 }

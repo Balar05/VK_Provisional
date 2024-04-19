@@ -39,15 +39,15 @@ public:
     bool animationbatPlayed = false;
     bool animationbat2Played = false;
     // Posición del personaje
-    Vector2 characterPosition = { WINDOW_WIDTH, 95}; // Inicialmente fuera de la pantalla
+    Vector2 characterPosition = { WINDOW_WIDTH - 30, 95}; // Inicialmente fuera de la pantalla
 
     // Posición de la nube
-    Vector2 cloudPosition = { WINDOW_WIDTH - 80, 100 }; // Posición inicial de la nube
+    Vector2 cloudPosition = { WINDOW_WIDTH - 60, 100 }; // Posición inicial de la nube
 
     // Posición de la segunda animación
-    Vector2 bat_introPosition = { WINDOW_WIDTH / 2 + 20, 130 }; // Posición inicial del murciélago
+    Vector2 bat_introPosition = { WINDOW_WIDTH / 2 + 20, 70 }; // Posición inicial del murciélago
 
-    Vector2 bat_intro2Position = { WINDOW_WIDTH / 2 - 180, 200 }; // Posición inicial del murciélago
+    Vector2 bat_intro2Position = { WINDOW_WIDTH / 2 - 100, 120 }; // Posición inicial del murciélago
 private:
     AppStatus BeginPlay();
     void FinishPlay();
