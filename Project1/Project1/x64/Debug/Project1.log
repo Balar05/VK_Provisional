@@ -1,17 +1,17 @@
 ﻿  main.c
 C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(95,61): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(112,71): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(171,39): warning C4305: '-=': truncation from 'double' to 'float'
-C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(172,40): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(173,40): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(114,71): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(181,39): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(182,40): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(183,40): warning C4305: '-=': truncation from 'double' to 'float'
 C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(66,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
 C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(69,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
 C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(72,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
 C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(74,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(207,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(213,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(236,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(237,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(241,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(242,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(214,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(220,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(243,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(244,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(248,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\Project1\main.c(249,1): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   Project1.vcxproj -> C:\Users\haoshengl\Documents\GitHub\VK_Provisional\Project1\x64\Debug\Project1.exe

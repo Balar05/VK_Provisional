@@ -100,6 +100,8 @@ int main(void)
         }
         else if (!animation2Played)
         {
+            PlayMusicStream(musicArray[0]);
+            
             // Actualizar la animación 2
             framesCounter++;
             if (framesCounter >= (60 / framesSpeed))
@@ -115,6 +117,14 @@ int main(void)
                 }
             }
 
+            if (!music2Played)
+            {
+                float timePlayed = 0.0f;
+                UpdateMusicStream(musicArray[0]);
+                timePlayed = GetMusicTimePlayed(musicArray[0]) / GetMusicTimeLength(musicArray[0]);
+                if (timePlayed > 1.0f) timePlayed = 1.0f;
+                
+            }
             // Movimiento del personaje hacia el centro
             if (characterPosition.x > screenWidth / 2 && !characterStopped)
             {
@@ -192,10 +202,7 @@ int main(void)
             }
 
         }
-
-        // Update Music Stream
-        UpdateMusicStream(musicArray[0]);
-
+ 
         // Draw
         BeginDrawing();
         ClearBackground(RAYWHITE);
