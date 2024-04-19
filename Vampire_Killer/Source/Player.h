@@ -8,6 +8,8 @@
 //Logical model size: 12x28
 #define PLAYER_PHYSICAL_WIDTH	12
 #define PLAYER_PHYSICAL_HEIGHT	28
+#define ATTACK_WIDTH			24
+#define ATTACK_HEIGHT			14
 
 //Horizontal speed and vertical speed while falling down
 #define PLAYER_SPEED_X			1
@@ -33,7 +35,7 @@
 #define GRAVITY_FORCE			1
 
 //Logic states
-enum class State { IDLE, WALKING, JUMPING, FALLING, DEAD };
+enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING, DEAD };
 enum class Look { RIGHT, LEFT };
 
 //Rendering states
@@ -43,6 +45,9 @@ enum class PlayerAnim {
 	JUMPING_LEFT, JUMPING_RIGHT,
 	LEVITATING_LEFT, LEVITATING_RIGHT,
 	FALLING_LEFT, FALLING_RIGHT,
+	FALLING_LEFT_NJ, FALLING_RIGHT_NJ,
+	SNEAKING_LEFT, SNEAKING_RIGHT,
+	ATTACKING_LEFT, ATTACKING_RIGHT,
 	CLIMBING, CLIMBING_PRE_TOP, CLIMBING_TOP,
 	SHOCK_LEFT, SHOCK_RIGHT,
 	TELEPORT_LEFT, TELEPORT_RIGHT,
@@ -73,7 +78,9 @@ private:
 	//Player mechanics
 	void MoveX();
 	void MoveY();
+	void MoveY_SNEAK();
 	void LogicJumping();
+	void Attack();
 
 	//Animation management
 	void SetAnimation(int id);
@@ -82,7 +89,12 @@ private:
 	void StartWalkingLeft();
 	void StartWalkingRight();
 	void StartFalling();
+	void StartFalling_NJ();
 	void StartJumping();
+	void StartSneaking();
+	void StopSneaking();
+	void StartAttacking();
+	void StopAttacking();
 	void ChangeAnimRight();
 	void ChangeAnimLeft();
 
@@ -95,6 +107,8 @@ private:
 	bool IsInFirstHalfTile() const;
 	bool IsInSecondHalfTile() const;
 
+	bool attackAnimationComplete = false;
+
 	State state;
 	Look look;
 	int jump_delay;
@@ -103,3 +117,4 @@ private:
 
 	int score;
 };
+

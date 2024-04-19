@@ -52,10 +52,16 @@ AppStatus Player::Initialise()
 
 	sprite->SetAnimationDelay((int)PlayerAnim::FALLING_RIGHT, ANIM_DELAY);
 	sprite->AddKeyFrame((int)PlayerAnim::FALLING_RIGHT, { 3 * n, 0 * n, n, n });
-	sprite->AddKeyFrame((int)PlayerAnim::FALLING_RIGHT, { 3 * n, 0 * n, n, n });
 	sprite->SetAnimationDelay((int)PlayerAnim::FALLING_LEFT, ANIM_DELAY);
 	sprite->AddKeyFrame((int)PlayerAnim::FALLING_LEFT, { 3 * n, 0 * n, -n, n });
-	sprite->AddKeyFrame((int)PlayerAnim::FALLING_LEFT, { 3 * n, 0 * n, -n, n });
+	sprite->SetAnimationDelay((int)PlayerAnim::FALLING_RIGHT_NJ, ANIM_DELAY);
+	sprite->AddKeyFrame((int)PlayerAnim::FALLING_RIGHT_NJ, { 0 * n, 0 * n, n, n });
+	sprite->SetAnimationDelay((int)PlayerAnim::FALLING_LEFT_NJ, ANIM_DELAY);
+	sprite->AddKeyFrame((int)PlayerAnim::FALLING_LEFT_NJ, { 0 * n, 0 * n, -n, n });
+	sprite->SetAnimationDelay((int)PlayerAnim::SNEAKING_RIGHT, ANIM_DELAY);
+	sprite->AddKeyFrame((int)PlayerAnim::SNEAKING_RIGHT, { 3 * n, 0 * n, n, n });
+	sprite->SetAnimationDelay((int)PlayerAnim::SNEAKING_LEFT, ANIM_DELAY);
+	sprite->AddKeyFrame((int)PlayerAnim::SNEAKING_LEFT, { 3 * n, 0 * n, -n, n });
 
 	sprite->SetAnimationDelay((int)PlayerAnim::JUMPING_RIGHT, ANIM_DELAY);
 	sprite->AddKeyFrame((int)PlayerAnim::JUMPING_RIGHT, { 0, 1 * n, n, n });
@@ -65,6 +71,13 @@ AppStatus Player::Initialise()
 	sprite->AddKeyFrame((int)PlayerAnim::LEVITATING_RIGHT, { n, 0 * n, n, n });
 	sprite->SetAnimationDelay((int)PlayerAnim::LEVITATING_LEFT, ANIM_DELAY);
 	sprite->AddKeyFrame((int)PlayerAnim::LEVITATING_LEFT, { n, 0 * n, -n, n });
+
+	sprite->SetAnimationDelay((int)PlayerAnim::ATTACKING_RIGHT, ANIM_DELAY);
+	for (i = 0; i < 3; ++i)
+		sprite->AddKeyFrame((int)PlayerAnim::ATTACKING_RIGHT, { (float)i * (2 * n), 4 * n, 2 * n, n });
+	sprite->SetAnimationDelay((int)PlayerAnim::ATTACKING_LEFT, ANIM_DELAY);
+	for (i = 0; i < 3; ++i)
+		sprite->AddKeyFrame((int)PlayerAnim::ATTACKING_LEFT, { (float)i * (2 * n), 4 * n, -2 * n, n });
 
 	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING, ANIM_LADDER_DELAY);
 	for (i = 0; i < 4; ++i)
@@ -158,6 +171,13 @@ void Player::StartFalling()
 	if (IsLookingRight())	SetAnimation((int)PlayerAnim::FALLING_RIGHT);
 	else					SetAnimation((int)PlayerAnim::FALLING_LEFT);
 }
+void Player::StartFalling_NJ()
+{
+	dir.y = PLAYER_SPEED_Y;
+	state = State::FALLING;
+	if (IsLookingRight())	SetAnimation((int)PlayerAnim::FALLING_RIGHT_NJ);
+	else					SetAnimation((int)PlayerAnim::FALLING_LEFT_NJ);
+}
 void Player::StartJumping()
 {
 	dir.y = -PLAYER_JUMP_FORCE;
@@ -166,7 +186,40 @@ void Player::StartJumping()
 	else					SetAnimation((int)PlayerAnim::JUMPING_LEFT);
 	jump_delay = PLAYER_JUMP_DELAY;
 }
+void Player::StartSneaking()
+{
+	state = State::SNEAKING;
+	if (IsLookingRight())	SetAnimation((int)PlayerAnim::SNEAKING_RIGHT);
+	else					SetAnimation((int)PlayerAnim::SNEAKING_LEFT);
+}
+void Player::StopSneaking()
+{
+	state = State::IDLE;
+	if (IsLookingRight())   SetAnimation((int)PlayerAnim::IDLE_RIGHT);
+	else					SetAnimation((int)PlayerAnim::IDLE_LEFT);
 
+}
+void Player::StartAttacking() {
+	state = State::ATTACKING;
+	if (IsLookingRight()) {
+		SetAnimation((int)PlayerAnim::ATTACKING_RIGHT);
+	}
+	else {
+		SetAnimation((int)PlayerAnim::ATTACKING_LEFT);
+	}
+	attackAnimationComplete = false; // Restablece la propiedad cuando se inicia el ataque
+
+
+}
+void Player::StopAttacking() {
+	state = State::IDLE;
+	if (IsLookingRight()) {
+		SetAnimation((int)PlayerAnim::IDLE_RIGHT);
+	}
+	else {
+		SetAnimation((int)PlayerAnim::IDLE_LEFT);
+	}
+}
 void Player::ChangeAnimRight()
 {
 	look = Look::RIGHT;
@@ -195,6 +248,7 @@ void Player::Update()
 	//Instead, uses an independent behaviour for each axis.
 	MoveX();
 	MoveY();
+	MoveY_SNEAK();
 
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->Update();
@@ -205,7 +259,7 @@ void Player::MoveX()
 	int prev_x = pos.x;
 
 
-	if (IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT))
+	if (IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT) && state != State::SNEAKING)
 	{
 		pos.x += -PLAYER_SPEED_X;
 		if (state == State::IDLE) StartWalkingLeft();
@@ -220,8 +274,14 @@ void Player::MoveX()
 			pos.x = prev_x;
 			if (state == State::WALKING) Stop();
 		}
+		else if (IsKeyDown(KEY_SPACE))
+		{
+			StartAttacking();
+		}
+		
+
 	}
-	else if (IsKeyDown(KEY_RIGHT))
+	else if (IsKeyDown(KEY_RIGHT) && state != State::SNEAKING)
 	{
 		pos.x += PLAYER_SPEED_X;
 		if (state == State::IDLE) StartWalkingRight();
@@ -236,12 +296,17 @@ void Player::MoveX()
 			pos.x = prev_x;
 			if (state == State::WALKING) Stop();
 		}
+		else if (IsKeyDown(KEY_SPACE))
+		{
+			StartAttacking();
+		}
 	}
 	else
 	{
 		if (state == State::WALKING) Stop();
 	}
 }
+
 void Player::MoveY()
 {
 	AABB box;
@@ -260,17 +325,39 @@ void Player::MoveY()
 			if (state == State::FALLING) Stop();
 
 
-			else if (IsKeyPressed(KEY_SPACE))
+			else if (IsKeyPressed(KEY_UP))
 			{
 				StartJumping();
 			}
 		}
 		else
 		{
-			if (state != State::FALLING) StartFalling();
+			if (state != State::FALLING) StartFalling_NJ();
 		}
 	}
 }
+
+void Player::MoveY_SNEAK()
+{
+	if (IsKeyDown(KEY_DOWN))
+	{
+		if (state != State::SNEAKING)
+			StartSneaking();
+
+	}
+	else
+	{
+		if (state == State::SNEAKING)
+			StopSneaking();
+
+	}
+}
+
+void Player::Attack()
+{
+
+}
+
 void Player::LogicJumping()
 {
 	AABB box, prev_box;
@@ -343,3 +430,6 @@ void Player::Release()
 
 	render->Release();
 }
+
+
+
