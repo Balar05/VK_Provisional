@@ -33,6 +33,7 @@ public:
     float framesSpeed = 1;
     bool introPlayed = false;
     bool animation2Played = false;
+    bool music1Played = false;
     bool music2Played = false;
     bool characterFrontFacing = true; // Variable para controlar si el personaje está de frente o de espaldas
     bool characterStopped = false;    // Variable para controlar si el personaje ha detenido su animación de caminar
@@ -65,7 +66,7 @@ private:
     Rectangle src, dst;
 
 
-    Sound soundArray[10];
+    Music musicArray2[10];
     Music musicArray[10];
 
     Texture2D background;

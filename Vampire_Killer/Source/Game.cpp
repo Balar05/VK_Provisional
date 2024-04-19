@@ -49,8 +49,8 @@ AppStatus Game::Initialise(float scale)
         return AppStatus::ERROR;
     }
 
-    soundArray[0] = LoadSound("Audio/Whip-Sound Effect.wav");
     musicArray[0] = LoadMusicStream("Audio/Prologue.ogg");
+    musicArray2[0] = LoadMusicStream("Audio/Vampire Killer.ogg");
     intro = LoadTexture("images/Sprites/Intro 256x212.png");
     //animation2 = LoadTexture("images/Sprites/intro2.png");
     castle = LoadTexture("images/Sprites/Castle Background 256x212.png");
@@ -115,6 +115,7 @@ AppStatus Game::Update()
         if (IsKeyPressed(KEY_SPACE))
         {
             if (BeginPlay() != AppStatus::OK) return AppStatus::ERROR;
+            
             state = GameState::INTRO;
         }
         break;
@@ -139,7 +140,7 @@ AppStatus Game::Update()
         }
         else if (!animation2Played)
         {
-            PlayMusicStream(musicArray[0]); // Reproducir la música después de cambiar al estado INTRO
+          // Reproducir la música después de cambiar al estado INTRO
             // La reproducción de la música se ha movido al estado MAIN_MENU
             // Reproduce la música aquí solo si necesitas reproducirla específicamente durante la segunda animación
 
@@ -156,17 +157,20 @@ AppStatus Game::Update()
                 }
             }
 
-            if (!music2Played)
-            {
-                float timePlayed = 0;
+            if (!music1Played) {
+                PlayMusicStream(musicArray[0]);
+                float timePlayed = GetMusicTimePlayed(musicArray[0]);
+                // Actualiza la música en cada iteración del bucle principal
                 UpdateMusicStream(musicArray[0]);
-                timePlayed = GetMusicTimePlayed(musicArray[0]) / GetMusicTimeLength(musicArray[0]);
-                if (timePlayed > GetMusicTimeLength(musicArray[0])) {
+
+                // Controla el tiempo de reproducción si es necesario
+                if (timePlayed > 6.5) {
                     StopMusicStream(musicArray[0]);
-                    music2Played = true;
+                    music1Played = true;
                     state = GameState::PLAYING;
                 }
             }
+
             // Movimiento del personaje hacia el centro
             if (characterPosition.x > WINDOW_WIDTH / 2 && !characterStopped)
             {
@@ -249,9 +253,19 @@ AppStatus Game::Update()
     }
     case GameState::PLAYING:
     {
+
+        if (!music2Played) {
+            PlayMusicStream(musicArray2[0]);
+          
+            // Actualiza la música en cada iteración del bucle principal
+            UpdateMusicStream(musicArray2[0]);
+            
+        }
         if (IsKeyPressed(KEY_ESCAPE))
         {
             FinishPlay();
+            StopMusicStream(musicArray2[0]);
+            music2Played = true;
             state = GameState::MAIN_MENU;
         }
         else
@@ -340,7 +354,7 @@ void Game::Render()
 void Game::Cleanup()
 {
     // Unload resources
-    UnloadSound(soundArray[0]);
+    UnloadMusicStream(musicArray2[0]);
     UnloadMusicStream(musicArray[0]);
     UnloadTexture(background);
     UnloadTexture(intro);
