@@ -49,6 +49,18 @@ AppStatus Game::Initialise(float scale)
         return AppStatus::ERROR;
     }
 
+    soundArray[0] = LoadSound("resources/Audio/Whip-Sound Effect.wav");
+    musicArray[0] = LoadMusicStream("resources/Audio/Prologue.ogg");
+    background = LoadTexture("resources/sprites/space_background.png");
+    intro = LoadTexture("resources/images/Sprites/intro1.png");
+    animation2 = LoadTexture("resources/images/Sprites/intro2.png");
+    characterFront = LoadTexture("resources/images/Sprites/simonbelmont.png"); // Cargar la textura frontal del personaje
+    characterBack = LoadTexture("resources/images/Sprites/simonbelmont.png");  // Cargar la textura de espaldas del personaje
+    cloudTexture = LoadTexture("resources/images/Sprites/cloud.png");    // Cargar la textura de la nube
+    bat_intro = LoadTexture("resources/images/Sprites/batanim.png"); // Cargar la nueva textura
+    bat_intro2 = LoadTexture("resources/images/Sprites/batanim.png"); // Cargar la nueva textura
+
+
     //Set the target frame rate for the application
     SetTargetFPS(60);
     //Disable the escape key to quit functionality
@@ -98,15 +110,140 @@ AppStatus Game::Update()
     switch (state)
     {
     case GameState::MAIN_MENU:
+    {
         if (IsKeyPressed(KEY_ESCAPE)) return AppStatus::QUIT;
         if (IsKeyPressed(KEY_SPACE))
         {
             if (BeginPlay() != AppStatus::OK) return AppStatus::ERROR;
-            state = GameState::PLAYING;
+            state = GameState::INTRO;
         }
         break;
+    }
+    case GameState::INTRO:
+    {
+        if (!introPlayed)
+        {
+            framesCounter++;
+            if (framesCounter >= (60 / framesSpeed))
+            {
+                framesCounter = 0;
+                currentFrameIntro++;
+                if (currentFrameIntro >= totalFramesIntro)
+                {
+                    framesSpeed = 10;
+                    currentFrameIntro = totalFramesIntro - 1;
+                    if (IsKeyDown(KEY_SPACE))
+                        introPlayed = true;
+                }
+            }
+        }
+        else if (!animation2Played)
+        {
+            PlayMusicStream(musicArray[0]);
 
+            // Actualizar la animación 2
+            framesCounter++;
+            if (framesCounter >= (60 / framesSpeed))
+            {
+                framesCounter = 0;
+                currentFrameAnimation2++;
+                if (currentFrameAnimation2 >= totalFramesAnimation2)
+                {
+                    framesSpeed = 10;
+                    currentFrameAnimation2 = totalFramesAnimation2 - 1;
+                    if (IsKeyDown(KEY_SPACE))
+                        animation2Played = true;
+                }
+            }
+
+            if (!music2Played)
+            {
+                float timePlayed = 0.0f;
+                UpdateMusicStream(musicArray[0]);
+                timePlayed = GetMusicTimePlayed(musicArray[0]) / GetMusicTimeLength(musicArray[0]);
+                if (timePlayed > 1.0f) timePlayed = 1.0f;
+
+            }
+            // Movimiento del personaje hacia el centro
+            if (characterPosition.x > WINDOW_WIDTH / 2 && !characterStopped)
+            {
+                characterPosition.x -= 0.8f; // ajustar la velocidad
+            }
+            else
+            {
+                // Detener la animación de caminar
+                characterStopped = true;
+
+                // Cambiar la textura del personaje a la de espaldas
+                characterFrontFacing = false;
+            }
+
+            // Actualizar la animación del personaje
+            if (!characterStopped)
+            {
+                framesCounter++;
+                if (framesCounter >= (60 / framesSpeed))
+                {
+                    framesCounter = 0;
+                    currentFrameCharacterFront++;
+                    if (currentFrameCharacterFront >= totalFramesCharacterFront)
+                    {
+                        framesSpeed = 1;
+                        currentFrameCharacterFront = 0; // Reiniciar la animación frontal
+                    }
+
+                }
+            }
+
+            else if (!animationbatPlayed)
+            {
+                framesCounter2++;
+                if (framesCounter2 >= (60 / framesSpeed2))
+                {
+                    framesCounter2 = 0;
+                    currentFramebat_intro++;
+                    currentFramebat_intro2++;
+                    if (currentFramebat_intro >= totalFramesbat_intro)
+                    {
+                        framesSpeed2 = 3;
+                        currentFramebat_intro = 0;
+                    }
+                    else if (currentFramebat_intro2 >= totalFramesbat_intro2)
+                    {
+                        framesSpeed2 = 3;
+                        currentFramebat_intro2 = 0;
+                    }
+                }
+            }
+
+            // Actualizar la posición del murciélago
+            bat_introPosition.x -= 0.2; // Desplazar el murciélago hacia la izquierda
+            bat_intro2Position.x += 0.2;
+            bat_intro2Position.y -= 0.1;
+
+            // Actualizar los fotogramas de animación de los murciélagos
+            framesCounter2++;
+            if (framesCounter2 >= (60 / framesSpeed2))
+            {
+                framesCounter2 = 0;
+                currentFramebat_intro++;
+                currentFramebat_intro2++;
+                if (currentFramebat_intro >= totalFramesbat_intro)
+                {
+                    framesSpeed2 = 5;
+                    currentFramebat_intro = 0;
+                }
+                if (currentFramebat_intro2 >= totalFramesbat_intro2)
+                {
+                    framesSpeed2 = 5;
+                    currentFramebat_intro2 = 0;
+                }
+            }
+            break;
+        }
+    }
     case GameState::PLAYING:
+    {
         if (IsKeyPressed(KEY_ESCAPE))
         {
             FinishPlay();
@@ -119,8 +256,11 @@ AppStatus Game::Update()
         }
         break;
     }
+    }
     return AppStatus::OK;
 }
+
+
 void Game::Render()
 {
     //Draw everything in the render texture, note this will not be rendered on screen, yet
@@ -131,6 +271,52 @@ void Game::Render()
     {
     case GameState::MAIN_MENU:
         DrawTexture(*img_menu, 0, 0, WHITE);
+        break;
+
+    case GameState::INTRO:
+        ClearBackground(RAYWHITE);
+        DrawTexture(background, 0, 0, WHITE);
+        if (!introPlayed)
+        {
+            Rectangle source = { currentFrameIntro * EXPLOSION_SIZE, 0, EXPLOSION_SIZE, EXPLOSION_SIZE }; // Solo necesitas un frame de altura para la textura de introducción
+            Rectangle dest = { WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 50, EXPLOSION_SIZE * 2, EXPLOSION_SIZE * 2 };
+            DrawTexturePro(intro, source, dest, Vector2 { dest.width / 2, dest.height / 2 }, 0, WHITE);
+        }
+        else if (!animation2Played)
+        {
+            Rectangle source = { currentFrameAnimation2 * EXPLOSION_SIZE, 0, EXPLOSION_SIZE, EXPLOSION_SIZE };
+            Rectangle dest = { WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 50, EXPLOSION_SIZE * 2, EXPLOSION_SIZE * 2 };
+            DrawTexturePro(animation2, source, dest, Vector2 { dest.width / 2, dest.height / 2 }, 0, WHITE);
+
+            // Dibujar la animación del personaje
+            if (characterFrontFacing)
+            {
+                Rectangle sourceCharacter = { currentFrameCharacterFront * SPRITE_SIZE, 0, -SPRITE_SIZE, SPRITE_SIZE };
+                Rectangle destCharacter = { characterPosition.x + SPRITE_SIZE, characterPosition.y, SPRITE_SIZE * 2, SPRITE_SIZE * 2 };
+                DrawTexturePro(characterFront, sourceCharacter, destCharacter, Vector2 { destCharacter.width / 2, destCharacter.height / 2 - 110 }, 0, WHITE);
+            }
+            else
+            {
+                Rectangle sourceCharacter = { currentFrameCharacterBack * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE };
+                Rectangle destCharacter = { characterPosition.x, characterPosition.y, SPRITE_SIZE * 2, SPRITE_SIZE * 2 };
+                DrawTexturePro(characterBack, sourceCharacter, destCharacter, Vector2 { destCharacter.width / 2, destCharacter.height / 2 - 110 }, 0, WHITE);
+            }
+
+            // Dibujar la nube (aumentada en tamaño)
+            Rectangle cloudSource = { 0, 0, CLOUD_SIZE, CLOUD_SIZE };
+            Rectangle cloudDest = { cloudPosition.x, cloudPosition.y, CLOUD_SIZE * 2, CLOUD_SIZE * 2 }; // Doble tamaño
+            DrawTexturePro(cloudTexture, cloudSource, cloudDest, Vector2 { cloudDest.width / 2, cloudDest.height / 2 - 60 }, 0, WHITE);
+
+            // Dibujar la segunda animación del murciélago
+            Rectangle batSource1 = { (int)currentFramebat_intro * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE };
+            Rectangle batDest1 = { (int)bat_introPosition.x, (int)bat_introPosition.y, SPRITE_SIZE * 2, SPRITE_SIZE * 2 };
+            DrawTexturePro(bat_intro, batSource1, batDest1, Vector2 { batDest1.width / 2, batDest1.height / 2 }, 0, WHITE);
+
+            // Dibujar la segunda animación del murciélago
+            Rectangle batSource2 = { (int)currentFramebat_intro2 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE };
+            Rectangle batDest2 = { (int)bat_intro2Position.x, (int)bat_intro2Position.y, SPRITE_SIZE * 2, SPRITE_SIZE * 2 };
+            DrawTexturePro(bat_intro2, batSource2, batDest2, Vector2 { batDest2.width / 2, batDest2.height / 2 }, 0, WHITE);
+        }
         break;
 
     case GameState::PLAYING:
@@ -145,6 +331,7 @@ void Game::Render()
     DrawTexturePro(target.texture, src, dst, { 0, 0 }, 0.0f, WHITE);
     EndDrawing();
 }
+
 void Game::Cleanup()
 {
     UnloadResources();
