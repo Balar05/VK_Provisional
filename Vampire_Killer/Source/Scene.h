@@ -15,6 +15,7 @@ public:
 
     AppStatus Init();
     void Update();
+    void UpdateBackground(int s);
     void Render();
     void Release();
 

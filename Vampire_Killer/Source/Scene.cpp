@@ -15,8 +15,6 @@ Scene::Scene() : currentStage(1)
 	camera.zoom = 1.0f;						//Default zoom
 
 	debug = DebugMode::OFF;
-
-	//background = LoadTexture("images/Sprites/256x176 Levels.png");
 }
 Scene::~Scene()
 {
@@ -110,19 +108,20 @@ AppStatus Scene::LoadLevel(int stage)
 	{
 		currentStage = 1;
 		map = new int[size] {
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-			-1, -1, -1, -1, -1/*fire*/, -1, -1, -1, -1, -1, -1, -1/*fire*/, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
+
 		};
-		player->InitScore();
+		//player->InitScore();
 	}
 	else if (stage == 2)
 	{
@@ -236,42 +235,24 @@ void Scene::Update()
 		debug = (DebugMode)(((int)debug + 1) % (int)DebugMode::SIZE);
 	}
 	//Debug levels instantly
-	if (IsKeyPressed(KEY_ONE))		LoadLevel(1);
-	else if (IsKeyPressed(KEY_TWO))	LoadLevel(2);
+	if (IsKeyPressed(KEY_ONE))			LoadLevel(1);
+	else if (IsKeyPressed(KEY_TWO))		LoadLevel(2);
 	else if (IsKeyPressed(KEY_THREE))	LoadLevel(3);
 	else if (IsKeyPressed(KEY_FOUR))	LoadLevel(4);
+	else if (IsKeyPressed(KEY_FIVE))	LoadLevel(5);
+	else if (IsKeyPressed(KEY_SIX))		LoadLevel(6);
+	else if (IsKeyPressed(KEY_SEVEN))	LoadLevel(7);
 
 	level->Update();
 	player->Update();
+
+	UpdateBackground(currentStage);
+
 	CheckCollisions();
 }
 void Scene::Render()
 {
 	BeginMode2D(camera);
-
-	//LevelBackground();
-	//LevelBackground::RenderBackground(currentStage);
-
-	/*Rectangle source;
-	float width = LEVEL_WIDTH * TILE_SIZE;
-	float height = LEVEL_HEIGHT * TILE_SIZE;
-	switch (currentStage)
-	{
-		case 1:
-			source = { 0 * width, 0 * height, width, height }; break;
-		case 2:
-			source = { 1 * width, 0 * height, width, height }; break;
-		case 3:
-			source = { 2 * width, 0 * height, width, height }; break;
-		case 4:
-			source = { 0 * width, 1 * height, width, height }; break;
-	}
-	DrawTextureRec(background, source, { 0, 16 }, WHITE);*/ //Afegim 16 al vector de posició per baixar el background una tile.
-	//if (currentStage >= 1 && currentStage <= 4)
-	//{
-	//	Rectangle source = { (currentStage - 1) * LEVEL_WIDTH * TILE_SIZE, 0, LEVEL_WIDTH * TILE_SIZE, LEVEL_HEIGHT * TILE_SIZE };
-	//	DrawTextureRec(background, source, { 0, 16 }, WHITE); //Afegim 16 al vector de posició per baixar el background una tile.
-	//}
 
 	background->RenderBackground(currentStage);
 	level->Render();
@@ -348,4 +329,51 @@ void Scene::RenderGUI() const
 {
 	//Temporal approach
 	//DrawText(TextFormat("SCORE : %d", player->GetScore()), 10, 10, 8, LIGHTGRAY);
+}
+
+void Scene::UpdateBackground(int s)
+{
+	int x = player->GetPlayerPosX();
+	int y = player->GetPlayerPosY();
+	switch (currentStage)
+	{
+	case 1:
+		if (x < 0)
+		{
+			player->SetPos({ 0,y });
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, PLAYER_Y_STARTER });
+			LoadLevel(2);
+			break;
+		}
+	case 2:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, PLAYER_Y_STARTER });
+			LoadLevel(1);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, PLAYER_Y_STARTER });
+			LoadLevel(3);
+			break;
+		}
+	case 3:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, PLAYER_Y_STARTER });
+			LoadLevel(2);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, PLAYER_Y_STARTER });
+			LoadLevel(4);
+			break;
+		}
+	}
 }

@@ -343,3 +343,13 @@ void Player::Release()
 
 	render->Release();
 }
+
+int Player::GetPlayerPosX()
+{
+	return pos.x;
+}
+
+int Player::GetPlayerPosY()
+{
+	return pos.y;
+}

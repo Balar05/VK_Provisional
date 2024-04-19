@@ -65,6 +65,8 @@ public:
 	void Update();
 	void DrawDebug(const Color& col) const;
 	void Release();
+	int GetPlayerPosX();
+	int GetPlayerPosY();
 
 private:
 	bool IsLookingRight() const;
