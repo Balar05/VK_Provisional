@@ -39,7 +39,7 @@ public:
     bool animationbatPlayed = false;
     bool animationbat2Played = false;
     // Posición del personaje
-    Vector2 characterPosition = { WINDOW_WIDTH - 100, WINDOW_HEIGHT / 2 + 50 }; // Inicialmente fuera de la pantalla
+    Vector2 characterPosition = { WINDOW_WIDTH, 95}; // Inicialmente fuera de la pantalla
 
     // Posición de la nube
     Vector2 cloudPosition = { WINDOW_WIDTH - 80, 100 }; // Posición inicial de la nube
@@ -70,7 +70,8 @@ private:
 
     Texture2D background;
     Texture2D intro;
-    Texture2D animation2;
+    //Texture2D animation2;
+    Texture2D castle;
     Texture2D characterFront; // Textura para la animación frontal del personaje
     Texture2D characterBack;  // Textura para la animación de espaldas del personaje
     Texture2D cloudTexture;   // Textura para la animación de la nube

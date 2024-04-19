@@ -51,8 +51,9 @@ AppStatus Game::Initialise(float scale)
 
     soundArray[0] = LoadSound("Audio/Whip-Sound Effect.wav");
     musicArray[0] = LoadMusicStream("resources/Audio/Prologue.ogg");
-    intro = LoadTexture("images/Sprites/intro1.png");
-    animation2 = LoadTexture("images/Sprites/intro2.png");
+    intro = LoadTexture("images/Sprites/Intro 256x212.png");
+    //animation2 = LoadTexture("images/Sprites/intro2.png");
+    castle = LoadTexture("images/Sprites/Castle Background 256x212.png");
     characterFront = LoadTexture("images/Sprites/simonbelmont.png"); // Cargar la textura frontal del personaje
     characterBack = LoadTexture("images/Sprites/simonbelmont.png");  // Cargar la textura de espaldas del personaje
     cloudTexture = LoadTexture("images/Sprites/cloud.png");    // Cargar la textura de la nube
@@ -70,7 +71,7 @@ AppStatus Game::LoadResources()
 {
     ResourceManager& data = ResourceManager::Instance();
 
-    if (data.LoadTexture(Resource::IMG_MENU, "images/Sprites/intro1.png") != AppStatus::OK)
+    if (data.LoadTexture(Resource::IMG_MENU, "images/Sprites/Intro 256x212.png") != AppStatus::OK)
     {
         return AppStatus::ERROR;
     }
@@ -110,6 +111,7 @@ AppStatus Game::Update()
     case GameState::MAIN_MENU:
     {
         if (IsKeyPressed(KEY_ESCAPE)) return AppStatus::QUIT;
+        if (BeginPlay() != AppStatus::OK)   return AppStatus::ERROR;
         if (IsKeyPressed(KEY_SPACE))
         {
             if (BeginPlay() != AppStatus::OK) return AppStatus::ERROR;
@@ -165,7 +167,8 @@ AppStatus Game::Update()
             // Movimiento del personaje hacia el centro
             if (characterPosition.x > WINDOW_WIDTH / 2 && !characterStopped)
             {
-                characterPosition.x -= 0.8f; // ajustar la velocidad
+                //characterPosition.x -= 0.8f; // ajustar la velocidad
+                characterPosition.x = WINDOW_WIDTH / 2;
             }
             else
             {
@@ -268,50 +271,51 @@ void Game::Render()
     switch (state)
     {
     case GameState::MAIN_MENU:
-        DrawTexture(*img_menu, 0, 0, WHITE);
+        DrawTexture(*img_menu, 0, 0, WHITE);    //Incloure noms, foto, etc
         break;
 
     case GameState::INTRO:
         ClearBackground(RAYWHITE);
         if (!introPlayed)
         {
-            Rectangle source = { currentFrameIntro * EXPLOSION_SIZE, 0, EXPLOSION_SIZE, EXPLOSION_SIZE }; // Solo necesitas un frame de altura para la textura de introducción
-            Rectangle dest = { WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 50, EXPLOSION_SIZE * 2, EXPLOSION_SIZE * 2 };
-            DrawTexturePro(intro, source, dest, Vector2{ dest.width / 2, dest.height / 2 }, 0, WHITE);
+            Rectangle source = { currentFrameIntro * WINDOW_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT }; // Solo necesitas un frame de altura para la textura de introducción
+            Rectangle dest = { 0, 0, 0, 0 };
+            DrawTextureRec(intro, source, Vector2{ 0, 0 }, WHITE);
         }
         else if (!animation2Played)
         {
-            Rectangle source = { currentFrameAnimation2 * EXPLOSION_SIZE, 0, EXPLOSION_SIZE, EXPLOSION_SIZE };
-            Rectangle dest = { WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 50, EXPLOSION_SIZE * 2, EXPLOSION_SIZE * 2 };
-            DrawTexturePro(animation2, source, dest, Vector2{ dest.width / 2, dest.height / 2 }, 0, WHITE);
+            Rectangle source = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+            DrawTextureRec(castle, source, Vector2{ 0,0 }, WHITE);
+            //Rectangle dest = { WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 50, EXPLOSION_SIZE * 2, EXPLOSION_SIZE * 2 };
+            //DrawTexturePro(animation2, source, dest, Vector2{ dest.width / 2, dest.height / 2 }, 0, WHITE);
 
             // Dibujar la animación del personaje
             if (characterFrontFacing)
             {
                 Rectangle sourceCharacter = { currentFrameCharacterFront * SPRITE_SIZE, 0, -SPRITE_SIZE, SPRITE_SIZE };
-                Rectangle destCharacter = { characterPosition.x + SPRITE_SIZE, characterPosition.y, SPRITE_SIZE * 2, SPRITE_SIZE * 2 };
-                DrawTexturePro(characterFront, sourceCharacter, destCharacter, Vector2{ destCharacter.width / 2, destCharacter.height / 2 - 110 }, 0, WHITE);
+                Rectangle destCharacter = { characterPosition.x + SPRITE_SIZE, characterPosition.y, SPRITE_SIZE, SPRITE_SIZE };
+                DrawTexturePro(characterFront, sourceCharacter, destCharacter, Vector2{ destCharacter.width, destCharacter.height - 110 }, 0, WHITE);
             }
             else
             {
                 Rectangle sourceCharacter = { currentFrameCharacterBack * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE };
-                Rectangle destCharacter = { characterPosition.x, characterPosition.y, SPRITE_SIZE * 2, SPRITE_SIZE * 2 };
-                DrawTexturePro(characterBack, sourceCharacter, destCharacter, Vector2{ destCharacter.width / 2, destCharacter.height / 2 - 110 }, 0, WHITE);
+                Rectangle destCharacter = { characterPosition.x, characterPosition.y, SPRITE_SIZE, SPRITE_SIZE };
+                DrawTexturePro(characterBack, sourceCharacter, destCharacter, Vector2{ destCharacter.width, destCharacter.height - 110 }, 0, WHITE);
             }
 
             // Dibujar la nube (aumentada en tamaño)
             Rectangle cloudSource = { 0, 0, CLOUD_SIZE, CLOUD_SIZE };
-            Rectangle cloudDest = { cloudPosition.x, cloudPosition.y, CLOUD_SIZE * 2, CLOUD_SIZE * 2 }; // Doble tamaño
+            Rectangle cloudDest = { cloudPosition.x, cloudPosition.y, CLOUD_SIZE, CLOUD_SIZE }; // Doble tamaño
             DrawTexturePro(cloudTexture, cloudSource, cloudDest, Vector2{ cloudDest.width / 2, cloudDest.height / 2 - 60 }, 0, WHITE);
 
             // Dibujar la segunda animación del murciélago
             Rectangle batSource1 = { (int)currentFramebat_intro * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE };
-            Rectangle batDest1 = { (int)bat_introPosition.x, (int)bat_introPosition.y, SPRITE_SIZE * 2, SPRITE_SIZE * 2 };
+            Rectangle batDest1 = { (int)bat_introPosition.x, (int)bat_introPosition.y, SPRITE_SIZE, SPRITE_SIZE };
             DrawTexturePro(bat_intro, batSource1, batDest1, Vector2{ batDest1.width / 2, batDest1.height / 2 }, 0, WHITE);
 
             // Dibujar la segunda animación del murciélago
             Rectangle batSource2 = { (int)currentFramebat_intro2 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE };
-            Rectangle batDest2 = { (int)bat_intro2Position.x, (int)bat_intro2Position.y, SPRITE_SIZE * 2, SPRITE_SIZE * 2 };
+            Rectangle batDest2 = { (int)bat_intro2Position.x, (int)bat_intro2Position.y, SPRITE_SIZE, SPRITE_SIZE };
             DrawTexturePro(bat_intro2, batSource2, batDest2, Vector2{ batDest2.width / 2, batDest2.height / 2 }, 0, WHITE);
         }
         break;
