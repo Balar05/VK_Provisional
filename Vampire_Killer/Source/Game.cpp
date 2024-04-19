@@ -30,7 +30,7 @@ AppStatus Game::Initialise(float scale)
 
     //Initialise window
     InitWindow((int)w, (int)h, "Vampire Killer MSX2");
-
+    InitAudioDevice();
     //Render texture initialisation, used to hold the rendering result so we can easily resize it
     target = LoadRenderTexture(WINDOW_WIDTH, WINDOW_HEIGHT);
     if (target.id == 0)
@@ -153,21 +153,17 @@ AppStatus Game::Update()
                 {
                     framesSpeed = 10;
                     currentFrameAnimation2 = totalFramesAnimation2 - 1;
-                    if (IsKeyDown(KEY_SPACE))
-                        animation2Played = true;
                 }
             }
 
             if (!music2Played)
             {
-                float timePlayed = 0.0f;
+                float timePlayed = 0;
                 UpdateMusicStream(musicArray[0]);
                 timePlayed = GetMusicTimePlayed(musicArray[0]) / GetMusicTimeLength(musicArray[0]);
-                if (timePlayed > 1.0f) timePlayed = 1.0f;
-
-                // Verificar si la música ha terminado y la segunda animación también ha terminado
-                if (timePlayed >= 1.0f && currentFrameAnimation2 >= totalFramesAnimation2)
-                {
+                if (timePlayed > GetMusicTimeLength(musicArray[0])) {
+                    StopMusicStream(musicArray[0]);
+                    music2Played = true;
                     state = GameState::PLAYING;
                 }
             }
