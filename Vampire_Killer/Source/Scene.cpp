@@ -9,10 +9,10 @@ Scene::Scene() : currentStage(1)
 	level = nullptr;
 	background = nullptr;
 
-	camera.target = { 0, 0 };				//Center of the screen
-	camera.offset = { 0, MARGIN_GUI_Y };	//Offset from the target (center of the screen)
-	camera.rotation = 0.0f;					//No rotation
-	camera.zoom = 1.0f;						//Default zoom
+	//camera.target = { 0, 0 };				//Center of the screen
+	//camera.offset = { 0, MARGIN_GUI_Y };	//Offset from the target (center of the screen)
+	//camera.rotation = 0.0f;					//No rotation
+	//camera.zoom = 1.0f;						//Default zoom
 
 	debug = DebugMode::OFF;
 }
@@ -108,7 +108,6 @@ AppStatus Scene::LoadLevel(int stage)
 	{
 		currentStage = 1;
 		map = new int[size] {
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -117,6 +116,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0/*fire*/, 0, 0, 0, 0, 0, 0, 0/*fire*/, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 
@@ -171,6 +171,23 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0/*candle*/, 0, 0, 0, 0/*candle */, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+		};
+	}
+	else if (stage == 5)
+	{
+		currentStage = 5;
+		map = new int[size] {
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 3, 1, 2, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 6, 3, 1, 2, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 6, 0, 0/*candle*/, 0, 0, 0, 0/*candle */, 0, 0, 0, 0,
+				0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
 	}
@@ -252,7 +269,7 @@ void Scene::Update()
 }
 void Scene::Render()
 {
-	BeginMode2D(camera);
+	//BeginMode2D(camera);
 
 	background->RenderBackground(currentStage);
 	level->Render();
@@ -269,7 +286,7 @@ void Scene::Render()
 
 	EndMode2D();
 
-	RenderGUI();
+	//RenderGUI();
 }
 void Scene::Release()
 {

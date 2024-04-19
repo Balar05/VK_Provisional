@@ -42,7 +42,7 @@ void LevelBackground::RenderBackground(int stage)
 		default:
 			LOG("Level background does not exist.");
 	}
-	DrawTextureRec(backgroundImage, source, { 0, 16 }, WHITE);
+	DrawTextureRec(backgroundImage, source, { 0, TILE_SIZE }, WHITE);
 }
 void LevelBackground::Release()
 {
