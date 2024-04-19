@@ -30,12 +30,15 @@ private:
 
     Player* player;
     TileMap* level;
+
+    LevelBackground* background;
+
     std::vector<Object*> objects;
 
     Camera2D camera;
     DebugMode debug;
 
-    Texture2D background;
+    //Texture2D background = LoadTexture("images/Sprites/256x176 Levels.png");
     Rectangle rc;
     int currentStage;
 };

@@ -1,28 +1,41 @@
 #pragma once
-#include "Entity.h"
 
-//#define OBJECT_PHYSICAL_SIZE	14
-//#define OBJECT_FRAME_SIZE		16
-
-//#define POINTS_APPLE	10
-//#define POINTS_CHILI	20
-
-enum class /*ObjectType*/ LevelNum { 
-	AIR, LEVEL1, LEVEL2, LEVEL3
-};
-
-class /*Object*/ Level : public Entity
+class LevelBackground
 {
-public:
-	/*Object*/ Level(const Point& p, LevelNum n);
-	/*~Object();*/ ~Level();
-
-	//void DrawDebug(const Color& col) const;
-	//int Points() const;
-
 private:
-	LevelNum num;
+	Texture2D backgroundImage; //= LoadTexture("images/Sprites/256x176 Levels.png");
+public:
+	LevelBackground();
+	//~LevelBackground();
+	void RenderBackground(int stage);
+	void Release();
 };
+
+//#pragma once
+//#include "Entity.h"
+//
+////#define OBJECT_PHYSICAL_SIZE	14
+////#define OBJECT_FRAME_SIZE		16
+//
+////#define POINTS_APPLE	10
+////#define POINTS_CHILI	20
+//
+//enum class /*ObjectType*/ LevelNum { 
+//	AIR, LEVEL1, LEVEL2, LEVEL3
+//};
+//
+//class /*Object*/ Level : public Entity
+//{
+//public:
+//	/*Object*/ Level(const Point& p, LevelNum n);
+//	/*~Object();*/ ~Level();
+//
+//	//void DrawDebug(const Color& col) const;
+//	//int Points() const;
+//
+//private:
+//	LevelNum num;
+//};
 
 
 //#pragma once

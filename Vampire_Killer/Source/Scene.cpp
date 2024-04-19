@@ -1,11 +1,13 @@
 #include "Scene.h"
 #include <stdio.h>
 #include "Globals.h"
+#include "LevelBackground.h"
 
 Scene::Scene() : currentStage(1)
 {
 	player = nullptr;
 	level = nullptr;
+	background = nullptr;
 
 	camera.target = { 0, 0 };				//Center of the screen
 	camera.offset = { 0, MARGIN_GUI_Y };	//Offset from the target (center of the screen)
@@ -14,7 +16,7 @@ Scene::Scene() : currentStage(1)
 
 	debug = DebugMode::OFF;
 
-	background = LoadTexture("images/Sprites/256x176 Levels.png");
+	//background = LoadTexture("images/Sprites/256x176 Levels.png");
 }
 Scene::~Scene()
 {
@@ -29,6 +31,12 @@ Scene::~Scene()
 		level->Release();
 		delete level;
 		level = nullptr;
+	}
+	if (background != nullptr)
+	{
+		background->Release();
+		delete background;
+		background = nullptr;
 	}
 	for (Entity* obj : objects)
 	{
@@ -60,6 +68,13 @@ AppStatus Scene::Init()
 		return AppStatus::ERROR;
 	}
 	
+	//Create background
+	background = new LevelBackground();
+	if (background == nullptr)
+	{
+		LOG("Failed to allocate memory for background");
+		return AppStatus::ERROR;
+	}
 	//Initialise level
 	if (level->Initialise() != AppStatus::OK)
 	{
@@ -91,31 +106,9 @@ AppStatus Scene::LoadLevel(int stage)
 
 	size = LEVEL_WIDTH * LEVEL_HEIGHT;
 
-	if (stage >= 1 && stage < 4)
-	{
-		// Define la región de la imagen que corresponde al nivel actual
-		Rectangle source = { (stage - 1) * LEVEL_WIDTH * TILE_SIZE, 0, LEVEL_WIDTH * TILE_SIZE, LEVEL_HEIGHT * TILE_SIZE };
-
-		// Dibuja la parte correspondiente de la imagen completa
-		DrawTextureRec(background, source, { 0, 0 }, WHITE);
-	}
-	else if (stage >= 4 && stage < 7)
-	{
-		// Define la región de la imagen que corresponde al nivel actual
-		Rectangle source = { (stage - 4) * LEVEL_WIDTH * TILE_SIZE, (stage - 4) * LEVEL_WIDTH * TILE_SIZE, LEVEL_WIDTH * TILE_SIZE, LEVEL_HEIGHT * TILE_SIZE };
-
-		// Dibuja la parte correspondiente de la imagen completa
-		DrawTextureRec(background, source, { 0, 0 }, WHITE);
-	}
-	else
-	{
-		// Error: nivel no válido
-		LOG("Failed to load level, stage %d doesn't exist", stage);
-		return AppStatus::ERROR;
-	}
-
 	if (stage == 1)
 	{
+		currentStage = 1;
 		map = new int[size] {
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -133,6 +126,7 @@ AppStatus Scene::LoadLevel(int stage)
 	}
 	else if (stage == 2)
 	{
+		currentStage = 2;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -149,6 +143,7 @@ AppStatus Scene::LoadLevel(int stage)
 	}
 	else if (stage == 3)
 	{
+		currentStage = 3;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -165,6 +160,7 @@ AppStatus Scene::LoadLevel(int stage)
 	}
 	else if (stage == 4)
 	{
+		currentStage = 4;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -225,6 +221,7 @@ AppStatus Scene::LoadLevel(int stage)
 	}
 	//Tile map
 	level->Load(map, LEVEL_WIDTH, LEVEL_HEIGHT);
+	delete map;
 
 	return AppStatus::OK;
 }
@@ -240,6 +237,8 @@ void Scene::Update()
 	}
 	//Debug levels instantly
 	if (IsKeyPressed(KEY_ONE))		LoadLevel(1);
+	else if (IsKeyPressed(KEY_TWO))	LoadLevel(2);
+	else if (IsKeyPressed(KEY_THREE))	LoadLevel(3);
 	else if (IsKeyPressed(KEY_FOUR))	LoadLevel(4);
 
 	level->Update();
@@ -250,12 +249,31 @@ void Scene::Render()
 {
 	BeginMode2D(camera);
 
-	if (currentStage >= 1 && currentStage <= 4)
-	{
-		Rectangle source = { (currentStage - 1) * LEVEL_WIDTH * TILE_SIZE, 0, LEVEL_WIDTH * TILE_SIZE, LEVEL_HEIGHT * TILE_SIZE };
-		DrawTextureRec(background, source, { 0, 16 }, WHITE); //Afegim 16 al vector de posició per baixar el background una tile.
-	}
+	//LevelBackground();
+	//LevelBackground::RenderBackground(currentStage);
 
+	/*Rectangle source;
+	float width = LEVEL_WIDTH * TILE_SIZE;
+	float height = LEVEL_HEIGHT * TILE_SIZE;
+	switch (currentStage)
+	{
+		case 1:
+			source = { 0 * width, 0 * height, width, height }; break;
+		case 2:
+			source = { 1 * width, 0 * height, width, height }; break;
+		case 3:
+			source = { 2 * width, 0 * height, width, height }; break;
+		case 4:
+			source = { 0 * width, 1 * height, width, height }; break;
+	}
+	DrawTextureRec(background, source, { 0, 16 }, WHITE);*/ //Afegim 16 al vector de posició per baixar el background una tile.
+	//if (currentStage >= 1 && currentStage <= 4)
+	//{
+	//	Rectangle source = { (currentStage - 1) * LEVEL_WIDTH * TILE_SIZE, 0, LEVEL_WIDTH * TILE_SIZE, LEVEL_HEIGHT * TILE_SIZE };
+	//	DrawTextureRec(background, source, { 0, 16 }, WHITE); //Afegim 16 al vector de posició per baixar el background una tile.
+	//}
+
+	background->RenderBackground(currentStage);
 	level->Render();
 	if (debug == DebugMode::OFF || debug == DebugMode::SPRITES_AND_HITBOXES)
 	{
@@ -274,6 +292,7 @@ void Scene::Render()
 }
 void Scene::Release()
 {
+	background->Release();
 	level->Release();
 	player->Release();
 	ClearLevel();

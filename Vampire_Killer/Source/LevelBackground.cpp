@@ -1,29 +1,94 @@
+#include <stdio.h>
+#include "Globals.h"
+#include <raylib.h>
 #include "LevelBackground.h"
-#include "StaticImage.h"
+#include "ResourceManager.h"
 
-//Object::Object(const Point& p, ObjectType t) : Entity(p, OBJECT_PHYSICAL_SIZE, OBJECT_PHYSICAL_SIZE, OBJECT_FRAME_SIZE, OBJECT_FRAME_SIZE)
-Level::Level(const Point& p, LevelNum n) : Entity(p, LEVEL_WIDTH, LEVEL_HEIGHT)
+LevelBackground::LevelBackground()
 {
-	//type = t;
-	num = n;
-
-	Rectangle rc;
-	const int x = LEVEL_WIDTH * TILE_SIZE;
-	const int y = LEVEL_HEIGHT * TILE_SIZE;
-	switch (num)
+	backgroundImage = LoadTexture("images/Sprites/256x176 Levels.png");
+}
+void LevelBackground::RenderBackground(int stage)
+{
+	Rectangle source = { 0, 0, 0, 0 };
+	float width = LEVEL_WIDTH * TILE_SIZE;
+	float height = LEVEL_HEIGHT * TILE_SIZE;
+	switch (stage)
 	{
-	case LevelNum::LEVEL1: rc = { 0, 0, x, y }; break;
-	case LevelNum::LEVEL2: rc = { x, 0, x, y }; break;
-
-	default: LOG("Internal error: object creation of invalid type");
+		case 1:
+			source = { 0 * width, 0 * height, width, height }; break;
+		case 2:
+			source = { 1 * width, 0 * height, width, height }; break;
+		case 3:
+			source = { 2 * width, 0 * height, width, height }; break;
+		case 4:
+			source = { 0 * width, 2 * height, width, height }; break;
 	}
-
-	ResourceManager& data = ResourceManager::Instance();
-	render = new StaticImage(data.GetTexture(Resource::IMG_BACKGROUND), rc);
+	DrawTextureRec(backgroundImage, source, { 0, 16 }, WHITE);
 }
-Level::~Level()
+void LevelBackground::Release()
 {
+	ResourceManager& data = ResourceManager::Instance();
+	data.ReleaseTexture(Resource::IMG_BACKGROUND);
+	//dict_rect.clear();
 }
+
+//class LevelBackground
+//{
+//	protected:
+//		Texture2D background = LoadTexture("images/Sprites/256x176 Levels.png");
+//	public:
+//		LevelBackground()
+//		{
+//
+//		}
+//		void RenderBackground(int stage)
+//		{
+//			Rectangle source = { 0, 0, 0, 0 };
+//			float width = LEVEL_WIDTH * TILE_SIZE;
+//			float height = LEVEL_HEIGHT * TILE_SIZE;
+//			switch (stage)
+//			{
+//			case 1:
+//				source = { 0 * width, 0 * height, width, height }; break;
+//			case 2:
+//				source = { 1 * width, 0 * height, width, height }; break;
+//			case 3:
+//				source = { 2 * width, 0 * height, width, height }; break;
+//			case 4:
+//				source = { 0 * width, 2 * height, width, height }; break;
+//			}
+//			DrawTextureRec(background, source, { 0, 16 }, WHITE);
+//		}
+//};
+
+
+//#include "LevelBackground.h"
+//#include "StaticImage.h"
+//
+////Object::Object(const Point& p, ObjectType t) : Entity(p, OBJECT_PHYSICAL_SIZE, OBJECT_PHYSICAL_SIZE, OBJECT_FRAME_SIZE, OBJECT_FRAME_SIZE)
+//Level::Level(const Point& p, LevelNum n) : Entity(p, LEVEL_WIDTH, LEVEL_HEIGHT)
+//{
+//	//type = t;
+//	num = n;
+//
+//	Rectangle rc;
+//	const int x = LEVEL_WIDTH * TILE_SIZE;
+//	const int y = LEVEL_HEIGHT * TILE_SIZE;
+//	switch (num)
+//	{
+//	case LevelNum::LEVEL1: rc = { 0, 0, x, y }; break;
+//	case LevelNum::LEVEL2: rc = { x, 0, x, y }; break;
+//
+//	default: LOG("Internal error: object creation of invalid type");
+//	}
+//
+//	ResourceManager& data = ResourceManager::Instance();
+//	render = new StaticImage(data.GetTexture(Resource::IMG_BACKGROUND), rc);
+//}
+//Level::~Level()
+//{
+//}
 //void Object::DrawDebug(const Color& col) const
 //{
 //	Entity::DrawHitbox(pos.x, pos.y, width, height, col);
