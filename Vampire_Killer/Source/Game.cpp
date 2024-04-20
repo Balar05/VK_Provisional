@@ -71,7 +71,7 @@ AppStatus Game::LoadResources()
 {
     ResourceManager& data = ResourceManager::Instance();
 
-    if (data.LoadTexture(Resource::IMG_MENU, "images/Sprites/Intro 256x212.png") != AppStatus::OK)
+    if (data.LoadTexture(Resource::IMG_MENU, "images/Sprites/initial screen.png") != AppStatus::OK)
     {
         return AppStatus::ERROR;
     }
@@ -288,7 +288,8 @@ void Game::Render()
     switch (state)
     {
     case GameState::MAIN_MENU:
-        DrawTexture(*img_menu, 0, 0, WHITE);    //Incloure noms, foto, etc
+        Rectangle source = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+            DrawTextureRec(*img_menu, source, Vector2{ 0,0 }, WHITE);    //Incloure noms, foto, etc
         break;
 
     case GameState::INTRO:
