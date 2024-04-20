@@ -266,7 +266,7 @@ AppStatus Game::Update()
 
             ResetAnimations();
             // Cambia el estado a INTRO
-            state = GameState::INTRO;
+            state = GameState::MAIN_MENU;
 
             // Llama a ResetAnimations para reiniciar las animaciones
            
