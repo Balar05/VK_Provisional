@@ -120,6 +120,7 @@ AppStatus Game::Update()
         }
         break;
     }
+    
     case GameState::INTRO:
     {
         if (!introPlayed)
@@ -253,19 +254,17 @@ AppStatus Game::Update()
     }
     case GameState::PLAYING:
     {
-
-        if (!music2Played) {
+        
+        if (!music2Played && state == GameState::PLAYING) {
             PlayMusicStream(musicArray2[0]);
-          
-            // Actualiza la música en cada iteración del bucle principal
-            UpdateMusicStream(musicArray2[0]);
-            
+            music2Played = true; // Asegúrate de establecer a true después de reproducir la música
         }
-        if (IsKeyPressed(KEY_ESCAPE))
-        {
+        UpdateMusicStream(musicArray2[0]); // Llama a UpdateMusicStream() en cada iteración del bucle
+
+        if (IsKeyPressed(KEY_ESCAPE)) {
             FinishPlay();
             StopMusicStream(musicArray2[0]);
-            music2Played = true;
+            music2Played = true; // Considera mantener la lógica de detener la música aquí
             state = GameState::MAIN_MENU;
         }
         else
