@@ -60,6 +60,9 @@
     <ClCompile Include="Source\LevelBackground.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Zombie.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Globals.h">
@@ -106,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="Source\LevelBackground.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Zombie.h">
+      <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

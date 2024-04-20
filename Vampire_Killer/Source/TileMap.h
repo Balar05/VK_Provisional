@@ -33,6 +33,7 @@ enum class Tile {
 
 	// id >= 100: entities' initial locations
 	PLAYER = 100,
+	ZOMBIE = 200,
 
 	//Intervals
 	/*STATIC_FIRST = BLOCK_SQUARE1_TL,
@@ -48,7 +49,7 @@ enum class Tile {
 	SPECIAL_FIRST = WHIP,
 	SPECIAL_LAST = PLAIN_HEART,
 	ENTITY_FIRST = PLAYER,
-	ENTITY_LAST = PLAYER
+	ENTITY_LAST = ZOMBIE
 };
 
 class TileMap

@@ -1,6 +1,7 @@
 #pragma once
 #include <raylib.h>
 #include "Player.h"
+#include "Zombie.h"
 #include "TileMap.h"
 #include "Object.h"
 #include "LevelBackground.h"
