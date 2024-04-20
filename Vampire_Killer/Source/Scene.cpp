@@ -178,7 +178,7 @@ AppStatus Scene::LoadLevel(int stage)
 	{
 		currentStage = 5;
 		map = new int[size] {
-				-1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0,
@@ -188,6 +188,40 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 6, 0, 0/*candle*/, 0, 0, 0, 0/*candle */, 0, 0, 0, 0,
 				0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+		};
+	}
+	else if (stage == 6)
+	{
+		currentStage = 6;
+		map = new int[size] {
+				0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 3, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0,
+				0, 0, 1, 2, 1, 2, 6, 3, 1, 2, 1, 2, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+		};
+	}
+	else if (stage == 7)
+	{
+		currentStage = 7;
+		map = new int[size] {
+			-1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 3,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0,
+				1, 2, 1, 2, 3, 5, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 6, 0, 0, 0, 0,
+				0, 0, 0, 0, 1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 1, 2, 1, 2, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
 	}
@@ -362,34 +396,87 @@ void Scene::UpdateBackground(int s)
 		}
 		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
 		{
-			player->SetPos({ 15, PLAYER_Y_STARTER});
+			player->SetPos({ 15, y});
 			LoadLevel(2);
 			break;
 		}
 	case 2:
 		if (x < 0)
 		{
-			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, PLAYER_Y_STARTER});
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y});
 			LoadLevel(1);
 			break;
 		}
 		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
 		{
-			player->SetPos({ 15, PLAYER_Y_STARTER});
+			player->SetPos({ 15, y});
+			LoadLevel(3);
 			LoadLevel(3);
 			break;
 		}
 	case 3:
 		if (x < 0)
 		{
-			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, PLAYER_Y_STARTER });
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
 			LoadLevel(2);
 			break;
 		}
 		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
 		{
-			player->SetPos({ 15, PLAYER_Y_STARTER });
+			player->SetPos({ 15, y });
 			LoadLevel(4);
+			break;
+		}
+	case 4:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(6);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(5);
+			break;
+		}
+	case 5:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(4);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(7);
+			break;
+		}
+	case 6:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(7);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(4);
+			break;
+		}
+	case 7:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(5);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(6);
 			break;
 		}
 	}
