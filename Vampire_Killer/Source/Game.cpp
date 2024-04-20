@@ -3,6 +3,7 @@
 #include "ResourceManager.h"
 #include <stdio.h>
 
+
 Game::Game()
 {
     state = GameState::MAIN_MENU;
@@ -69,14 +70,6 @@ AppStatus Game::Initialise(float scale)
 }
 AppStatus Game::LoadResources()
 {
-    ResourceManager& data = ResourceManager::Instance();
-
-    if (data.LoadTexture(Resource::IMG_MENU, "images/Sprites/initial screen.png") != AppStatus::OK)
-    {
-        return AppStatus::ERROR;
-    }
-    img_menu = data.GetTexture(Resource::IMG_MENU);
-
     return AppStatus::OK;
 }
 AppStatus Game::BeginPlay()
@@ -123,6 +116,8 @@ AppStatus Game::Update()
     
     case GameState::INTRO:
     {
+        if (IsKeyPressed(KEY_ESCAPE)) return AppStatus::QUIT;
+
         if (!introPlayed)
         {
             framesCounter++;
@@ -136,6 +131,7 @@ AppStatus Game::Update()
                     currentFrameIntro = totalFramesIntro - 1;
                     if (IsKeyDown(KEY_SPACE))
                         introPlayed = true;
+                   
                 }
             }
         }
@@ -168,7 +164,9 @@ AppStatus Game::Update()
                 if (timePlayed > 6.5) {
                     StopMusicStream(musicArray[0]);
                     music1Played = true;
+                    ResetAnimations();
                     state = GameState::PLAYING;
+                    
                 }
             }
 
@@ -249,6 +247,7 @@ AppStatus Game::Update()
                     currentFramebat_intro2 = 0;
                 }
             }
+
             break;
         }
     }
@@ -257,15 +256,20 @@ AppStatus Game::Update()
         
         if (!music2Played && state == GameState::PLAYING) {
             PlayMusicStream(musicArray2[0]);
-            music2Played = true; // Asegúrate de establecer a true después de reproducir la música
         }
         UpdateMusicStream(musicArray2[0]); // Llama a UpdateMusicStream() en cada iteración del bucle
 
         if (IsKeyPressed(KEY_ESCAPE)) {
             FinishPlay();
             StopMusicStream(musicArray2[0]);
-            music2Played = true; // Considera mantener la lógica de detener la música aquí
-            state = GameState::MAIN_MENU;
+            music2Played = true;
+
+            ResetAnimations();
+            // Cambia el estado a INTRO
+            state = GameState::INTRO;
+
+            // Llama a ResetAnimations para reiniciar las animaciones
+           
         }
         else
         {
@@ -278,6 +282,27 @@ AppStatus Game::Update()
     return AppStatus::OK;
 }
 
+void Game::ResetAnimations()
+{
+    currentFrameIntro = 0;
+    currentFrameAnimation2 = 0;
+    currentFrameCharacterFront = 0; // Fotograma actual para la animación frontal del personaje
+    currentFrameCharacterBack = 5;  // Fotograma actual para la animación de espaldas del personaje
+    currentFramebat_intro = 0;
+    currentFramebat_intro2 = 0;
+    framesCounter = 0;
+    framesCounter2 = 0;
+    framesSpeed2 = 1;
+    framesSpeed = 1;
+    introPlayed = false;
+    animation2Played = false;
+    music1Played = false;
+    music2Played = false;
+    characterFrontFacing = true; // Variable para controlar si el personaje está de frente o de espaldas
+    characterStopped = false;    // Variable para controlar si el personaje ha detenido su animación de caminar
+    animationbatPlayed = false;
+    animationbat2Played = false;
+}
 
 void Game::Render()
 {
@@ -288,8 +313,13 @@ void Game::Render()
     switch (state)
     {
     case GameState::MAIN_MENU:
-        Rectangle source = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-            DrawTextureRec(*img_menu, source, Vector2{ 0,0 }, WHITE);    //Incloure noms, foto, etc
+    {
+        Image imgMenu = LoadImage("images/Sprites/initial screen.png");
+        ImageResize(&imgMenu, WINDOW_WIDTH, WINDOW_HEIGHT);
+        Texture2D img_menu = LoadTextureFromImage(imgMenu);
+        UnloadImage(imgMenu); // Ya no necesitas la imagen original
+        DrawTexture(img_menu, 0, 0, WHITE);
+    }
         break;
 
     case GameState::INTRO:
