@@ -240,7 +240,7 @@ void Scene::Update()
 	else if (IsKeyPressed(KEY_TWO))	LoadLevel(2);
 	else if (IsKeyPressed(KEY_THREE))	LoadLevel(3);
 	else if (IsKeyPressed(KEY_FOUR))	LoadLevel(4);
-
+	
 	level->Update();
 	player->Update();
 	CheckCollisions();

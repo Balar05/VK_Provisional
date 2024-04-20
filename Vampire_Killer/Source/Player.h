@@ -34,10 +34,14 @@
 //Gravity affects jumping velocity when jump_delay is 0
 #define GRAVITY_FORCE			1
 
+
 //Logic states
 enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING, DEAD };
 enum class Look { RIGHT, LEFT };
-
+typedef struct
+{
+	float Lifetime;
+}Timer;
 //Rendering states
 enum class PlayerAnim {
 	IDLE_LEFT, IDLE_RIGHT,
@@ -48,6 +52,7 @@ enum class PlayerAnim {
 	FALLING_LEFT_NJ, FALLING_RIGHT_NJ,
 	SNEAKING_LEFT, SNEAKING_RIGHT,
 	ATTACKING_LEFT, ATTACKING_RIGHT,
+	DEAD_LEFT, DEAD_RIGHT,
 	CLIMBING, CLIMBING_PRE_TOP, CLIMBING_TOP,
 	SHOCK_LEFT, SHOCK_RIGHT,
 	TELEPORT_LEFT, TELEPORT_RIGHT,
@@ -71,7 +76,41 @@ public:
 	void DrawDebug(const Color& col) const;
 	void Release();
 
+	const int totalFramesAttack = 3;
+	float currentFrameAttack = 0;
+	float framesCounter = 0;
+	float framesSpeed = 1;
+
+	double waitTime = 2.0; // Tiempo de espera en segundos
+	double timer = 0.0; // Inicializa el temporizador
+
+	void StartTimer(Timer* timer, float lifetime)
+	{
+		if (timer != NULL)
+			timer->Lifetime = lifetime;
+	}
+
+	// update a timer with the current frame time
+	void UpdateTimer(Timer* timer)
+	{
+		// subtract this frame from the timer if it's not allready expired
+		if (timer != NULL && timer->Lifetime > 0)
+			timer->Lifetime -= GetFrameTime();
+	}
+
+	// check if a timer is done.
+	bool TimerDone(Timer* timer)
+	{
+		if (timer != NULL)
+			return timer->Lifetime <= 0;
+
+		return false;
+	}
+
+	Timer attackTimer = { 0 };
+	float attackLife = 0.5f; // Duration of the attack animation
 private:
+
 	bool IsLookingRight() const;
 	bool IsLookingLeft() const;
 
@@ -107,6 +146,7 @@ private:
 	bool IsInFirstHalfTile() const;
 	bool IsInSecondHalfTile() const;
 
+
 	bool attackAnimationComplete = false;
 
 	State state;
@@ -116,5 +156,7 @@ private:
 	TileMap* map;
 
 	int score;
+
+	Texture2D attackAnim;
 };
 

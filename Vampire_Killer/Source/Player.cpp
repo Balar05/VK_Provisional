@@ -22,6 +22,8 @@ AppStatus Player::Initialise()
 	int i;
 	const int n = PLAYER_FRAME_SIZE;
 
+	attackAnim = LoadTexture("images/Sprites/32x32 Simon Belmont.png");
+
 	ResourceManager& data = ResourceManager::Instance();
 	if (data.LoadTexture(Resource::IMG_PLAYER, "images/Sprites/32x32 Simon Belmont.png") != AppStatus::OK)
 	{
@@ -78,6 +80,13 @@ AppStatus Player::Initialise()
 	sprite->SetAnimationDelay((int)PlayerAnim::ATTACKING_LEFT, ANIM_DELAY);
 	for (i = 0; i < 3; ++i)
 		sprite->AddKeyFrame((int)PlayerAnim::ATTACKING_LEFT, { (float)i * (2 * n), 4 * n, -2 * n, n });
+
+	sprite->SetAnimationDelay((int)PlayerAnim::DEAD_RIGHT, ANIM_DELAY);
+	for (i = 8; i < 10; ++i)
+		sprite->AddKeyFrame((int)PlayerAnim::DEAD_RIGHT, { (float)i * n, 0 * n, n, n });
+	sprite->SetAnimationDelay((int)PlayerAnim::DEAD_LEFT, ANIM_DELAY);
+	for (i = 8; i < 10; ++i)
+		sprite->AddKeyFrame((int)PlayerAnim::DEAD_LEFT, { (float)i * n, 0 * n, -n, n });
 
 	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING, ANIM_LADDER_DELAY);
 	for (i = 0; i < 4; ++i)
@@ -199,18 +208,27 @@ void Player::StopSneaking()
 	else					SetAnimation((int)PlayerAnim::IDLE_LEFT);
 
 }
+
+
 void Player::StartAttacking() {
-	state = State::ATTACKING;
-	if (IsLookingRight()) {
-		SetAnimation((int)PlayerAnim::ATTACKING_RIGHT);
-	}
-	else {
-		SetAnimation((int)PlayerAnim::ATTACKING_LEFT);
-	}
-	attackAnimationComplete = false; // Restablece la propiedad cuando se inicia el ataque
+	// Set the state to ATTACKING only if not currently attacking
+	if (state != State::ATTACKING) {
+		state = State::ATTACKING;
 
+		// Set the attack animation based on the player's direction
+		if (IsLookingRight()) {
+			SetAnimation((int)PlayerAnim::ATTACKING_RIGHT);
+		}
+		else if (IsLookingLeft()) {
+			SetAnimation((int)PlayerAnim::ATTACKING_LEFT);
+		}
 
+		// Start the attack timer
+		StartTimer(&attackTimer, attackLife);
+	}
 }
+
+
 void Player::StopAttacking() {
 	state = State::IDLE;
 	if (IsLookingRight()) {
@@ -249,9 +267,13 @@ void Player::Update()
 	MoveX();
 	MoveY();
 	MoveY_SNEAK();
+	Attack();
+
+
 
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->Update();
+
 }
 void Player::MoveX()
 {
@@ -274,10 +296,6 @@ void Player::MoveX()
 			pos.x = prev_x;
 			if (state == State::WALKING) Stop();
 		}
-		else if (IsKeyDown(KEY_SPACE))
-		{
-			StartAttacking();
-		}
 		
 
 	}
@@ -295,10 +313,6 @@ void Player::MoveX()
 		{
 			pos.x = prev_x;
 			if (state == State::WALKING) Stop();
-		}
-		else if (IsKeyDown(KEY_SPACE))
-		{
-			StartAttacking();
 		}
 	}
 	else
@@ -353,9 +367,19 @@ void Player::MoveY_SNEAK()
 	}
 }
 
-void Player::Attack()
-{
+void Player::Attack() {
+	// Initiate the attack if the space bar is pressed and the current state is not ATTACKING
+	if (IsKeyPressed(KEY_SPACE) && state != State::ATTACKING) {
+		StartAttacking();
+	}
 
+	// Update the attack timer
+	UpdateTimer(&attackTimer);
+
+	// If the timer has expired, stop the attack
+	if (TimerDone(&attackTimer)) {
+		Stop();
+	}
 }
 
 void Player::LogicJumping()

@@ -225,9 +225,9 @@ AppStatus Game::Update()
 
             cloudPosition.x -= 0.1;
             // Actualizar la posición del murciélago
-            bat_introPosition.x -= 0.2; // Desplazar el murciélago hacia la izquierda
-            bat_intro2Position.x += 0.2;
-            bat_intro2Position.y -= 0.1;
+            bat_introPosition.x -= 0.15; // Desplazar el murciélago hacia la izquierda
+            bat_intro2Position.x += 0.15;
+            bat_intro2Position.y -= 0.08;
 
             // Actualizar los fotogramas de animación de los murciélagos
             framesCounter2++;
@@ -302,6 +302,17 @@ void Game::ResetAnimations()
     characterStopped = false;    // Variable para controlar si el personaje ha detenido su animación de caminar
     animationbatPlayed = false;
     animationbat2Played = false;
+
+    // Posición del personaje
+    characterPosition = { WINDOW_WIDTH - 30, 95 }; // Inicialmente fuera de la pantalla
+
+    // Posición de la nube
+    cloudPosition = { WINDOW_WIDTH - 60, 100 }; // Posición inicial de la nube
+
+    // Posición de la segunda animación
+    bat_introPosition = { WINDOW_WIDTH / 2 + 20, 70 }; // Posición inicial del murciélago
+
+    bat_intro2Position = { WINDOW_WIDTH / 2 - 100, 120 }; // Posición inicial del murciélago
 }
 
 void Game::Render()
