@@ -33,7 +33,7 @@
 #define GRAVITY_FORCE			1
 
 //Logic states
-enum class State { IDLE, WALKING, JUMPING, FALLING, DEAD };
+enum class State { IDLE, WALKING, JUMPING, CLIMBING, FALLING, DEAD };
 enum class Look { RIGHT, LEFT };
 
 //Rendering states
@@ -43,7 +43,7 @@ enum class PlayerAnim {
 	JUMPING_LEFT, JUMPING_RIGHT,
 	LEVITATING_LEFT, LEVITATING_RIGHT,
 	FALLING_LEFT, FALLING_RIGHT,
-	CLIMBING, CLIMBING_PRE_TOP, CLIMBING_TOP,
+	CLIMBING_RIGHT, CLIMBING_LEFT, CLIMBING_PRE_TOP, CLIMBING_TOP,
 	SHOCK_LEFT, SHOCK_RIGHT,
 	TELEPORT_LEFT, TELEPORT_RIGHT,
 	NUM_ANIMATIONS
@@ -76,6 +76,7 @@ private:
 	void MoveX();
 	void MoveY();
 	void LogicJumping();
+	void LogicClimbing();
 
 	//Animation management
 	void SetAnimation(int id);
@@ -85,6 +86,7 @@ private:
 	void StartWalkingRight();
 	void StartFalling();
 	void StartJumping();
+	void StartClimbing();
 	void ChangeAnimRight();
 	void ChangeAnimLeft();
 
