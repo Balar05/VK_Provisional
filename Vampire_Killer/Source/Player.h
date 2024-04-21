@@ -67,6 +67,7 @@ public:
 	void Release();
 	int GetPlayerPosX();
 	int GetPlayerPosY();
+	void CheckPosY();
 
 private:
 	bool IsLookingRight() const;
@@ -86,7 +87,8 @@ private:
 	void StartWalkingRight();
 	void StartFalling();
 	void StartJumping();
-	void StartClimbing();
+	void StartClimbingRight();
+	void StartClimbingLeft();
 	void ChangeAnimRight();
 	void ChangeAnimLeft();
 
