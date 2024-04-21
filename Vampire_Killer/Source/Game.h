@@ -15,17 +15,18 @@ public:
     void Render();
     void Cleanup();
     void ResetAnimations();
+    void ResetCredits();
 
     const int totalFramesIntro = 3;
     const int totalFramesAnimation2 = 3;
-    const int totalFramesCharacterFront = 3; // Número total de fotogramas para la animación frontal del personaje
-    const int totalFramesCharacterBack = 1;  // Número total de fotogramas para la animación de espaldas del personaje
+    const int totalFramesCharacterFront = 3; 
+    const int totalFramesCharacterBack = 1; 
     const int totalFramesbat_intro = 2;
     const int totalFramesbat_intro2 = 2;
     float currentFrameIntro = 0;
     float currentFrameAnimation2 = 0;
-    float currentFrameCharacterFront = 0; // Fotograma actual para la animación frontal del personaje
-    float currentFrameCharacterBack = 5;  // Fotograma actual para la animación de espaldas del personaje
+    float currentFrameCharacterFront = 0; 
+    float currentFrameCharacterBack = 5; 
     float currentFramebat_intro = 0;
     float currentFramebat_intro2 = 0;
     float framesCounter = 0;
@@ -36,10 +37,14 @@ public:
     bool animation2Played = false;
     bool music1Played = false;
     bool music2Played = false;
-    bool characterFrontFacing = true; // Variable para controlar si el personaje está de frente o de espaldas
-    bool characterStopped = false;    // Variable para controlar si el personaje ha detenido su animación de caminar
+    bool music3Played = false;
+    bool characterFrontFacing = true;
+    bool characterStopped = false;   
     bool animationbatPlayed = false;
     bool animationbat2Played = false;
+    bool creditsFinished = false;
+
+    float creditPositionY = WINDOW_HEIGHT;
     // Posición del personaje
     Vector2 characterPosition = { WINDOW_WIDTH - 30, 95 }; // Inicialmente fuera de la pantalla
 
@@ -50,7 +55,7 @@ public:
     Vector2 bat_introPosition = { WINDOW_WIDTH / 2 + 20, 70 }; // Posición inicial del murciélago
 
     Vector2 bat_intro2Position = { WINDOW_WIDTH / 2 - 100, 120 }; // Posición inicial del murciélago
-  
+
 private:
     AppStatus BeginPlay();
     void FinishPlay();
@@ -67,17 +72,20 @@ private:
     Rectangle src, dst;
 
 
-    Music musicArray2[10];
+    Sound soundArray[10];
     Music musicArray[10];
 
     Texture2D background;
     Texture2D intro;
     //Texture2D animation2;
     Texture2D castle;
-    Texture2D characterFront; // Textura para la animación frontal del personaje
-    Texture2D characterBack;  // Textura para la animación de espaldas del personaje
-    Texture2D cloudTexture;   // Textura para la animación de la nube
-    Texture2D bat_intro; // Nueva textura para la segunda animación
-    Texture2D bat_intro2; // Nueva textura para la segunda animación
+    Texture2D characterFront; 
+    Texture2D characterBack; 
+    Texture2D cloudTexture;  
+    Texture2D bat_intro; 
+    Texture2D bat_intro2; 
+    Texture2D creditImage;
+
+
 
 };

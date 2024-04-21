@@ -30,3 +30,5 @@ void log(const char file[], int line, const char* text, ...);
 #define EXPLOSION_SIZE 276
 #define SPRITE_SIZE 32
 #define CLOUD_SIZE 64
+
+#define CREDIT_SCROLL_SPEED 0.25f

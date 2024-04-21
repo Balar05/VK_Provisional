@@ -288,7 +288,7 @@ void Player::MoveX()
 	int prev_x = pos.x;
 
 	if (state == State::ATTACKING) {
-		return; // Detener la función aquí
+		return; 
 	}
 
 	if (IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT) && state != State::SNEAKING)
@@ -336,7 +336,7 @@ void Player::MoveY()
 	AABB box;
 
 	if (state == State::ATTACKING) {
-		return; // Detener la función aquí
+		return; 
 	}
 
 	if (state == State::JUMPING)
@@ -368,7 +368,7 @@ void Player::MoveY()
 void Player::MoveY_SNEAK()
 {
 	if (state == State::ATTACKING) {
-		return; // Detener la función aquí
+		return;
 	}
 
 	if (IsKeyDown(KEY_DOWN))
@@ -390,7 +390,6 @@ void Player::Attack()
 	// Iniciar el ataque si se presiona la barra espaciadora y el jugador no está atacando
 	if (IsKeyDown(KEY_SPACE) && state != State::ATTACKING && state != State::JUMPING && state != State::SNEAKING && state != State::DEAD)
 	{
-		// Iniciar el ataque
 		StartAttacking();
 	}
 	UpdateTimer(&attackTimer);

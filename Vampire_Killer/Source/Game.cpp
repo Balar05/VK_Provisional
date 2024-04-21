@@ -51,15 +51,17 @@ AppStatus Game::Initialise(float scale)
     }
 
     musicArray[0] = LoadMusicStream("Audio/Prologue.ogg");
-    musicArray2[0] = LoadMusicStream("Audio/Vampire Killer.ogg");
+    musicArray[1] = LoadMusicStream("Audio/Vampire Killer.ogg");
+    musicArray[2] = LoadMusicStream("Audio/Ending.ogg");
     intro = LoadTexture("images/Sprites/Intro 256x212.png");
     //animation2 = LoadTexture("images/Sprites/intro2.png");
     castle = LoadTexture("images/Sprites/Castle Background 256x212.png");
-    characterFront = LoadTexture("images/Sprites/simonbelmont.png"); // Cargar la textura frontal del personaje
-    characterBack = LoadTexture("images/Sprites/simonbelmont.png");  // Cargar la textura de espaldas del personaje
-    cloudTexture = LoadTexture("images/Sprites/cloud.png");    // Cargar la textura de la nube
-    bat_intro = LoadTexture("images/Sprites/batanim.png"); // Cargar la nueva textura
-    bat_intro2 = LoadTexture("images/Sprites/batanim.png"); // Cargar la nueva textura
+    characterFront = LoadTexture("images/Sprites/simonbelmont.png"); 
+    characterBack = LoadTexture("images/Sprites/simonbelmont.png"); 
+    cloudTexture = LoadTexture("images/Sprites/cloud.png");    
+    bat_intro = LoadTexture("images/Sprites/batanim.png"); 
+    bat_intro2 = LoadTexture("images/Sprites/batanim.png");
+    creditImage = LoadTexture("images/Sprites/Ending.png");
 
     //Set the target frame rate for the application
     SetTargetFPS(60);
@@ -108,12 +110,12 @@ AppStatus Game::Update()
         if (IsKeyPressed(KEY_SPACE))
         {
             if (BeginPlay() != AppStatus::OK) return AppStatus::ERROR;
-            
+
             state = GameState::INTRO;
         }
         break;
     }
-    
+
     case GameState::INTRO:
     {
         if (IsKeyPressed(KEY_ESCAPE)) return AppStatus::QUIT;
@@ -131,17 +133,15 @@ AppStatus Game::Update()
                     currentFrameIntro = totalFramesIntro - 1;
                     if (IsKeyDown(KEY_SPACE))
                         introPlayed = true;
-                   
+
                 }
             }
         }
         else if (!animation2Played)
         {
-          // Reproducir la música después de cambiar al estado INTRO
-            // La reproducción de la música se ha movido al estado MAIN_MENU
-            // Reproduce la música aquí solo si necesitas reproducirla específicamente durante la segunda animación
+       
 
-            // Actualizar la animación 2
+              // Actualizar la animación 2
             framesCounter++;
             if (framesCounter >= (60 / framesSpeed))
             {
@@ -166,7 +166,7 @@ AppStatus Game::Update()
                     music1Played = true;
                     ResetAnimations();
                     state = GameState::PLAYING;
-                    
+
                 }
             }
 
@@ -174,7 +174,7 @@ AppStatus Game::Update()
             if (characterPosition.x > WINDOW_WIDTH / 2 && !characterStopped)
             {
                 characterPosition.x -= 0.5f; // ajustar la velocidad
-                
+
             }
             else
             {
@@ -253,31 +253,67 @@ AppStatus Game::Update()
     }
     case GameState::PLAYING:
     {
-        
+        // Actualizar el flujo de música si es necesario
         if (!music2Played && state == GameState::PLAYING) {
-            PlayMusicStream(musicArray2[0]);
+            PlayMusicStream(musicArray[1]);
         }
-        UpdateMusicStream(musicArray2[0]); // Llama a UpdateMusicStream() en cada iteración del bucle
+        UpdateMusicStream(musicArray[1]); // Llama a UpdateMusicStream() en cada iteración del bucle
 
+        // Si se presiona la tecla ESC, termina el juego
         if (IsKeyPressed(KEY_ESCAPE)) {
             FinishPlay();
-            StopMusicStream(musicArray2[0]);
+            StopMusicStream(musicArray[1]);
             music2Played = true;
 
-            ResetAnimations();
-            // Cambia el estado a INTRO
+            // Cambia el estado a MAIN_MENU
             state = GameState::MAIN_MENU;
 
-            // Llama a ResetAnimations para reiniciar las animaciones
-           
+            // Reinicia las animaciones
+            ResetAnimations();
         }
-        else
-        {
-            //Game logic
+        // Si se presiona la tecla F4, cambia al estado CREDITS
+        else if (IsKeyPressed(KEY_F4)) {
+            // Cambia el estado a CREDITS
+            state = GameState::CREDITS;
+
+            // Detiene la música actual si es necesario
+            StopMusicStream(musicArray[1]);
+            music2Played = true;
+
+        }
+        else {
+            // Lógica de juego
             scene->Update();
         }
         break;
     }
+    case GameState::CREDITS:
+        // Actualizar la posición de los créditos
+        creditPositionY -= CREDIT_SCROLL_SPEED;
+        if (!music3Played && state == GameState::CREDITS) {
+            PlayMusicStream(musicArray[2]);
+        }
+        UpdateMusicStream(musicArray[2]); // Llama a UpdateMusicStream() en cada iteración del bucle
+
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            state = GameState::MAIN_MENU;
+            StopMusicStream(musicArray[1]);
+            music3Played = true;
+            ResetCredits();
+        }
+        // Si la imagen de los créditos se ha desplazado completamente fuera de la pantalla
+        if (creditPositionY + creditImage.height < 0) {
+            creditsFinished = true;
+        }
+
+        // Si los créditos han terminado, cambia al estado MAIN_MENU
+        if (creditsFinished) {
+            state = GameState::MAIN_MENU;
+            music3Played = true;
+            ResetCredits();
+
+        }
+        break;
     }
     return AppStatus::OK;
 }
@@ -286,8 +322,8 @@ void Game::ResetAnimations()
 {
     currentFrameIntro = 0;
     currentFrameAnimation2 = 0;
-    currentFrameCharacterFront = 0; // Fotograma actual para la animación frontal del personaje
-    currentFrameCharacterBack = 5;  // Fotograma actual para la animación de espaldas del personaje
+    currentFrameCharacterFront = 0; 
+    currentFrameCharacterBack = 5; 
     currentFramebat_intro = 0;
     currentFramebat_intro2 = 0;
     framesCounter = 0;
@@ -298,21 +334,27 @@ void Game::ResetAnimations()
     animation2Played = false;
     music1Played = false;
     music2Played = false;
-    characterFrontFacing = true; // Variable para controlar si el personaje está de frente o de espaldas
-    characterStopped = false;    // Variable para controlar si el personaje ha detenido su animación de caminar
+    characterFrontFacing = true; 
+    characterStopped = false;    
     animationbatPlayed = false;
     animationbat2Played = false;
 
     // Posición del personaje
-    characterPosition = { WINDOW_WIDTH - 30, 95 }; // Inicialmente fuera de la pantalla
+    characterPosition = { WINDOW_WIDTH - 30, 95 }; 
 
     // Posición de la nube
-    cloudPosition = { WINDOW_WIDTH - 60, 100 }; // Posición inicial de la nube
+    cloudPosition = { WINDOW_WIDTH - 60, 100 }; 
 
     // Posición de la segunda animación
-    bat_introPosition = { WINDOW_WIDTH / 2 + 20, 70 }; // Posición inicial del murciélago
+    bat_introPosition = { WINDOW_WIDTH / 2 + 20, 70 }; 
 
-    bat_intro2Position = { WINDOW_WIDTH / 2 - 100, 120 }; // Posición inicial del murciélago
+    bat_intro2Position = { WINDOW_WIDTH / 2 - 100, 120 }; 
+}
+
+void Game::ResetCredits() {
+    music3Played = false;
+    creditsFinished = false;
+    creditPositionY = WINDOW_HEIGHT;
 }
 
 void Game::Render()
@@ -328,16 +370,16 @@ void Game::Render()
         Image imgMenu = LoadImage("images/Sprites/initial screen.png");
         ImageResize(&imgMenu, WINDOW_WIDTH, WINDOW_HEIGHT);
         Texture2D img_menu = LoadTextureFromImage(imgMenu);
-        UnloadImage(imgMenu); // Ya no necesitas la imagen original
+        UnloadImage(imgMenu);
         DrawTexture(img_menu, 0, 0, WHITE);
     }
-        break;
+    break;
 
     case GameState::INTRO:
         ClearBackground(RAYWHITE);
         if (!introPlayed)
         {
-            Rectangle source = { currentFrameIntro * WINDOW_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT }; // Solo necesitas un frame de altura para la textura de introducción
+            Rectangle source = { currentFrameIntro * WINDOW_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT }; 
             Rectangle dest = { 0, 0, 0, 0 };
             DrawTextureRec(intro, source, Vector2{ 0, 0 }, WHITE);
         }
@@ -362,9 +404,9 @@ void Game::Render()
                 DrawTexturePro(characterBack, sourceCharacter, destCharacter, Vector2{ destCharacter.width - 20, destCharacter.height - 110 }, 0, WHITE);
             }
 
-            // Dibujar la nube (aumentada en tamaño)
+            // Dibujar la nube 
             Rectangle cloudSource = { 0, 0, CLOUD_SIZE, CLOUD_SIZE };
-            Rectangle cloudDest = { cloudPosition.x, cloudPosition.y, CLOUD_SIZE, CLOUD_SIZE }; // Doble tamaño
+            Rectangle cloudDest = { cloudPosition.x, cloudPosition.y, CLOUD_SIZE, CLOUD_SIZE }; 
             DrawTexturePro(cloudTexture, cloudSource, cloudDest, Vector2{ cloudDest.width / 2 - 35, cloudDest.height / 2 + 25 }, 0, WHITE);
 
             // Dibujar la segunda animación del murciélago
@@ -382,6 +424,12 @@ void Game::Render()
     case GameState::PLAYING:
         scene->Render();
         break;
+
+
+    case GameState::CREDITS:
+       
+        DrawTexture(creditImage, 0, creditPositionY, WHITE);
+        break;
     }
 
     EndTextureMode();
@@ -395,14 +443,15 @@ void Game::Render()
 void Game::Cleanup()
 {
     // Unload resources
-    UnloadMusicStream(musicArray2[0]);
     UnloadMusicStream(musicArray[0]);
+    UnloadMusicStream(musicArray[1]);
     UnloadTexture(background);
     UnloadTexture(intro);
-    UnloadTexture(characterFront); // Descargar la textura frontal del personaje
-    UnloadTexture(characterBack);  // Descargar la textura de espaldas del personaje
-    UnloadTexture(cloudTexture);    // Descargar la textura de la nube
-    UnloadTexture(bat_intro); // Descargar la nueva textura
+    UnloadTexture(characterFront); 
+    UnloadTexture(characterBack); 
+    UnloadTexture(cloudTexture);   
+    UnloadTexture(bat_intro); 
+    UnloadTexture(creditImage);
     CloseAudioDevice();
     UnloadResources();
     CloseWindow();
