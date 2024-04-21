@@ -448,11 +448,11 @@ void Player::LogicClimbing()
 	{
 		if (IsLookingRight())
 		{
-			if (IsInSecondHalfTile())	SetAnimation((int)PlayerAnim::CLIMBING_RIGHT);
+			if (IsInFirstHalfTile())	SetAnimation((int)PlayerAnim::CLIMBING_RIGHT);
 		}
 		else if (IsLookingLeft())
 		{
-			if (IsInFirstHalfTile())	SetAnimation((int)PlayerAnim::CLIMBING_LEFT);
+			if (IsInSecondHalfTile())	SetAnimation((int)PlayerAnim::CLIMBING_LEFT);
 		}
 		
 		else	LOG("Internal error, tile should be a LADDER_TOP, coord: (%d,%d)", box.pos.x, box.pos.y);
@@ -472,11 +472,11 @@ void Player::LogicClimbing()
 		Stop();
 		sprite->SetAutomaticMode();
 	}
-	else
+	/*else
 	{
 		if (GetAnimation() != PlayerAnim::CLIMBING_RIGHT)	SetAnimation((int)PlayerAnim::CLIMBING_RIGHT);
 		else if (GetAnimation() != PlayerAnim::CLIMBING_LEFT)	SetAnimation((int)PlayerAnim::CLIMBING_LEFT);
-	}
+	}*/
 }
 
 void Player::CheckPosY()
