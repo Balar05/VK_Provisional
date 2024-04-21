@@ -22,7 +22,7 @@ AppStatus Player::Initialise()
 	int i;
 	const int n = PLAYER_FRAME_SIZE;
 
-	attackAnim = LoadTexture("images/Sprites/32x32 Simon Belmont.png");
+	soundArray[0] = LoadSound("Audio/Whip-Sound Effect.wav");
 
 	ResourceManager& data = ResourceManager::Instance();
 	if (data.LoadTexture(Resource::IMG_PLAYER, "images/Sprites/32x32 Simon Belmont.png") != AppStatus::OK)
@@ -214,7 +214,7 @@ void Player::StartAttacking() {
     // Establecer el estado a ATTACKING solo si no está actualmente atacando
     {
         state = State::ATTACKING;
-
+		PlaySound(soundArray[0]);
         // Establecer la animación de ataque según la dirección del jugador
         if (IsLookingRight()) {
             SetAnimation((int)PlayerAnim::ATTACKING_RIGHT);

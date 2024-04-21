@@ -119,6 +119,8 @@ public:
 
 private:
 
+	Sound soundArray[10];
+
 	bool IsLookingRight() const;
 	bool IsLookingLeft() const;
 
@@ -163,6 +165,5 @@ private:
 
 	int score;
 
-	Texture2D attackAnim;
 };
 
