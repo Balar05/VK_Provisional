@@ -72,6 +72,14 @@ AppStatus Player::Initialise()
 	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING_LEFT, ANIM_LADDER_DELAY);
 	for (i = 0; i < 2; ++i)
 		sprite->AddKeyFrame((int)PlayerAnim::CLIMBING_LEFT, { (float)i * n, 1 * n, -n, n });
+
+	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING_DOWN_RIGHT, ANIM_LADDER_DELAY);
+	for (i = 2; i < 4; ++i)
+		sprite->AddKeyFrame((int)PlayerAnim::CLIMBING_DOWN_RIGHT, { (float)i * n, 1 * n, n, n });
+	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING_DOWN_LEFT, ANIM_LADDER_DELAY);
+	for (i = 2; i < 4; ++i)
+		sprite->AddKeyFrame((int)PlayerAnim::CLIMBING_DOWN_LEFT, { (float)i * n, 1 * n, -n, n });
+
 	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING_PRE_TOP, ANIM_DELAY);
 	sprite->AddKeyFrame((int)PlayerAnim::CLIMBING_PRE_TOP, { 4 * n, 6 * n, n, n });
 	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING_TOP, ANIM_DELAY);
@@ -205,7 +213,7 @@ void Player::MoveX()
 	int prev_x = pos.x;
 
 
-	if (IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT))
+	if (IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT) && state != State::CLIMBING)
 	{
 		pos.x += -PLAYER_SPEED_X;
 		if (state == State::IDLE) StartWalkingLeft();
@@ -221,7 +229,7 @@ void Player::MoveX()
 			if (state == State::WALKING) Stop();
 		}
 	}
-	else if (IsKeyDown(KEY_RIGHT))
+	else if (IsKeyDown(KEY_RIGHT) && state != State::CLIMBING)
 	{
 		pos.x += PLAYER_SPEED_X;
 		if (state == State::IDLE) StartWalkingRight();
@@ -354,6 +362,22 @@ void Player::StartClimbingLeft()
 	sprite->SetManualMode();
 }
 
+void Player::StartClimbingDownRight()
+{
+	state = State::CLIMBING;
+	SetAnimation((int)PlayerAnim::CLIMBING_DOWN_RIGHT);
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
+	sprite->SetManualMode();
+}
+
+void Player::StartClimbingDownLeft()
+{
+	state = State::CLIMBING;
+	SetAnimation((int)PlayerAnim::CLIMBING_DOWN_LEFT);
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
+	sprite->SetManualMode();
+}
+
 void Player::MoveY()
 {
 	AABB box;
@@ -388,9 +412,9 @@ void Player::MoveY()
 			{
 				box = GetHitbox();
 				if (map->TestOnLadder(box, &pos.x) and IsLookingRight())
-					StartClimbingRight();
+					StartClimbingDownRight();
 				else if (map->TestOnLadder(box, &pos.x) and IsLookingLeft())
-					StartClimbingLeft();
+					StartClimbingDownLeft();
 			}
 			else if (IsKeyPressed(KEY_SPACE))
 			{

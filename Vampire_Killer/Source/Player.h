@@ -44,6 +44,7 @@ enum class PlayerAnim {
 	LEVITATING_LEFT, LEVITATING_RIGHT,
 	FALLING_LEFT, FALLING_RIGHT,
 	CLIMBING_RIGHT, CLIMBING_LEFT, CLIMBING_PRE_TOP, CLIMBING_TOP,
+	CLIMBING_DOWN_RIGHT, CLIMBING_DOWN_LEFT,
 	SHOCK_LEFT, SHOCK_RIGHT,
 	TELEPORT_LEFT, TELEPORT_RIGHT,
 	NUM_ANIMATIONS
@@ -89,6 +90,8 @@ private:
 	void StartJumping();
 	void StartClimbingRight();
 	void StartClimbingLeft();
+	void StartClimbingDownRight();
+	void StartClimbingDownLeft();
 	void ChangeAnimRight();
 	void ChangeAnimLeft();
 
