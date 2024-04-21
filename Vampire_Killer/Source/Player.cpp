@@ -211,25 +211,23 @@ void Player::StopSneaking()
 
 
 void Player::StartAttacking() {
-	// Set the state to ATTACKING only if not currently attacking
-	if (state != State::ATTACKING) {
-		state = State::ATTACKING;
+    // Establecer el estado a ATTACKING solo si no está actualmente atacando
+    {
+        state = State::ATTACKING;
 
-		// Set the attack animation based on the player's direction
-		if (IsLookingRight()) {
-			SetAnimation((int)PlayerAnim::ATTACKING_RIGHT);
-		}
-		else if (IsLookingLeft()) {
-			SetAnimation((int)PlayerAnim::ATTACKING_LEFT);
-		}
-
-		// Start the attack timer
+        // Establecer la animación de ataque según la dirección del jugador
+        if (IsLookingRight()) {
+            SetAnimation((int)PlayerAnim::ATTACKING_RIGHT);
+        } else {
+            SetAnimation((int)PlayerAnim::ATTACKING_LEFT);
+        }
 		StartTimer(&attackTimer, attackLife);
-	}
+    }
 }
 
 
 void Player::StopAttacking() {
+	StopTimer(&attackTimer);
 	state = State::IDLE;
 	if (IsLookingRight()) {
 		SetAnimation((int)PlayerAnim::IDLE_RIGHT);
@@ -237,6 +235,7 @@ void Player::StopAttacking() {
 	else {
 		SetAnimation((int)PlayerAnim::IDLE_LEFT);
 	}
+
 }
 void Player::ChangeAnimRight()
 {
@@ -246,7 +245,10 @@ void Player::ChangeAnimRight()
 	case State::IDLE:	 SetAnimation((int)PlayerAnim::IDLE_RIGHT);    break;
 	case State::WALKING: SetAnimation((int)PlayerAnim::WALKING_RIGHT); break;
 	case State::JUMPING: SetAnimation((int)PlayerAnim::JUMPING_RIGHT); break;
+	case State::SNEAKING: SetAnimation((int)PlayerAnim::SNEAKING_RIGHT); break;
 	case State::FALLING: SetAnimation((int)PlayerAnim::FALLING_RIGHT); break;
+	case State::ATTACKING: SetAnimation((int)PlayerAnim::ATTACKING_RIGHT); break;
+	case State::DEAD: SetAnimation((int)PlayerAnim::DEAD_RIGHT); break;
 	}
 }
 void Player::ChangeAnimLeft()
@@ -257,7 +259,10 @@ void Player::ChangeAnimLeft()
 	case State::IDLE:	 SetAnimation((int)PlayerAnim::IDLE_LEFT);    break;
 	case State::WALKING: SetAnimation((int)PlayerAnim::WALKING_LEFT); break;
 	case State::JUMPING: SetAnimation((int)PlayerAnim::JUMPING_LEFT); break;
+	case State::SNEAKING: SetAnimation((int)PlayerAnim::SNEAKING_LEFT); break;
 	case State::FALLING: SetAnimation((int)PlayerAnim::FALLING_LEFT); break;
+	case State::ATTACKING: SetAnimation((int)PlayerAnim::ATTACKING_LEFT); break;
+	case State::DEAD: SetAnimation((int)PlayerAnim::DEAD_LEFT); break;
 	}
 }
 void Player::Update()
@@ -280,8 +285,11 @@ void Player::MoveX()
 	AABB box;
 	int prev_x = pos.x;
 
+	if (state == State::ATTACKING) {
+		return; // Detener la función aquí
+	}
 
-	if (IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT) && state != State::SNEAKING)
+	if (IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT) && state != State::SNEAKING )
 	{
 		pos.x += -PLAYER_SPEED_X;
 		if (state == State::IDLE) StartWalkingLeft();
@@ -299,7 +307,7 @@ void Player::MoveX()
 		
 
 	}
-	else if (IsKeyDown(KEY_RIGHT) && state != State::SNEAKING)
+	else if (IsKeyDown(KEY_RIGHT) && state != State::SNEAKING )
 	{
 		pos.x += PLAYER_SPEED_X;
 		if (state == State::IDLE) StartWalkingRight();
@@ -325,7 +333,11 @@ void Player::MoveY()
 {
 	AABB box;
 
-	if (state == State::JUMPING)
+	if (state == State::ATTACKING) {
+		return; // Detener la función aquí
+	}
+
+	if (state == State::JUMPING )
 	{
 		LogicJumping();
 	}
@@ -353,6 +365,10 @@ void Player::MoveY()
 
 void Player::MoveY_SNEAK()
 {
+	if (state == State::ATTACKING) {
+		return; // Detener la función aquí
+	}
+
 	if (IsKeyDown(KEY_DOWN))
 	{
 		if (state != State::SNEAKING)
@@ -367,18 +383,19 @@ void Player::MoveY_SNEAK()
 	}
 }
 
-void Player::Attack() {
-	// Initiate the attack if the space bar is pressed and the current state is not ATTACKING
-	if (IsKeyPressed(KEY_SPACE) && state != State::ATTACKING) {
+void Player::Attack()
+{
+	// Iniciar el ataque si se presiona la barra espaciadora y el jugador no está atacando
+	if (IsKeyDown(KEY_SPACE) && state != State::ATTACKING && state != State::JUMPING && state != State::SNEAKING && state != State::DEAD)
+	{
+		// Iniciar el ataque
 		StartAttacking();
 	}
-
-	// Update the attack timer
 	UpdateTimer(&attackTimer);
-
-	// If the timer has expired, stop the attack
-	if (TimerDone(&attackTimer)) {
-		Stop();
+	// Detener el ataque si el temporizador de ataque expira
+	if (state == State::ATTACKING && TimerDone(&attackTimer))
+	{
+		StopAttacking();
 	}
 }
 

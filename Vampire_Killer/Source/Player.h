@@ -3,7 +3,7 @@
 #include "TileMap.h"
 
 //Representation model size: 32x32
-#define PLAYER_FRAME_SIZE		32
+#define PLAYER_FRAME_SIZE		        32
 
 //Logical model size: 12x28
 #define PLAYER_PHYSICAL_WIDTH	12
@@ -38,10 +38,12 @@
 //Logic states
 enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING, DEAD };
 enum class Look { RIGHT, LEFT };
-typedef struct
+
+typedef struct //Temporizador
 {
 	float Lifetime;
 }Timer;
+
 //Rendering states
 enum class PlayerAnim {
 	IDLE_LEFT, IDLE_RIGHT,
@@ -81,9 +83,8 @@ public:
 	float framesCounter = 0;
 	float framesSpeed = 1;
 
-	double waitTime = 2.0; // Tiempo de espera en segundos
-	double timer = 0.0; // Inicializa el temporizador
 
+	//Temporizador
 	void StartTimer(Timer* timer, float lifetime)
 	{
 		if (timer != NULL)
@@ -107,8 +108,15 @@ public:
 		return false;
 	}
 
+	void StopTimer(Timer* timer)
+	{
+		if (timer != NULL)
+			timer->Lifetime = 0;
+	}
+
 	Timer attackTimer = { 0 };
 	float attackLife = 0.5f; // Duration of the attack animation
+
 private:
 
 	bool IsLookingRight() const;
@@ -146,8 +154,6 @@ private:
 	bool IsInFirstHalfTile() const;
 	bool IsInSecondHalfTile() const;
 
-
-	bool attackAnimationComplete = false;
 
 	State state;
 	Look look;
