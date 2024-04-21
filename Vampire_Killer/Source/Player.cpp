@@ -431,10 +431,12 @@ void Player::LogicClimbing()
 		CheckPosY();
 		if (IsLookingRight())
 		{
-			pos.x += PLAYER_LADDER_SPEED;
+			look = Look::LEFT;
+			pos.x -= PLAYER_LADDER_SPEED;
 		}
 		else if (IsLookingLeft())
 		{
+			look = Look::RIGHT;
 			pos.x -= PLAYER_LADDER_SPEED;
 		}
 		sprite->PrevFrame();
