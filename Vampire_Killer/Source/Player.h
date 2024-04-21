@@ -36,7 +36,7 @@
 
 
 //Logic states
-enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING, DEAD, CLIMBING };
+enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING, DEAD };
 enum class Look { RIGHT, LEFT };
 
 typedef struct //Temporizador
@@ -73,14 +73,8 @@ public:
 	void InitScore();
 	void IncrScore(int n);
 	int GetScore();
-
 	int GetLives();
-
 	void GetDamage();
-
-	int GetPlayerPosX();
-	int GetPlayerPosY();
-	void CheckPosY();
 
 	void Update();
 	void DrawDebug(const Color& col) const;
@@ -125,6 +119,9 @@ public:
 	Timer attackTimer = { 0 };
 	float attackLife = 0.5f; // Duration of the attack animation
 
+	int GetPlayerPosX();
+	int GetPlayerPosY();
+
 private:
 
 	Sound soundArray[10];
@@ -164,7 +161,6 @@ private:
 	bool IsInFirstHalfTile() const;
 	bool IsInSecondHalfTile() const;
 
-
 	State state;
 	Look look;
 	int jump_delay;
@@ -172,6 +168,7 @@ private:
 	TileMap* map;
 
 	int score;
+
 	int lives = 50;
 
 };

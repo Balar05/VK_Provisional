@@ -77,10 +77,10 @@ AppStatus Player::Initialise()
 	sprite->SetAnimationDelay((int)PlayerAnim::ATTACKING_RIGHT, ANIM_DELAY);
 	for (i = 0; i < 3; ++i)
 		sprite->AddKeyFrame((int)PlayerAnim::ATTACKING_RIGHT, { (float)i * (2 * n), 4 * n, 2 * n, n });
-	
+
 	sprite->SetAnimationDelay((int)PlayerAnim::ATTACKING_LEFT, ANIM_DELAY);
 	for (i = 0; i < 3; ++i)
-		sprite->AddKeyFrame((int)PlayerAnim::ATTACKING_LEFT, { (float)i * (2 * n), 4 * n, -2 * n+32, n });
+		sprite->AddKeyFrame((int)PlayerAnim::ATTACKING_LEFT, { (float)i * (2 * n), 4 * n, -2 * n + 32, n });
 
 	sprite->SetAnimationDelay((int)PlayerAnim::DEAD_RIGHT, ANIM_DELAY);
 	for (i = 8; i < 10; ++i)
@@ -212,18 +212,19 @@ void Player::StopSneaking()
 
 
 void Player::StartAttacking() {
-    // Establecer el estado a ATTACKING solo si no está actualmente atacando
-    {
-        state = State::ATTACKING;
+	// Establecer el estado a ATTACKING solo si no está actualmente atacando
+	{
+		state = State::ATTACKING;
 		PlaySound(soundArray[0]);
-        // Establecer la animación de ataque según la dirección del jugador
-        if (IsLookingRight()) {
-            SetAnimation((int)PlayerAnim::ATTACKING_RIGHT);
-        } else {
-            SetAnimation((int)PlayerAnim::ATTACKING_LEFT);
-        }
+		// Establecer la animación de ataque según la dirección del jugador
+		if (IsLookingRight()) {
+			SetAnimation((int)PlayerAnim::ATTACKING_RIGHT);
+		}
+		else {
+			SetAnimation((int)PlayerAnim::ATTACKING_LEFT);
+		}
 		StartTimer(&attackTimer, attackLife);
-    }
+	}
 }
 
 
@@ -290,7 +291,7 @@ void Player::MoveX()
 		return; // Detener la función aquí
 	}
 
-	if (IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT) && state != State::SNEAKING )
+	if (IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT) && state != State::SNEAKING)
 	{
 		pos.x += -PLAYER_SPEED_X;
 		if (state == State::IDLE) StartWalkingLeft();
@@ -305,10 +306,10 @@ void Player::MoveX()
 			pos.x = prev_x;
 			if (state == State::WALKING) Stop();
 		}
-		
+
 
 	}
-	else if (IsKeyDown(KEY_RIGHT) && state != State::SNEAKING )
+	else if (IsKeyDown(KEY_RIGHT) && state != State::SNEAKING)
 	{
 		pos.x += PLAYER_SPEED_X;
 		if (state == State::IDLE) StartWalkingRight();
@@ -338,7 +339,7 @@ void Player::MoveY()
 		return; // Detener la función aquí
 	}
 
-	if (state == State::JUMPING )
+	if (state == State::JUMPING)
 	{
 		LogicJumping();
 	}
@@ -472,19 +473,21 @@ void Player::Release()
 
 	render->Release();
 }
+
 int Player::GetLives()
 {
-	return lives;
+	return this->lives;
 }
 
 void Player::GetDamage()
 {
 	this->lives -= 10;
-	if (lives <= 10)
+	if (lives <= 0)
 	{
 		state = State::DEAD;
 	}
 }
+
 int Player::GetPlayerPosX()
 {
 	return pos.x;
@@ -493,15 +496,4 @@ int Player::GetPlayerPosX()
 int Player::GetPlayerPosY()
 {
 	return pos.y;
-}
-void Player::CheckPosY()
-{
-	if (pos.y > WINDOW_HEIGHT - TILE_SIZE * 3 - 5)
-	{
-		pos.y = (WINDOW_HEIGHT - TILE_SIZE * 3 - 5);
-	}
-	else if (pos.y < WINDOW_HEIGHT - LEVEL_HEIGHT * TILE_SIZE - TILE_SIZE)
-	{
-		pos.y = WINDOW_HEIGHT - LEVEL_HEIGHT * TILE_SIZE - TILE_SIZE;
-	}
 }
