@@ -15,8 +15,6 @@ Scene::Scene() : currentStage(1)
 	camera.zoom = 1.0f;						//Default zoom
 
 	debug = DebugMode::OFF;
-
-	//background = LoadTexture("images/Sprites/256x176 Levels.png");
 }
 Scene::~Scene()
 {
@@ -47,7 +45,7 @@ Scene::~Scene()
 AppStatus Scene::Init()
 {
 	//Create player
-	player = new Player({ 0, TILE_SIZE*10 }, State::IDLE, Look::RIGHT);
+	player = new Player({ 0, LEVEL_HEIGHT * TILE_SIZE - TILE_SIZE }, State::IDLE, Look::RIGHT);
 	if (player == nullptr)
 	{
 		LOG("Failed to allocate memory for Player");
@@ -67,7 +65,7 @@ AppStatus Scene::Init()
 		LOG("Failed to allocate memory for Level");
 		return AppStatus::ERROR;
 	}
-	
+
 	//Create background
 	background = new LevelBackground();
 	if (background == nullptr)
@@ -81,7 +79,7 @@ AppStatus Scene::Init()
 		LOG("Failed to initialise Level");
 		return AppStatus::ERROR;
 	}
-	
+
 	//Load level
 	if (LoadLevel(1) != AppStatus::OK)
 	{
@@ -110,35 +108,36 @@ AppStatus Scene::LoadLevel(int stage)
 	{
 		currentStage = 1;
 		map = new int[size] {
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-			-1, -1, -1, -1, -1/*fire*/, -1, -1, -1, -1, -1, -1, -1/*fire*/, -1, -1, -1, -1,
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
+
 		};
-		player->InitScore();
+		//player->InitScore();
 	}
 	else if (stage == 2)
 	{
 		currentStage = 2;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0/*fire*/, 0, 0, 0, 0, 0, 0, 0/*fire*/, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 		};
 	}
 	else if (stage == 3)
@@ -146,16 +145,16 @@ AppStatus Scene::LoadLevel(int stage)
 		currentStage = 3;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0/*fire*/, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 		};
 	}
 	else if (stage == 4)
@@ -171,7 +170,58 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0/*candle*/, 0, 0, 0, 0/*candle */, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+		};
+	}
+	else if (stage == 5)
+	{
+		currentStage = 5;
+		map = new int[size] {
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 3, 1, 2, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 10, 3, 1, 2, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 7, 0, 0/*candle*/, 0, 0, 0, 0/*candle */, 0, 0, 0, 0,
+				0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+		};
+	}
+	else if (stage == 6)
+	{
+		currentStage = 6;
+		map = new int[size] {
+			0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 3, 6, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0,
+				0, 0, 1, 2, 1, 2, 7, 3, 1, 2, 1, 2, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+		};
+	}
+	else if (stage == 7)
+	{
+		currentStage = 7;
+		map = new int[size] {
+			-1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 3,
+				0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0,
+				1, 2, 1, 2, 3, 6, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 7, 0, 0, 0, 0,
+				0, 0, 0, 0, 1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 1, 2, 1, 2, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
 	}
@@ -200,22 +250,22 @@ AppStatus Scene::LoadLevel(int stage)
 				player->SetPos(pos);
 				map[i] = 0;
 			}
-			/*else if (tile == Tile::ITEM_APPLE)
+			else if (tile == Tile::GOLDEN_KEY)
 			{
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
-				obj = new Object(pos, ObjectType::APPLE);
+				obj = new Object(pos, ObjectType::GOLDEN_KEY);
 				objects.push_back(obj);
 				map[i] = 0;
 			}
-			else if (tile == Tile::ITEM_CHILI)
+			else if (tile == Tile::SILVER_KEY)
 			{
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
-				obj = new Object(pos, ObjectType::CHILI);
+				obj = new Object(pos, ObjectType::SILVER_KEY);
 				objects.push_back(obj);
 				map[i] = 0;
-			}*/
+			}
 			++i;
 		}
 	}
@@ -236,42 +286,25 @@ void Scene::Update()
 		debug = (DebugMode)(((int)debug + 1) % (int)DebugMode::SIZE);
 	}
 	//Debug levels instantly
-	if (IsKeyPressed(KEY_ONE))		LoadLevel(1);
-	else if (IsKeyPressed(KEY_TWO))	LoadLevel(2);
+	if (IsKeyPressed(KEY_ONE))			LoadLevel(1);
+	else if (IsKeyPressed(KEY_TWO))		LoadLevel(2);
 	else if (IsKeyPressed(KEY_THREE))	LoadLevel(3);
 	else if (IsKeyPressed(KEY_FOUR))	LoadLevel(4);
-	
+	else if (IsKeyPressed(KEY_FIVE))	LoadLevel(5);
+	else if (IsKeyPressed(KEY_SIX))		LoadLevel(6);
+	else if (IsKeyPressed(KEY_SEVEN))	LoadLevel(7);
+	else if (IsKeyPressed(KEY_D))		player->GetDamage();
+
 	level->Update();
 	player->Update();
+
+	UpdateBackground(currentStage);
+
 	CheckCollisions();
 }
 void Scene::Render()
 {
 	BeginMode2D(camera);
-
-	//LevelBackground();
-	//LevelBackground::RenderBackground(currentStage);
-
-	/*Rectangle source;
-	float width = LEVEL_WIDTH * TILE_SIZE;
-	float height = LEVEL_HEIGHT * TILE_SIZE;
-	switch (currentStage)
-	{
-		case 1:
-			source = { 0 * width, 0 * height, width, height }; break;
-		case 2:
-			source = { 1 * width, 0 * height, width, height }; break;
-		case 3:
-			source = { 2 * width, 0 * height, width, height }; break;
-		case 4:
-			source = { 0 * width, 1 * height, width, height }; break;
-	}
-	DrawTextureRec(background, source, { 0, 16 }, WHITE);*/ //Afegim 16 al vector de posició per baixar el background una tile.
-	//if (currentStage >= 1 && currentStage <= 4)
-	//{
-	//	Rectangle source = { (currentStage - 1) * LEVEL_WIDTH * TILE_SIZE, 0, LEVEL_WIDTH * TILE_SIZE, LEVEL_HEIGHT * TILE_SIZE };
-	//	DrawTextureRec(background, source, { 0, 16 }, WHITE); //Afegim 16 al vector de posició per baixar el background una tile.
-	//}
 
 	background->RenderBackground(currentStage);
 	level->Render();
@@ -308,7 +341,7 @@ void Scene::CheckCollisions()
 		obj_box = (*it)->GetHitbox();
 		if (player_box.TestAABB(obj_box))
 		{
-			player->IncrScore((*it)->Points());
+			//player->IncrScore((*it)->Points());
 
 			//Delete the object
 			delete* it;
@@ -347,5 +380,105 @@ void Scene::RenderObjectsDebug(const Color& col) const
 void Scene::RenderGUI() const
 {
 	//Temporal approach
-	//DrawText(TextFormat("SCORE : %d", player->GetScore()), 10, 10, 8, LIGHTGRAY);
+	DrawText(TextFormat("LIVES : %d", player->GetLives()), 10, 10, 8, WHITE);
+}
+
+void Scene::UpdateBackground(int s)
+{
+	int x = player->GetPlayerPosX();
+	int y = player->GetPlayerPosY();
+	switch (currentStage)
+	{
+	case 1:
+		if (x < 0)
+		{
+			player->SetPos({ 0,y });
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(2);
+			break;
+		}
+	case 2:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(1);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(3);
+			LoadLevel(3);
+			break;
+		}
+	case 3:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(2);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(4);
+			break;
+		}
+	case 4:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(6);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(5);
+			break;
+		}
+	case 5:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(4);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(7);
+			break;
+		}
+	case 6:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(7);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(4);
+			break;
+		}
+	case 7:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(5);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(6);
+			break;
+		}
+	}
 }

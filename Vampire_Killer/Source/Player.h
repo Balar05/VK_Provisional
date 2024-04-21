@@ -36,7 +36,7 @@
 
 
 //Logic states
-enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING, DEAD };
+enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING, DEAD, CLIMBING };
 enum class Look { RIGHT, LEFT };
 
 typedef struct //Temporizador
@@ -73,6 +73,14 @@ public:
 	void InitScore();
 	void IncrScore(int n);
 	int GetScore();
+
+	int GetLives();
+
+	void GetDamage();
+
+	int GetPlayerPosX();
+	int GetPlayerPosY();
+	void CheckPosY();
 
 	void Update();
 	void DrawDebug(const Color& col) const;
@@ -164,6 +172,6 @@ private:
 	TileMap* map;
 
 	int score;
+	int lives = 50;
 
 };
-

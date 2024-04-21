@@ -472,6 +472,36 @@ void Player::Release()
 
 	render->Release();
 }
+int Player::GetLives()
+{
+	return lives;
+}
 
+void Player::GetDamage()
+{
+	this->lives -= 10;
+	if (lives <= 10)
+	{
+		state = State::DEAD;
+	}
+}
+int Player::GetPlayerPosX()
+{
+	return pos.x;
+}
 
-
+int Player::GetPlayerPosY()
+{
+	return pos.y;
+}
+void Player::CheckPosY()
+{
+	if (pos.y > WINDOW_HEIGHT - TILE_SIZE * 3 - 5)
+	{
+		pos.y = (WINDOW_HEIGHT - TILE_SIZE * 3 - 5);
+	}
+	else if (pos.y < WINDOW_HEIGHT - LEVEL_HEIGHT * TILE_SIZE - TILE_SIZE)
+	{
+		pos.y = WINDOW_HEIGHT - LEVEL_HEIGHT * TILE_SIZE - TILE_SIZE;
+	}
+}
