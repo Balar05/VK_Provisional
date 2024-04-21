@@ -77,9 +77,10 @@ AppStatus Player::Initialise()
 	sprite->SetAnimationDelay((int)PlayerAnim::ATTACKING_RIGHT, ANIM_DELAY);
 	for (i = 0; i < 3; ++i)
 		sprite->AddKeyFrame((int)PlayerAnim::ATTACKING_RIGHT, { (float)i * (2 * n), 4 * n, 2 * n, n });
+	
 	sprite->SetAnimationDelay((int)PlayerAnim::ATTACKING_LEFT, ANIM_DELAY);
 	for (i = 0; i < 3; ++i)
-		sprite->AddKeyFrame((int)PlayerAnim::ATTACKING_LEFT, { (float)i * (2 * n), 4 * n, -2 * n, n });
+		sprite->AddKeyFrame((int)PlayerAnim::ATTACKING_LEFT, { (float)i * (2 * n), 4 * n, -2 * n+32, n });
 
 	sprite->SetAnimationDelay((int)PlayerAnim::DEAD_RIGHT, ANIM_DELAY);
 	for (i = 8; i < 10; ++i)
