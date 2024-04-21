@@ -51,7 +51,8 @@ AppStatus Game::Initialise(float scale)
     }
 
     musicArray[0] = LoadMusicStream("Audio/Prologue.ogg");
-    musicArray2[0] = LoadMusicStream("Audio/Vampire Killer.ogg");
+    musicArray[1] = LoadMusicStream("Audio/Vampire Killer.ogg");
+    musicArray[2] = LoadMusicStream("Audio/Ending.ogg");
     intro = LoadTexture("images/Sprites/Intro 256x212.png");
     //animation2 = LoadTexture("images/Sprites/intro2.png");
     castle = LoadTexture("images/Sprites/Castle Background 256x212.png");
@@ -60,6 +61,7 @@ AppStatus Game::Initialise(float scale)
     cloudTexture = LoadTexture("images/Sprites/cloud.png");    // Cargar la textura de la nube
     bat_intro = LoadTexture("images/Sprites/batanim.png"); // Cargar la nueva textura
     bat_intro2 = LoadTexture("images/Sprites/batanim.png"); // Cargar la nueva textura
+    creditImage = LoadTexture("images/Sprites/Ending.png");
 
     //Set the target frame rate for the application
     SetTargetFPS(60);
@@ -251,33 +253,70 @@ AppStatus Game::Update()
             break;
         }
     }
-    case GameState::PLAYING:
-    {
-        
-        if (!music2Played && state == GameState::PLAYING) {
-            PlayMusicStream(musicArray2[0]);
+case GameState::PLAYING:
+{
+    // Actualizar el flujo de música si es necesario
+    if (!music2Played && state == GameState::PLAYING) {
+        PlayMusicStream(musicArray[1]);
+    }
+    UpdateMusicStream(musicArray[1]); // Llama a UpdateMusicStream() en cada iteración del bucle
+
+    // Si se presiona la tecla ESC, termina el juego
+    if (IsKeyPressed(KEY_ESCAPE)) {
+        FinishPlay();
+        StopMusicStream(musicArray[1]);
+        music2Played = true;
+
+        // Cambia el estado a MAIN_MENU
+        state = GameState::MAIN_MENU;
+
+        // Reinicia las animaciones
+        ResetAnimations();
+    }
+    // Si se presiona la tecla F4, cambia al estado CREDITS
+    else if (IsKeyPressed(KEY_F4)) {
+        // Cambia el estado a CREDITS
+        state = GameState::CREDITS;
+
+        // Detiene la música actual si es necesario
+        StopMusicStream(musicArray[1]);
+        music2Played = true;
+
+        // No es necesario reiniciar las animaciones
+    }
+    else {
+        // Lógica de juego
+        scene->Update();
+    }
+    break;
+}
+    case GameState::CREDITS:
+        // Actualizar la posición de los créditos
+        creditPositionY -= CREDIT_SCROLL_SPEED;
+        if (!music3Played && state == GameState::CREDITS) {
+            PlayMusicStream(musicArray[2]);
         }
-        UpdateMusicStream(musicArray2[0]); // Llama a UpdateMusicStream() en cada iteración del bucle
+        UpdateMusicStream(musicArray[2]); // Llama a UpdateMusicStream() en cada iteración del bucle
 
         if (IsKeyPressed(KEY_ESCAPE)) {
-            FinishPlay();
-            StopMusicStream(musicArray2[0]);
-            music2Played = true;
-
-            ResetAnimations();
-            // Cambia el estado a INTRO
             state = GameState::MAIN_MENU;
-
-            // Llama a ResetAnimations para reiniciar las animaciones
-           
+            StopMusicStream(musicArray[1]);
+            music3Played = true;
+            ResetCredits();
         }
-        else
-        {
-            //Game logic
-            scene->Update();
+            // Si la imagen de los créditos se ha desplazado completamente fuera de la pantalla
+        if (creditPositionY + creditImage.height < 0) {
+            creditsFinished = true;
+        }
+
+        // Si los créditos han terminado, cambia al estado MAIN_MENU
+        if (creditsFinished) {
+            state = GameState::MAIN_MENU;
+            music3Played = true;
+            ResetCredits();
+
         }
         break;
-    }
     }
     return AppStatus::OK;
 }
@@ -313,6 +352,12 @@ void Game::ResetAnimations()
     bat_introPosition = { WINDOW_WIDTH / 2 + 20, 70 }; // Posición inicial del murciélago
 
     bat_intro2Position = { WINDOW_WIDTH / 2 - 100, 120 }; // Posición inicial del murciélago
+}
+
+void Game::ResetCredits() {
+    music3Played = false;
+    creditsFinished = false;
+    creditPositionY = WINDOW_HEIGHT;
 }
 
 void Game::Render()
@@ -382,6 +427,12 @@ void Game::Render()
     case GameState::PLAYING:
         scene->Render();
         break;
+     
+
+    case GameState::CREDITS:
+            // Dibujar la imagen de los créditos en su posición actual
+            DrawTexture(creditImage, 0, creditPositionY, WHITE);
+            break;
     }
 
     EndTextureMode();
@@ -395,14 +446,15 @@ void Game::Render()
 void Game::Cleanup()
 {
     // Unload resources
-    UnloadMusicStream(musicArray2[0]);
     UnloadMusicStream(musicArray[0]);
+    UnloadMusicStream(musicArray[1]);
     UnloadTexture(background);
     UnloadTexture(intro);
     UnloadTexture(characterFront); // Descargar la textura frontal del personaje
     UnloadTexture(characterBack);  // Descargar la textura de espaldas del personaje
     UnloadTexture(cloudTexture);    // Descargar la textura de la nube
     UnloadTexture(bat_intro); // Descargar la nueva textura
+    UnloadTexture(creditImage);
     CloseAudioDevice();
     UnloadResources();
     CloseWindow();

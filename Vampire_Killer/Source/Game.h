@@ -15,6 +15,7 @@ public:
     void Render();
     void Cleanup();
     void ResetAnimations();
+    void ResetCredits();
 
     const int totalFramesIntro = 3;
     const int totalFramesAnimation2 = 3;
@@ -36,10 +37,14 @@ public:
     bool animation2Played = false;
     bool music1Played = false;
     bool music2Played = false;
+    bool music3Played = false;
     bool characterFrontFacing = true; // Variable para controlar si el personaje está de frente o de espaldas
     bool characterStopped = false;    // Variable para controlar si el personaje ha detenido su animación de caminar
     bool animationbatPlayed = false;
     bool animationbat2Played = false;
+    bool creditsFinished = false;
+
+    float creditPositionY = WINDOW_HEIGHT;
     // Posición del personaje
     Vector2 characterPosition = { WINDOW_WIDTH - 30, 95 }; // Inicialmente fuera de la pantalla
 
@@ -67,7 +72,7 @@ private:
     Rectangle src, dst;
 
 
-    Music musicArray2[10];
+    Sound soundArray[10];
     Music musicArray[10];
 
     Texture2D background;
@@ -79,5 +84,8 @@ private:
     Texture2D cloudTexture;   // Textura para la animación de la nube
     Texture2D bat_intro; // Nueva textura para la segunda animación
     Texture2D bat_intro2; // Nueva textura para la segunda animación
+    Texture2D creditImage;
+
+    // Posiciones Y de las imágenes de los créditos
 
 };
