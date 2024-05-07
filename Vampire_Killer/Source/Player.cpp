@@ -331,40 +331,6 @@ void Player::MoveX()
 	}
 }
 
-void Player::MoveY()
-{
-	AABB box;
-
-	if (state == State::ATTACKING) {
-		return; 
-	}
-
-	if (state == State::JUMPING)
-	{
-		LogicJumping();
-	}
-
-	else //idle, walking, falling
-	{
-		pos.y += PLAYER_SPEED_Y;
-		box = GetHitbox();
-		if (map->TestCollisionGround(box, &pos.y))
-		{
-			if (state == State::FALLING) Stop();
-
-
-			else if (IsKeyPressed(KEY_UP))
-			{
-				StartJumping();
-			}
-		}
-		else
-		{
-			if (state != State::FALLING) StartFalling_NJ();
-		}
-	}
-}
-
 void Player::MoveY_SNEAK()
 {
 	if (state == State::ATTACKING) {
@@ -496,3 +462,311 @@ int Player::GetPlayerPosY()
 {
 	return pos.y;
 }
+
+//bool Player::IsInFirstHalfTile() const
+//{
+//	return pos.y % TILE_SIZE < TILE_SIZE / 2;
+//}
+//bool Player::IsInSecondHalfTile() const
+//{
+//	return pos.y % TILE_SIZE >= TILE_SIZE / 2;
+//}
+
+void Player::StartClimbingRight()
+{
+	state = State::CLIMBING;
+	SetAnimation((int)PlayerAnim::CLIMBING_RIGHT);
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
+	sprite->SetManualMode();
+}
+
+void Player::StartClimbingLeft()
+{
+	state = State::CLIMBING;
+	SetAnimation((int)PlayerAnim::CLIMBING_LEFT);
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
+	sprite->SetManualMode();
+}
+
+void Player::StartClimbingDownRight()
+{
+	state = State::CLIMBING;
+	SetAnimation((int)PlayerAnim::CLIMBING_DOWN_RIGHT);
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
+	sprite->SetManualMode();
+}
+
+void Player::StartClimbingDownLeft()
+{
+	state = State::CLIMBING;
+	SetAnimation((int)PlayerAnim::CLIMBING_DOWN_LEFT);
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
+	sprite->SetManualMode();
+}
+
+//void Player::MoveY()
+//{
+//	AABB box;
+//
+//	CheckPosY();
+//
+//	if (state == State::ATTACKING)
+//	{
+//		return;
+//	}
+//
+//	if (state == State::JUMPING)
+//	{
+//		LogicJumping();
+//	}
+//	else if (state == State::CLIMBING)
+//	{
+//		LogicClimbing();
+//	}
+//	else //idle, walking, falling
+//	{
+//		pos.y += PLAYER_SPEED_Y;
+//		box = GetHitbox();
+//		if (map->TestCollisionGround(box, &pos.y))
+//		{
+//			if (state == State::FALLING) Stop();
+//
+//			if (IsKeyDown(KEY_UP))
+//			{
+//				box = GetHitbox();
+//				if (map->TestOnLadder(box, &pos.x) && IsLookingRight())
+//					StartClimbingRight();
+//				else if (map->TestOnLadder(box, &pos.x) && IsLookingLeft())
+//					StartClimbingLeft();
+//			}
+//			else if (IsKeyDown(KEY_DOWN))
+//			{
+//				box = GetHitbox();
+//				if (map->TestOnLadder(box, &pos.x) and IsLookingRight())
+//					StartClimbingDownRight();
+//				else if (map->TestOnLadder(box, &pos.x) and IsLookingLeft())
+//					StartClimbingDownLeft();
+//			}
+//			if (IsKeyPressed(KEY_UP))
+//			{
+//				StartJumping();
+//			}
+//		}
+//		else
+//		{
+//			if (state != State::FALLING) StartFalling();
+//		}
+//	}
+//	CheckPosY();
+//}
+
+void Player::MoveY()
+{
+	AABB box;
+
+	if (state == State::ATTACKING) {
+		return;
+	}
+
+	if (state == State::JUMPING)
+	{
+		LogicJumping();
+	}
+
+	else if (state == State::CLIMBING)
+	{
+		LogicClimbing();
+	}
+
+	else //idle, walking, falling
+	{
+		// Comprovar si el jugador està a sobre d'una escala
+		if (map->TestOnLadder(box, &pos.x))
+		{
+			// Si el jugador prem la tecla de pujar o baixar, moure'l segons la direcció
+			if (IsKeyDown(KEY_UP))
+			{
+				pos.y -= PLAYER_LADDER_SPEED;
+
+				if (IsLookingRight())
+				{
+					SetAnimation((int)PlayerAnim::CLIMBING_RIGHT);
+					StartClimbingRight();
+				}
+				else if (IsLookingLeft())
+				{
+					SetAnimation((int)PlayerAnim::CLIMBING_LEFT);
+					StartClimbingLeft();
+				}
+				
+			}
+			else if (IsKeyDown(KEY_DOWN))
+			{
+				pos.y += PLAYER_LADDER_SPEED;
+
+				if (IsLookingRight())
+				{
+					SetAnimation((int)PlayerAnim::CLIMBING_DOWN_RIGHT);
+					StartClimbingRight();
+				}
+				else if (IsLookingLeft())
+				{
+					SetAnimation((int)PlayerAnim::CLIMBING_DOWN_LEFT);
+					StartClimbingLeft();
+				}
+			}
+			else
+			{
+				// Si no es prem cap tecla, mantenir el jugador en estat d'escales
+				SetAnimation((int)PlayerAnim::CLIMBING);
+			}
+		}
+		else
+		{
+			// Si el jugador no està a sobre d'una escala, continuar amb el comportament normal de moviment
+			pos.y += PLAYER_SPEED_Y;
+			box = GetHitbox();
+			if (map->TestCollisionGround(box, &pos.y))
+			{
+				if (state == State::FALLING) Stop();
+				else if (IsKeyPressed(KEY_UP))
+				{
+					StartJumping();
+				}
+			}
+			else
+			{
+				if (state != State::FALLING) StartFalling_NJ();
+			}
+		}
+	}
+}
+
+void Player::LogicClimbing()
+{
+	AABB box;
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
+	int tmp;
+
+	if (IsKeyDown(KEY_UP))
+	{
+		pos.y -= PLAYER_LADDER_SPEED;
+		CheckPosY();
+		if (IsLookingRight())
+		{
+			pos.x += PLAYER_LADDER_SPEED;
+		}
+		else if (IsLookingLeft())
+		{
+			pos.x -= PLAYER_LADDER_SPEED;
+		}
+		sprite->NextFrame();
+	}
+	else if (IsKeyDown(KEY_DOWN))
+	{
+		pos.y += PLAYER_LADDER_SPEED;
+		CheckPosY();
+		if (IsLookingRight())
+		{
+			look = Look::LEFT;
+			pos.x -= PLAYER_LADDER_SPEED;
+		}
+		else if (IsLookingLeft())
+		{
+			look = Look::RIGHT;
+			pos.x -= PLAYER_LADDER_SPEED;
+		}
+		sprite->PrevFrame();
+	}
+
+	//It is important to first check LadderTop due to its condition as a collision ground.
+	//By doing so, we ensure that we don't stop climbing down immediately after starting the descent.
+
+	box = GetHitbox();
+	if (map->TestOnLadderTop(box, &tmp))
+	{
+		if (IsLookingRight())
+		{
+			if (IsInFirstHalfTile())	SetAnimation((int)PlayerAnim::CLIMBING_RIGHT);
+		}
+		else if (IsLookingLeft())
+		{
+			if (IsInSecondHalfTile())	SetAnimation((int)PlayerAnim::CLIMBING_LEFT);
+		}
+
+		else	LOG("Internal error, tile should be a LADDER_TOP, coord: (%d,%d)", box.pos.x, box.pos.y);
+	}
+
+	else if (map->TestCollisionGround(box, &pos.y))
+	{
+		//Case leaving the ladder descending.
+		Stop();
+		sprite->SetAutomaticMode();
+	}
+	else if (!map->TestOnLadder(box, &tmp))
+	{
+		//Case leaving the ladder ascending.
+		//If we are not in a LadderTop, colliding ground or in the Ladder it means we are leaving
+		//ther ladder ascending.
+		Stop();
+		sprite->SetAutomaticMode();
+	}
+	/*else
+	{
+		if (GetAnimation() != PlayerAnim::CLIMBING_RIGHT)	SetAnimation((int)PlayerAnim::CLIMBING_RIGHT);
+		else if (GetAnimation() != PlayerAnim::CLIMBING_LEFT)	SetAnimation((int)PlayerAnim::CLIMBING_LEFT);
+	}*/
+}
+
+
+//void Player::MoveY()
+//{
+//	AABB box;
+//
+//	if (state == State::ATTACKING) {
+//		return; 
+//	}
+//
+//	if (state == State::JUMPING)
+//	{
+//		LogicJumping();
+//	}
+//
+//	else if (state == State::CLIMBING)
+//	{
+//		LogicClimbing();
+//	}
+//
+//	else //idle, walking, falling
+//	{
+//		pos.y += PLAYER_SPEED_Y;
+//		box = GetHitbox();
+//		if (map->TestCollisionGround(box, &pos.y))
+//		{
+//			if (state == State::FALLING) Stop();
+//
+//
+//			else if (IsKeyPressed(KEY_UP))
+//			{
+//				StartJumping();
+//			}
+//		}
+//		else
+//		{
+//			if (state != State::FALLING) StartFalling_NJ();
+//		}
+//	}
+//}
+
+void Player::CheckPosY()
+{
+	if (pos.y > WINDOW_HEIGHT - TILE_SIZE * 3 - 5)
+	{
+		pos.y = (WINDOW_HEIGHT - TILE_SIZE * 3 - 5);
+	}
+	else if (pos.y < WINDOW_HEIGHT - LEVEL_HEIGHT * TILE_SIZE - TILE_SIZE)
+	{
+		pos.y = WINDOW_HEIGHT - LEVEL_HEIGHT * TILE_SIZE - TILE_SIZE;
+	}
+}
+

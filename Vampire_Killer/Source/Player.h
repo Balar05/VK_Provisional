@@ -36,7 +36,7 @@
 
 
 //Logic states
-enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING, DEAD };
+enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING, DEAD, CLIMBING };
 enum class Look { RIGHT, LEFT };
 
 typedef struct //Temporizador
@@ -55,7 +55,10 @@ enum class PlayerAnim {
 	SNEAKING_LEFT, SNEAKING_RIGHT,
 	ATTACKING_LEFT, ATTACKING_RIGHT,
 	DEAD_LEFT, DEAD_RIGHT,
-	CLIMBING, CLIMBING_PRE_TOP, CLIMBING_TOP,
+	CLIMBING,
+	CLIMBING_LEFT, CLIMBING_RIGHT,
+	CLIMBING_DOWN_LEFT, CLIMBING_DOWN_RIGHT,
+	CLIMBING_PRE_TOP, CLIMBING_TOP,
 	SHOCK_LEFT, SHOCK_RIGHT,
 	TELEPORT_LEFT, TELEPORT_RIGHT,
 	NUM_ANIMATIONS
@@ -122,6 +125,8 @@ public:
 	int GetPlayerPosX();
 	int GetPlayerPosY();
 
+	void CheckPosY();
+
 private:
 
 	Sound soundArray[10];
@@ -134,6 +139,7 @@ private:
 	void MoveY();
 	void MoveY_SNEAK();
 	void LogicJumping();
+	void LogicClimbing();
 	void Attack();
 
 	//Animation management
@@ -151,6 +157,10 @@ private:
 	void StopAttacking();
 	void ChangeAnimRight();
 	void ChangeAnimLeft();
+	void StartClimbingLeft();
+	void StartClimbingRight();
+	void StartClimbingDownRight();
+	void StartClimbingDownLeft();
 
 	//Jump steps
 	bool IsAscending() const;
