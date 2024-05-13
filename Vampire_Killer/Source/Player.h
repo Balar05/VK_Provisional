@@ -36,7 +36,7 @@
 
 
 //Logic states
-enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING, CLIMBING, DEAD };
+enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING, DEAD };
 enum class Look { RIGHT, LEFT };
 
 typedef struct //Temporizador
@@ -55,8 +55,7 @@ enum class PlayerAnim {
 	SNEAKING_LEFT, SNEAKING_RIGHT,
 	ATTACKING_LEFT, ATTACKING_RIGHT,
 	DEAD_LEFT, DEAD_RIGHT,
-	CLIMBING_RIGHT, CLIMBING_LEFT, CLIMBING_PRE_TOP, CLIMBING_TOP,
-	CLIMBING_DOWN_RIGHT, CLIMBING_DOWN_LEFT,
+	CLIMBING, CLIMBING_PRE_TOP, CLIMBING_TOP,
 	SHOCK_LEFT, SHOCK_RIGHT,
 	TELEPORT_LEFT, TELEPORT_RIGHT,
 	NUM_ANIMATIONS
@@ -122,7 +121,7 @@ public:
 
 	int GetPlayerPosX();
 	int GetPlayerPosY();
-	void CheckPosY(); //new
+	//void CheckPosY(); //new
 
 private:
 
@@ -137,7 +136,7 @@ private:
 	void MoveY_SNEAK();
 	void LogicJumping();
 	void Attack();
-	void LogicClimbing(); //new
+	//void LogicClimbing(); //new
 
 	//Animation management
 	void SetAnimation(int id);
@@ -148,10 +147,10 @@ private:
 	void StartFalling();
 	void StartFalling_NJ();
 	void StartJumping();
-	void StartClimbingRight(); //new
-	void StartClimbingLeft();  //new
-	void StartClimbingDownRight(); //new
-	void StartClimbingDownLeft(); //new
+	//void StartClimbingRight(); //new
+	//void StartClimbingLeft();  //new
+	//void StartClimbingDownRight(); //new
+	//void StartClimbingDownLeft(); //new
 	void StartSneaking();
 	void StopSneaking();
 	void StartAttacking();
