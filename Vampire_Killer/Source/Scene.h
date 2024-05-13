@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "TileMap.h"
 #include "Object.h"
+#include "EnemyManager.h"
 #include "LevelBackground.h"
 
 enum class DebugMode { OFF, SPRITES_AND_HITBOXES, ONLY_HITBOXES, SIZE };
@@ -35,6 +36,8 @@ private:
     LevelBackground* background;
 
     std::vector<Object*> objects;
+
+    EnemyManager* enemies;
 
     Camera2D camera;
     DebugMode debug;

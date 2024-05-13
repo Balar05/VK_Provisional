@@ -34,10 +34,9 @@
 //Gravity affects jumping velocity when jump_delay is 0
 #define GRAVITY_FORCE			1
 
-
 //Logic states
 enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING, DEAD };
-enum class Look { RIGHT, LEFT };
+
 
 typedef struct //Temporizador
 {

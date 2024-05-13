@@ -2,12 +2,14 @@
 #include <stdio.h>
 #include "Globals.h"
 #include "LevelBackground.h"
+#include "Enemy.h"
 
 Scene::Scene() : currentStage(1)
 {
 	player = nullptr;
 	level = nullptr;
 	background = nullptr;
+	enemies = nullptr;
 
 	camera.target = { 0, 0 };				//Center of the screen
 	camera.offset = { 0, MARGIN_GUI_Y };	//Offset from the target (center of the screen)
@@ -99,6 +101,7 @@ AppStatus Scene::LoadLevel(int stage)
 	Point pos;
 	int* map = nullptr;
 	Object* obj;
+	AABB hitbox, area;
 
 	ClearLevel();
 
@@ -265,6 +268,18 @@ AppStatus Scene::LoadLevel(int stage)
 				obj = new Object(pos, ObjectType::SILVER_KEY);
 				objects.push_back(obj);
 				map[i] = 0;
+			}
+
+			else if (tile == Tile::SLIME)
+			{
+				pos.x += (SLIME_FRAME_SIZE - SLIME_PHYSICAL_WIDTH) / 2;
+				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::SLIME);
+				area = level->GetSweptAreaX(hitbox);
+				enemies->Add(pos, EnemyType::SLIME, area);
+			}
+			else
+			{
+				LOG("Internal error loading scene: invalid entity or object tile id")
 			}
 			++i;
 		}
@@ -482,3 +497,4 @@ void Scene::UpdateBackground(int s)
 		}
 	}
 }
+

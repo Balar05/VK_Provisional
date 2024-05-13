@@ -16,6 +16,9 @@
     <Filter Include="Render">
       <UniqueIdentifier>{8fce914c-5337-4771-916f-af8bfb057245}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entities\Enemies">
+      <UniqueIdentifier>{b3581d40-cd5b-4240-8a5f-4e94f9d05bcd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Globals.cpp">
@@ -59,6 +62,15 @@
     </ClCompile>
     <ClCompile Include="Source\LevelBackground.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Enemy.cpp">
+      <Filter>Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Zombie.cpp">
+      <Filter>Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EnemyManager.cpp">
+      <Filter>Entities\Enemies</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +118,15 @@
     </ClInclude>
     <ClInclude Include="Source\LevelBackground.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Enemy.h">
+      <Filter>Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Zombie.h">
+      <Filter>Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EnemyManager.h">
+      <Filter>Entities\Enemies</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

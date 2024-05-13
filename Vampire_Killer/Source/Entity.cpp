@@ -17,6 +17,14 @@ Entity::~Entity()
 		render = nullptr;
 	}
 }
+void Entity::SetAlive(bool b)
+{
+	alive = b;
+}
+bool Entity::IsAlive() const
+{
+	return alive;
+}
 void Entity::SetPos(const Point& p)
 {
 	pos = p;

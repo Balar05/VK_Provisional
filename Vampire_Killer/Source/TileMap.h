@@ -35,6 +35,7 @@ enum class Tile {
 
 	// id >= 100: entities' initial locations
 	PLAYER = 100,
+	SLIME = 200,
 
 	STATIC_FIRST = BLOCK_LEFT,
 	STATIC_LAST = CHEST,
@@ -82,7 +83,7 @@ public:
 	Tile GetTileIndex(int x, int y) const;
 	bool IsTileLadder(Tile tile) const;
 	bool TestOnLadderTop(const AABB& box, int* px) const;
-
+	AABB GetSweptAreaX(const AABB& hitboxbox) const;
 
 private:
 	void InitTileDictionary();
@@ -93,6 +94,7 @@ private:
 	//int GetLadderCenterPos(int pixel_x, int pixel_y) const;
 	bool IsTileLadderTop(Tile tile) const;
 
+	
 
 	//Tile map
 	Tile* map;
