@@ -89,9 +89,20 @@ AppStatus Player::Initialise()
 	for (i = 8; i < 10; ++i)
 		sprite->AddKeyFrame((int)PlayerAnim::DEAD_LEFT, { (float)i * n, 0 * n, -n, n });
 
-	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING, ANIM_LADDER_DELAY);
-	for (i = 0; i < 4; ++i)
-		sprite->AddKeyFrame((int)PlayerAnim::CLIMBING, { (float)i * n, 6 * n, n, n });
+	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING_RIGHT, ANIM_LADDER_DELAY);
+	for (i = 0; i < 2; ++i)
+		sprite->AddKeyFrame((int)PlayerAnim::CLIMBING_RIGHT, { (float)i * n, 1 * n, n, n });
+	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING_LEFT, ANIM_LADDER_DELAY);
+	for (i = 0; i < 2; ++i)
+		sprite->AddKeyFrame((int)PlayerAnim::CLIMBING_LEFT, { (float)i * n, 1 * n, -n, n });
+
+	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING_DOWN_RIGHT, ANIM_LADDER_DELAY);
+	for (i = 2; i < 4; ++i)
+		sprite->AddKeyFrame((int)PlayerAnim::CLIMBING_DOWN_RIGHT, { (float)i * n, 1 * n, n, n });
+	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING_DOWN_LEFT, ANIM_LADDER_DELAY);
+	for (i = 2; i < 4; ++i)
+		sprite->AddKeyFrame((int)PlayerAnim::CLIMBING_DOWN_LEFT, { (float)i * n, 1 * n, -n, n });
+
 	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING_PRE_TOP, ANIM_DELAY);
 	sprite->AddKeyFrame((int)PlayerAnim::CLIMBING_PRE_TOP, { 4 * n, 6 * n, n, n });
 	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING_TOP, ANIM_DELAY);
@@ -100,6 +111,17 @@ AppStatus Player::Initialise()
 	sprite->SetAnimation((int)PlayerAnim::IDLE_RIGHT);
 
 	return AppStatus::OK;
+}
+void Player::CheckPosY()
+{
+	if (pos.y > WINDOW_HEIGHT - TILE_SIZE * 3 - 5)
+	{
+		pos.y = (WINDOW_HEIGHT - TILE_SIZE * 3 - 5);
+	}
+	else if (pos.y < WINDOW_HEIGHT - LEVEL_HEIGHT * TILE_SIZE - TILE_SIZE)
+	{
+		pos.y = WINDOW_HEIGHT - LEVEL_HEIGHT * TILE_SIZE - TILE_SIZE;
+	}
 }
 void Player::InitScore()
 {
