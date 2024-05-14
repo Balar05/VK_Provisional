@@ -3,8 +3,8 @@
 #include "Player.h"
 #include "TileMap.h"
 #include "Object.h"
-#include "EnemyManager.h"
 #include "LevelBackground.h"
+#include "EnemyManager.h"
 
 enum class DebugMode { OFF, SPRITES_AND_HITBOXES, ONLY_HITBOXES, SIZE };
 
@@ -28,7 +28,7 @@ private:
     void RenderObjects() const;
     void RenderObjectsDebug(const Color& col) const;
 
-    void RenderGUI() const;
+    //void RenderGUI() const;
 
     Player* player;
     TileMap* level;
@@ -37,11 +37,9 @@ private:
 
     std::vector<Object*> objects;
 
-    EnemyManager* enemies;
-
     Camera2D camera;
     DebugMode debug;
-
+    EnemyManager* enemies;
     //Texture2D background = LoadTexture("images/Sprites/256x176 Levels.png");
     Rectangle rc;
     int currentStage;

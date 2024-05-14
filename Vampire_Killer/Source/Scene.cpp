@@ -12,12 +12,13 @@ Scene::Scene() : currentStage(1)
 	enemies = nullptr;
 
 	camera.target = { 0, 0 };				//Center of the screen
-	camera.offset = { 0, MARGIN_GUI_Y };	//Offset from the target (center of the screen)
+	camera.offset = { 0, 0 };	//Offset from the target (center of the screen)
 	camera.rotation = 0.0f;					//No rotation
 	camera.zoom = 1.0f;						//Default zoom
 
 	debug = DebugMode::OFF;
 }
+
 Scene::~Scene()
 {
 	if (player != nullptr)
@@ -43,6 +44,12 @@ Scene::~Scene()
 		delete obj;
 	}
 	objects.clear();
+	if (enemies != nullptr)
+	{
+		enemies->Release();
+		delete enemies;
+		enemies = nullptr;
+	}
 }
 AppStatus Scene::Init()
 {
@@ -57,6 +64,20 @@ AppStatus Scene::Init()
 	if (player->Initialise() != AppStatus::OK)
 	{
 		LOG("Failed to initialise Player");
+		return AppStatus::ERROR;
+	}
+
+	//Create enemy manager
+	enemies = new EnemyManager();
+	if (enemies == nullptr)
+	{
+		LOG("Failed to allocate memory for Enemy Manager");
+		return AppStatus::ERROR;
+	}
+	//Initialise enemy manager
+	if (enemies->Initialise() != AppStatus::OK)
+	{
+		LOG("Failed to initialise Enemy Manager");
 		return AppStatus::ERROR;
 	}
 
@@ -111,7 +132,6 @@ AppStatus Scene::LoadLevel(int stage)
 	{
 		currentStage = 1;
 		map = new int[size] {
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -121,6 +141,9 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 
 		};
@@ -140,6 +163,8 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 0, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 		};
 	}
@@ -148,6 +173,8 @@ AppStatus Scene::LoadLevel(int stage)
 		currentStage = 3;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -171,6 +198,8 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0/*candle*/, 0, 0, 0, 0/*candle */, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -181,7 +210,9 @@ AppStatus Scene::LoadLevel(int stage)
 	{
 		currentStage = 5;
 		map = new int[size] {
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0,
@@ -198,7 +229,9 @@ AppStatus Scene::LoadLevel(int stage)
 	{
 		currentStage = 6;
 		map = new int[size] {
-			0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 3, 6, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0,
@@ -215,7 +248,9 @@ AppStatus Scene::LoadLevel(int stage)
 	{
 		currentStage = 7;
 		map = new int[size] {
-			-1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		   	   -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 3,
 				0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0,
@@ -269,13 +304,13 @@ AppStatus Scene::LoadLevel(int stage)
 				objects.push_back(obj);
 				map[i] = 0;
 			}
-
-			else if (tile == Tile::SLIME)
+			else if (tile == Tile::ZOMBIE)
 			{
-				pos.x += (SLIME_FRAME_SIZE - SLIME_PHYSICAL_WIDTH) / 2;
-				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::SLIME);
+				pos.x = x * TILE_SIZE;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::ZOMBIE);
 				area = level->GetSweptAreaX(hitbox);
-				enemies->Add(pos, EnemyType::SLIME, area);
+				enemies->Add(pos, EnemyType::ZOMBIE, area);
 			}
 			else
 			{
@@ -293,7 +328,7 @@ AppStatus Scene::LoadLevel(int stage)
 void Scene::Update()
 {
 	Point p1, p2;
-	AABB box;
+	AABB hitbox;
 
 	//Switch between the different debug modes: off, on (sprites & hitboxes), on (hitboxes) 
 	if (IsKeyPressed(KEY_F1))
@@ -316,6 +351,9 @@ void Scene::Update()
 	UpdateBackground(currentStage);
 
 	CheckCollisions();
+
+	hitbox = player->GetHitbox();
+	enemies->Update(hitbox);
 }
 void Scene::Render()
 {
@@ -327,16 +365,18 @@ void Scene::Render()
 	{
 		RenderObjects();
 		player->Draw();
+		enemies->Draw();
 	}
 	if (debug == DebugMode::SPRITES_AND_HITBOXES || debug == DebugMode::ONLY_HITBOXES)
 	{
 		RenderObjectsDebug(YELLOW);
 		player->DrawDebug(GREEN);
+		enemies->DrawDebug();
 	}
 
 	EndMode2D();
 
-	RenderGUI();
+	//RenderGUI();
 }
 void Scene::Release()
 {
@@ -377,6 +417,7 @@ void Scene::ClearLevel()
 		delete obj;
 	}
 	objects.clear();
+	enemies->Release();
 }
 void Scene::RenderObjects() const
 {
@@ -392,11 +433,11 @@ void Scene::RenderObjectsDebug(const Color& col) const
 		obj->DrawDebug(col);
 	}
 }
-void Scene::RenderGUI() const
-{
-	//Temporal approach
-	DrawText(TextFormat("LIVES : %d", player->GetLives()), 10, 10, 8, WHITE);
-}
+//void Scene::RenderGUI() const
+//{
+//	//Temporal approach
+//	DrawText(TextFormat("LIVES : %d", player->GetLives()), 10, 10, 8, WHITE);
+//}
 
 void Scene::UpdateBackground(int s)
 {
@@ -497,4 +538,3 @@ void Scene::UpdateBackground(int s)
 		}
 	}
 }
-

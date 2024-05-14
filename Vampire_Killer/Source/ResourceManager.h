@@ -14,6 +14,7 @@ enum class Resource {
     IMG_TILES,
     IMG_ITEMS,
     IMG_BACKGROUND,
+    IMG_UI,
     IMG_ENEMIES
 };
 

@@ -1,10 +1,9 @@
 #include "EnemyManager.h"
 #include "Zombie.h"
 
-
 EnemyManager::EnemyManager()
 {
-	//shots = nullptr;
+
 }
 EnemyManager::~EnemyManager()
 {
@@ -13,7 +12,7 @@ EnemyManager::~EnemyManager()
 AppStatus EnemyManager::Initialise()
 {
 	ResourceManager& data = ResourceManager::Instance();
-	if (data.LoadTexture(Resource::IMG_ENEMIES, "images/enemies.png") != AppStatus::OK)
+	if (data.LoadTexture(Resource::IMG_ENEMIES, "images/sprites/32x32 Enemies.png") != AppStatus::OK)
 	{
 		LOG("Failed to load enemies sprite texture");
 		return AppStatus::ERROR;
@@ -21,22 +20,19 @@ AppStatus EnemyManager::Initialise()
 
 	return AppStatus::OK;
 }
-//void EnemyManager::SetShotManager(ShotManager* shots)
-//{
-//	this->shots = shots;
-//}
+
 void EnemyManager::Add(const Point& pos, EnemyType type, const AABB& area, Look look)
 {
 	Enemy* enemy;
 
-	if (type == EnemyType::SLIME)
+	if (type == EnemyType::ZOMBIE)
 	{
-		enemy = new Slime(pos, SLIME_PHYSICAL_WIDTH, SLIME_PHYSICAL_HEIGHT, SLIME_FRAME_SIZE, SLIME_FRAME_SIZE);
+		enemy = new Zombie(pos, ZOMBIE_PHYSICAL_WIDTH, ZOMBIE_PHYSICAL_HEIGHT, ZOMBIE_FRAME_SIZE, ZOMBIE_FRAME_SIZE); //Slime.h
 	}
-	/*else if (type == EnemyType::TURRET)
-	{
-		enemy = new Turret(pos, TURRET_PHYSICAL_WIDTH, TURRET_PHYSICAL_HEIGHT, TURRET_FRAME_SIZE, TURRET_FRAME_SIZE);
-	}*/
+	//else if (type == EnemyType::AQUAMAN)
+	//{
+	//	enemy = new Aquaman(pos, AQUAMAN_PHYSICAL_WIDTH, AQUAMAN_PHYSICAL_HEIGHT, AQUAMAN_FRAME_SIZE, AQUAMAN_FRAME_SIZE); //Turret.h
+	//}
 	else
 	{
 		LOG("Internal error: trying to add a new enemy with invalid type");
@@ -49,16 +45,12 @@ void EnemyManager::Add(const Point& pos, EnemyType type, const AABB& area, Look 
 AABB EnemyManager::GetEnemyHitBox(const Point& pos, EnemyType type) const
 {
 	int width, height;
-	if (type == EnemyType::SLIME)
+	if (type == EnemyType::ZOMBIE)
 	{
-		width = SLIME_PHYSICAL_WIDTH;
-		height = SLIME_PHYSICAL_HEIGHT;
+		width = ZOMBIE_PHYSICAL_WIDTH;
+		height = ZOMBIE_PHYSICAL_HEIGHT;
 	}
-	/*else if (type == EnemyType::TURRET)
-	{
-		width = TURRET_PHYSICAL_WIDTH;
-		height = TURRET_PHYSICAL_HEIGHT;
-	}*/
+
 	else
 	{
 		LOG("Internal error while computing hitbox for an invalid enemy type");
@@ -70,18 +62,18 @@ AABB EnemyManager::GetEnemyHitBox(const Point& pos, EnemyType type) const
 }
 void EnemyManager::Update(const AABB& player_hitbox)
 {
-	//bool shoot;
-	//Point p, d;
+	bool shoot;
+	Point p, d;
 
-	//for (Enemy* enemy : enemies)
-	//{
-	//	shoot = enemy->Update(player_hitbox);
-	//	if (shoot)
-	//	{
-	//		enemy->GetShootingPosDir(&p, &d);
-	//		//shots->Add(p, d);
-	//	}
-	//}
+	for (Enemy* enemy : enemies)
+	{
+		/*shoot = enemy->Update(player_hitbox);
+		if (shoot)
+		{
+			enemy->GetShootingPosDir(&p, &d);
+			shots->Add(p, d);
+		}*/
+	}
 }
 void EnemyManager::Draw() const
 {

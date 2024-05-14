@@ -2,18 +2,18 @@
 #include "Entity.h"
 
 //Representation model size: 32x32
-#define SLIME_FRAME_SIZE		32
+#define ZOMBIE_FRAME_SIZE		32
 //Logical model size: 24x30
-#define SLIME_PHYSICAL_WIDTH	24
-#define SLIME_PHYSICAL_HEIGHT	30
+#define ZOMBIE_PHYSICAL_WIDTH	12
+#define ZOMBIE_PHYSICAL_HEIGHT	28
 
-//Representation model size: 32x32
-#define TURRET_FRAME_SIZE		32
-//Logical model size: 0x0
-#define TURRET_PHYSICAL_WIDTH	32
-#define TURRET_PHYSICAL_HEIGHT	26
+////Representation model size: 32x32
+//#define AQUAMAN_FRAME_SIZE		32
+////Logical model size: 0x0
+//#define AQUAMAN_PHYSICAL_WIDTH	32
+//#define AQUAMAN_PHYSICAL_HEIGHT	26
 
-enum class EnemyType { SLIME, TURRET };
+enum class EnemyType { ZOMBIE, AQUAMAN };
 
 class Enemy : public Entity
 {
@@ -31,9 +31,6 @@ public:
 
 	//Update the enemy according to its logic, return true if the enemy must shoot
 	virtual bool Update(const AABB& box) = 0;
-
-	////Retrieve the position and direction of the shot to be thrown
-	//virtual void GetShootingPosDir(Point* pos, Point* dir) const = 0;
 
 protected:
 	//Return true if the given hitbox is within the visibility area and the enemy is facing it

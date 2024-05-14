@@ -3,7 +3,7 @@
 class LevelBackground
 {
 private:
-	Texture2D backgroundImage; //= LoadTexture("images/Sprites/256x176 Levels.png");
+	Texture2D backgroundImage, ui; //= LoadTexture("images/Sprites/256x176 Levels.png");
 public:
 	LevelBackground();
 	//~LevelBackground();

@@ -300,7 +300,7 @@ void Player::MoveX()
 	int prev_x = pos.x;
 
 	if (state == State::ATTACKING) {
-		return; 
+		return;
 	}
 
 	if (IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT) && state != State::SNEAKING)
@@ -348,7 +348,7 @@ void Player::MoveY()
 	AABB box;
 
 	if (state == State::ATTACKING) {
-		return; 
+		return;
 	}
 
 	if (state == State::JUMPING)
