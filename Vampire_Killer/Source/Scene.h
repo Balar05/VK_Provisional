@@ -6,6 +6,8 @@
 #include "LevelBackground.h"
 #include "EnemyManager.h"
 
+
+
 enum class DebugMode { OFF, SPRITES_AND_HITBOXES, ONLY_HITBOXES, SIZE };
 
 class Scene

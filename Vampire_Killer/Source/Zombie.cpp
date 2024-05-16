@@ -19,7 +19,7 @@ AppStatus Zombie::Initialise(Look look, const AABB& area)
 {
 	int i;
 	const int n = ZOMBIE_FRAME_SIZE;
-	state == ZombieState::ROAMING;
+	state = ZombieState::ROAMING;
 	ResourceManager& data = ResourceManager::Instance();
 	render = new Sprite(data.GetTexture(Resource::IMG_ENEMIES));
 	if (render == nullptr)
@@ -38,10 +38,10 @@ AppStatus Zombie::Initialise(Look look, const AABB& area)
 
 	sprite->SetAnimationDelay((int)ZombieAnim::WALKING_RIGHT, ZOMBIE_ANIM_DELAY);
 	for (i = 0; i < 2; ++i)
-		sprite->AddKeyFrame((int)ZombieAnim::WALKING_RIGHT, { (float)i * n, 0, n, n });
+		sprite->AddKeyFrame((int)ZombieAnim::WALKING_RIGHT, { (float)i * n, 0, -n, n });
 	sprite->SetAnimationDelay((int)ZombieAnim::WALKING_LEFT, ZOMBIE_ANIM_DELAY);
 	for (i = 0; i < 2; ++i)
-		sprite->AddKeyFrame((int)ZombieAnim::WALKING_LEFT, { (float)i * n, 0 * n, -n, n });
+		sprite->AddKeyFrame((int)ZombieAnim::WALKING_LEFT, { (float)i * n, 0 * n, n, n });
 
 	this->look = look;
 	if (look == Look::LEFT)        sprite->SetAnimation((int)ZombieAnim::IDLE_LEFT);
@@ -56,15 +56,20 @@ AppStatus Zombie::Initialise(Look look, const AABB& area)
 
 void Zombie::InitPattern()
 {
-	const int n = ZOMBIE_ANIM_DELAY * 3;
+	const int n = ZOMBIE_ANIM_DELAY * 2;
 
-	pattern.push_back({ {ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_RIGHT });
-	pattern.push_back({ {ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_RIGHT });
-	pattern.push_back({ {ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_RIGHT });
-
-	pattern.push_back({ {-ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_LEFT });
-	pattern.push_back({ {-ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_LEFT });
-	pattern.push_back({ {-ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_LEFT });
+	if (look == Look::LEFT)
+	{
+		pattern.push_back({ {ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_RIGHT });
+		pattern.push_back({ {ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_RIGHT });
+		pattern.push_back({ {ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_RIGHT });
+	}
+	else
+	{
+		pattern.push_back({ {-ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_LEFT });
+		pattern.push_back({ {-ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_LEFT });
+		pattern.push_back({ {-ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_LEFT });
+	}
 
 	current_step = 0;
 	current_frames = 0;
@@ -74,7 +79,7 @@ bool Zombie::Update(const AABB& box)
 {
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	int anim_id;
-	
+
 	if (state == ZombieState::ROAMING)
 	{
 		pos += pattern[current_step].speed;
@@ -88,13 +93,14 @@ bool Zombie::Update(const AABB& box)
 
 			anim_id = pattern[current_step].anim;
 			sprite->SetAnimation(anim_id);
-			UpdateLook(anim_id);
+			// No actualizamos la dirección del zombie
 		}
 	}
 	sprite->Update();
 
 	return false; // Zombies don't shoot
 }
+
 
 void Zombie::UpdateLook(int anim_id)
 {

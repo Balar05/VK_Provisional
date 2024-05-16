@@ -2,7 +2,7 @@
 #include "Enemy.h" 
 
 #define ZOMBIE_SPEED			1
-#define ZOMBIE_ANIM_DELAY	(4*ANIM_DELAY)
+#define ZOMBIE_ANIM_DELAY	(2*ANIM_DELAY)
 
 #define ZOMBIE_SHOT_OFFSET_X_LEFT	-14
 #define ZOMBIE_SHOT_OFFSET_X_RIGHT	 26

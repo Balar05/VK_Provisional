@@ -62,17 +62,9 @@ AABB EnemyManager::GetEnemyHitBox(const Point& pos, EnemyType type) const
 }
 void EnemyManager::Update(const AABB& player_hitbox)
 {
-	bool shoot;
-	Point p, d;
-
 	for (Enemy* enemy : enemies)
 	{
-		/*shoot = enemy->Update(player_hitbox);
-		if (shoot)
-		{
-			enemy->GetShootingPosDir(&p, &d);
-			shots->Add(p, d);
-		}*/
+		enemy->Update(player_hitbox); // Llama a la función Update de cada enemigo
 	}
 }
 void EnemyManager::Draw() const

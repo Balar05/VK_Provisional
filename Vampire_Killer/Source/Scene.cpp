@@ -143,7 +143,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 
 		};
@@ -164,7 +164,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 		};
 	}
@@ -202,7 +202,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0/*candle*/, 0, 0, 0, 0/*candle */, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 44, 0, 200, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
 	}
@@ -308,10 +308,33 @@ AppStatus Scene::LoadLevel(int stage)
 			{
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
-				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::ZOMBIE);
-				area = level->GetSweptAreaX(hitbox);
-				enemies->Add(pos, EnemyType::ZOMBIE, area);
+
+				// Obtenemos la posición del jugador
+				int playerPosX = player->GetPlayerPosX();
+
+				// Comprobamos si el jugador está a la derecha o a la izquierda
+				if (playerPosX > WINDOW_WIDTH / 2)
+				{
+					// Si el jugador está a la derecha, hacemos aparecer al zombie a la izquierda
+					pos.x = 0;
+					enemies->Add(pos, EnemyType::ZOMBIE, area, Look::LEFT); // El zombie se moverá hacia la derecha
+				}
+				else
+				{
+					// Si el jugador está a la izquierda, hacemos aparecer al zombie a la derecha
+					pos.x = (LEVEL_WIDTH - 1) * TILE_SIZE; // Aseguramos que el zombie aparezca dentro del mapa
+					enemies->Add(pos, EnemyType::ZOMBIE, area, Look::RIGHT); // El zombie se moverá hacia la izquierda
+				}
+
+				// Aquí agregas la condición para que los zombis solo aparezcan en los niveles 1 y 2
+				if (currentStage == 4)
+				{
+					hitbox = enemies->GetEnemyHitBox(pos, EnemyType::ZOMBIE);
+					area = level->GetSweptAreaX(hitbox);
+				}
 			}
+
+
 			else
 			{
 				LOG("Internal error loading scene: invalid entity or object tile id")
@@ -354,6 +377,8 @@ void Scene::Update()
 
 	hitbox = player->GetHitbox();
 	enemies->Update(hitbox);
+
+
 }
 void Scene::Render()
 {
