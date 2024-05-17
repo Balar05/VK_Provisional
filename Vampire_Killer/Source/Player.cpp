@@ -416,9 +416,22 @@ void Player::MoveY()
 				else if (map->TestOnLadder(box, &pos.x) and IsLookingLeft())
 					StartClimbingDownLeft();
 			}
-			else if (IsKeyPressed(KEY_SPACE))
+
+			if (IsKeyPressed(KEY_UP))
 			{
-				StartJumping();
+				box = GetHitbox();
+				if (map->TestOnLadder(box, &pos.x) && IsLookingRight())
+				{
+
+				}
+				else if (map->TestOnLadder(box, &pos.x) && IsLookingLeft())
+				{
+
+				}
+				else
+				{
+					StartJumping();
+				}
 			}
 		}
 		else
