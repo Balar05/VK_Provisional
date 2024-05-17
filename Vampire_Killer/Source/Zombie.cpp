@@ -93,12 +93,12 @@ bool Zombie::Update(const AABB& box)
 
 			anim_id = pattern[current_step].anim;
 			sprite->SetAnimation(anim_id);
-			// No actualizamos la dirección del zombie
+			
 		}
 	}
 	sprite->Update();
 
-	return false; // Zombies don't shoot
+	return false; 
 }
 
 

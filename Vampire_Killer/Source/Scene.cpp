@@ -312,6 +312,12 @@ AppStatus Scene::LoadLevel(int stage)
 				// Obtenemos la posición del jugador
 				int playerPosX = player->GetPlayerPosX();
 
+				// Aquí agregas la condición para que los zombis solo aparezcan en los niveles
+				if (stage == 4)
+				{
+					hitbox = enemies->GetEnemyHitBox(pos, EnemyType::ZOMBIE);
+					area = level->GetSweptAreaX(hitbox);
+				}
 				// Comprobamos si el jugador está a la derecha o a la izquierda
 				if (playerPosX > WINDOW_WIDTH / 2)
 				{
@@ -326,12 +332,6 @@ AppStatus Scene::LoadLevel(int stage)
 					enemies->Add(pos, EnemyType::ZOMBIE, area, Look::RIGHT); // El zombie se moverá hacia la izquierda
 				}
 
-				// Aquí agregas la condición para que los zombis solo aparezcan en los niveles 1 y 2
-				if (currentStage == 4)
-				{
-					hitbox = enemies->GetEnemyHitBox(pos, EnemyType::ZOMBIE);
-					area = level->GetSweptAreaX(hitbox);
-				}
 			}
 
 
