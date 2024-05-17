@@ -3,11 +3,13 @@
 #include "TileMap.h"
 
 //Representation model size: 32x32
-#define PLAYER_FRAME_SIZE		32
+#define PLAYER_FRAME_SIZE		        32
 
 //Logical model size: 12x28
 #define PLAYER_PHYSICAL_WIDTH	12
 #define PLAYER_PHYSICAL_HEIGHT	28
+#define ATTACK_WIDTH			24
+#define ATTACK_HEIGHT			14
 
 //Horizontal speed and vertical speed while falling down
 #define PLAYER_SPEED_X			1
@@ -32,9 +34,15 @@
 //Gravity affects jumping velocity when jump_delay is 0
 #define GRAVITY_FORCE			1
 
+
 //Logic states
-enum class State { IDLE, WALKING, JUMPING, CLIMBING, FALLING, DEAD };
+enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING, DEAD };
 enum class Look { RIGHT, LEFT };
+
+typedef struct //Temporizador
+{
+	float Lifetime;
+}Timer;
 
 //Rendering states
 enum class PlayerAnim {
@@ -43,8 +51,11 @@ enum class PlayerAnim {
 	JUMPING_LEFT, JUMPING_RIGHT,
 	LEVITATING_LEFT, LEVITATING_RIGHT,
 	FALLING_LEFT, FALLING_RIGHT,
-	CLIMBING_RIGHT, CLIMBING_LEFT, CLIMBING_PRE_TOP, CLIMBING_TOP,
-	CLIMBING_DOWN_RIGHT, CLIMBING_DOWN_LEFT,
+	FALLING_LEFT_NJ, FALLING_RIGHT_NJ,
+	SNEAKING_LEFT, SNEAKING_RIGHT,
+	ATTACKING_LEFT, ATTACKING_RIGHT,
+	DEAD_LEFT, DEAD_RIGHT,
+	CLIMBING, CLIMBING_PRE_TOP, CLIMBING_TOP,
 	SHOCK_LEFT, SHOCK_RIGHT,
 	TELEPORT_LEFT, TELEPORT_RIGHT,
 	NUM_ANIMATIONS
@@ -70,15 +81,60 @@ public:
 	int GetPlayerPosY();
 	void CheckPosY();
 
+	const int totalFramesAttack = 3;
+	float currentFrameAttack = 0;
+	float framesCounter = 0;
+	float framesSpeed = 1;
+
+
+	//Temporizador
+	void StartTimer(Timer* timer, float lifetime)
+	{
+		if (timer != NULL)
+			timer->Lifetime = lifetime;
+	}
+
+	// update a timer with the current frame time
+	void UpdateTimer(Timer* timer)
+	{
+		// subtract this frame from the timer if it's not allready expired
+		if (timer != NULL && timer->Lifetime > 0)
+			timer->Lifetime -= GetFrameTime();
+	}
+
+	// check if a timer is done.
+	bool TimerDone(Timer* timer)
+	{
+		if (timer != NULL)
+			return timer->Lifetime <= 0;
+
+		return false;
+	}
+
+	void StopTimer(Timer* timer)
+	{
+		if (timer != NULL)
+			timer->Lifetime = 0;
+	}
+
+	Timer attackTimer = { 0 };
+	float attackLife = 0.5f; // Duration of the attack animation
+
 private:
+
+	Sound soundArray[10];
+
 	bool IsLookingRight() const;
 	bool IsLookingLeft() const;
 
 	//Player mechanics
 	void MoveX();
 	void MoveY();
+	void MoveY_SNEAK();
 	void LogicJumping();
 	void LogicClimbing();
+	void Attack();
+
 
 	//Animation management
 	void SetAnimation(int id);
@@ -87,11 +143,19 @@ private:
 	void StartWalkingLeft();
 	void StartWalkingRight();
 	void StartFalling();
+	void StartFalling_NJ();
 	void StartJumping();
+
 	void StartClimbingRight();
 	void StartClimbingLeft();
 	void StartClimbingDownRight();
 	void StartClimbingDownLeft();
+
+	void StartSneaking();
+	void StopSneaking();
+	void StartAttacking();
+	void StopAttacking();
+
 	void ChangeAnimRight();
 	void ChangeAnimLeft();
 
@@ -104,6 +168,7 @@ private:
 	bool IsInFirstHalfTile() const;
 	bool IsInSecondHalfTile() const;
 
+
 	State state;
 	Look look;
 	int jump_delay;
@@ -111,4 +176,6 @@ private:
 	TileMap* map;
 
 	int score;
+
 };
+

@@ -26,4 +26,8 @@ void log(const char file[], int line, const char* text, ...);
 #define PLAYER_Y_STARTER	159
 
 //Entities animation delay
-#define ANIM_DELAY		6 //4
+#define ANIM_DELAY		10 //4
+
+#define EXPLOSION_SIZE 276
+#define SPRITE_SIZE 32
+#define CLOUD_SIZE 64
