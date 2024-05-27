@@ -31,6 +31,9 @@ public:
 	void DrawHitbox(const Color& col) const;
 	void DrawHitbox(int x, int y, int w, int h, const Color& col) const;
 
+	void StartBlinking(float duration);
+	bool IsBlinking() const;
+
 protected:
 	Point GetRenderingPosition() const;
 
@@ -46,4 +49,9 @@ protected:
 	//Flag to mark wether an entity is active or inactive. Trick to manage dynamic arrays of
 	//entities with static arrays without new/delete operations
 	bool alive;
+
+private:
+	bool isBlinking;
+	float blinkDuration;
+	float blinkTimer;
 };

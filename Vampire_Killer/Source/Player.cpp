@@ -13,6 +13,7 @@ Player::Player(const Point& p, State s, Look view) :
 	jump_delay = PLAYER_JUMP_DELAY;
 	map = nullptr;
 	score = 0;
+	lives = 100;
 }
 Player::~Player()
 {
@@ -281,19 +282,12 @@ void Player::ChangeAnimLeft()
 }
 void Player::Update()
 {
-	//Player doesn't use the "Entity::Update() { pos += dir; }" default behaviour.
-	//Instead, uses an independent behaviour for each axis.
 	MoveX();
 	MoveY();
 	MoveY_SNEAK();
 	Attack();
 
-	if (isBlinking) {
-		UpdateTimer(&damageTimer);
-		if (TimerDone(&damageTimer)) {
-			isBlinking = false;
-		}
-	}
+	Entity::Update();
 
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->Update();
@@ -476,32 +470,25 @@ void Player::LogicJumping()
 
 void Player::DrawDebug(const Color& col) const
 {
-	if (isBlinking) {
-		if ((int)(GetTime() * 10) % 2 == 0) {
-			// Skip drawing the player to create a blinking effect
-			return;
-		}
-	}
-
 	Entity::DrawHitbox(pos.x, pos.y, width, height, col);
 	DrawText(TextFormat("Position: (%d,%d)\nSize: %dx%d\nFrame: %dx%d", pos.x, pos.y, width, height, frame_width, frame_height), 18 * 16, 0, 8, LIGHTGRAY);
 	DrawPixel(pos.x, pos.y, WHITE);
 }
 
-void Player::Draw() const
-{
-	if (isBlinking) {
-		if ((int)(GetTime() * 10) % 2 == 0) {
-			// Skip drawing the player to create a blinking effect
-			return;
-		}
-	}
-
-	Sprite* sprite = dynamic_cast<Sprite*>(render);
-	if (sprite != nullptr) {
-		sprite->Draw(pos.x, pos.y);
-	}
-}
+//void Player::Draw() const
+//{
+//	if (isBlinking) {
+//		if ((int)(GetTime() * 10) % 2 == 0) {
+//			// Skip drawing the player to create a blinking effect
+//			return;
+//		}
+//	}
+//
+//	Sprite* sprite = dynamic_cast<Sprite*>(render);
+//	if (sprite != nullptr) {
+//		sprite->Draw(pos.x, pos.y);
+//	}
+//}
 
 void Player::Release()
 {
@@ -518,16 +505,16 @@ int Player::GetLives()
 
 void Player::GetDamage()
 {
-	if (!isBlinking) {
-		this->lives -= 10;
+	if (!IsBlinking())
+	{
+		lives -= 10;
 		if (lives <= 0)
 		{
 			state = State::DEAD;
 		}
 		else
 		{
-			StartTimer(&damageTimer, damageDuration);
-			isBlinking = true;
+			StartBlinking(damageDuration);
 		}
 	}
 }

@@ -23,10 +23,10 @@
 #define ANIM_LADDER_DELAY		(2*ANIM_DELAY)
 
 //When jumping, initial jump speed and maximum falling speed
-#define PLAYER_JUMP_FORCE		8
+#define PLAYER_JUMP_FORCE		3
 
 //Frame delay for updating the jump velocity
-#define PLAYER_JUMP_DELAY		2
+#define PLAYER_JUMP_DELAY		4
 
 //Player is levitating when abs(speed) <= this value
 #define PLAYER_LEVITATING_SPEED	0
@@ -77,7 +77,6 @@ public:
 
 	void Update();
 	void DrawDebug(const Color& col) const;
-	void Draw() const;
 	void Release();
 
 	const int totalFramesAttack = 3;
@@ -170,7 +169,7 @@ private:
 
 	Timer damageTimer;     // Timer for damage invincibility
 	float damageDuration = 1.0f; // Duration of the invincibility
-	bool isBlinking = false; // Whether the player is blinking
+	
 
 	State state;
 	Look look;
@@ -180,6 +179,6 @@ private:
 
 	int score;
 
-	int lives = 50;
+	int lives = 100;
 
 };
