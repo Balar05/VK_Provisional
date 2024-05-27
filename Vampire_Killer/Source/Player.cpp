@@ -282,10 +282,26 @@ void Player::ChangeAnimLeft()
 }
 void Player::Update()
 {
-	MoveX();
-	MoveY();
-	MoveY_SNEAK();
-	Attack();
+	if (state != State::RECOILING)
+	{
+		MoveX();
+		MoveY();
+		MoveY_SNEAK();
+		Attack();
+	}
+	else
+	{
+		// Lógica de retroceso (recoil)
+		if (damageDirection == Look::LEFT)
+		{
+			dir.x = PLAYER_SPEED_X;
+		}
+		else
+		{
+			dir.x = -PLAYER_SPEED_X;
+		}
+		LogicJumping();
+	}
 
 	Entity::Update();
 
@@ -503,7 +519,7 @@ int Player::GetLives()
 	return this->lives;
 }
 
-void Player::GetDamage()
+void Player::GetDamage(Look damageDirection)
 {
 	if (!IsBlinking())
 	{
@@ -514,7 +530,9 @@ void Player::GetDamage()
 		}
 		else
 		{
-			StartBlinking(damageDuration);
+			StartBlinking(damageDuration, damageDirection);
+			state = State::RECOILING;
+			dir.y = -PLAYER_JUMP_FORCE;
 		}
 	}
 }

@@ -35,7 +35,7 @@
 #define GRAVITY_FORCE			1
 
 //Logic states
-enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING, DEAD };
+enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING,RECOILING, DEAD };
 
 
 typedef struct //Temporizador
@@ -73,7 +73,7 @@ public:
 	void IncrScore(int n);
 	int GetScore();
 	int GetLives();
-	void GetDamage();
+	void GetDamage(Look damageDirection);
 
 	void Update();
 	void DrawDebug(const Color& col) const;
@@ -179,6 +179,6 @@ private:
 
 	int score;
 
-	int lives = 100;
+	int lives;
 
 };

@@ -366,7 +366,7 @@ void Scene::Update()
 	else if (IsKeyPressed(KEY_FIVE))	LoadLevel(5);
 	else if (IsKeyPressed(KEY_SIX))		LoadLevel(6);
 	else if (IsKeyPressed(KEY_SEVEN))	LoadLevel(7);
-	else if (IsKeyPressed(KEY_D))		player->GetDamage();
+	else if (IsKeyPressed(KEY_D))		player->GetDamage(Look::RIGHT);
 
 	level->Update();
 	player->Update();
@@ -464,7 +464,9 @@ void Scene::CheckCollisions()
 		enemy_box = enemy->GetHitbox();
 		if (player_box.TestAABB(enemy_box))
 		{
-			player->GetDamage();
+			// Determinar la dirección del daño
+			Look damageDirection = player->GetPlayerPosX() > enemy->GetPos().x ? Look::LEFT : Look::RIGHT;
+			player->GetDamage(damageDirection);
 			break; // Only take damage once per update cycle
 		}
 	}

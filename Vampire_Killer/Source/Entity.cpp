@@ -91,11 +91,12 @@ void Entity::DrawHitbox(int x, int y, int w, int h, const Color& col) const
 	render->DrawBox(x, y - (h - 1), w, h, c);
 	render->DrawCorners(x, y - (h - 1), w, h);
 }
-void Entity::StartBlinking(float duration)
+void Entity::StartBlinking(float duration, Look damageDirection)
 {
 	isBlinking = true;
 	blinkDuration = duration;
 	blinkTimer = duration;
+	this->damageDirection = damageDirection;
 }
 
 bool Entity::IsBlinking() const
