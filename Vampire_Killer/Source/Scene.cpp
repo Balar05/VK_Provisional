@@ -412,7 +412,7 @@ void Scene::Render()
 	if (debug == DebugMode::OFF || debug == DebugMode::SPRITES_AND_HITBOXES)
 	{
 		RenderObjects();
-		player->Draw();
+		player->Draw(); // Llama a la nueva función Draw del jugador
 		enemies->Draw();
 	}
 	if (debug == DebugMode::SPRITES_AND_HITBOXES || debug == DebugMode::ONLY_HITBOXES)
@@ -435,7 +435,7 @@ void Scene::Release()
 }
 void Scene::CheckCollisions()
 {
-	AABB player_box, obj_box;
+	AABB player_box, obj_box, enemy_box;
 
 	player_box = player->GetHitbox();
 	auto it = objects.begin();
@@ -455,6 +455,17 @@ void Scene::CheckCollisions()
 		{
 			//Move to the next object
 			++it;
+		}
+	}
+
+	// Check collisions with enemies
+	for (const Enemy* enemy : enemies->GetEnemies())
+	{
+		enemy_box = enemy->GetHitbox();
+		if (player_box.TestAABB(enemy_box))
+		{
+			player->GetDamage();
+			break; // Only take damage once per update cycle
 		}
 	}
 }

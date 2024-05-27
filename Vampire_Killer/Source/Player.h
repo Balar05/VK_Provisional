@@ -77,6 +77,7 @@ public:
 
 	void Update();
 	void DrawDebug(const Color& col) const;
+	void Draw() const;
 	void Release();
 
 	const int totalFramesAttack = 3;
@@ -122,6 +123,7 @@ public:
 	int GetPlayerPosY();
 	//void CheckPosY(); //new
 
+
 private:
 
 	Sound soundArray[10];
@@ -165,6 +167,10 @@ private:
 	//Ladder get in/out steps
 	bool IsInFirstHalfTile() const;
 	bool IsInSecondHalfTile() const;
+
+	Timer damageTimer;     // Timer for damage invincibility
+	float damageDuration = 1.0f; // Duration of the invincibility
+	bool isBlinking = false; // Whether the player is blinking
 
 	State state;
 	Look look;

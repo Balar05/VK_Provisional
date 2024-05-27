@@ -288,11 +288,15 @@ void Player::Update()
 	MoveY_SNEAK();
 	Attack();
 
-
+	if (isBlinking) {
+		UpdateTimer(&damageTimer);
+		if (TimerDone(&damageTimer)) {
+			isBlinking = false;
+		}
+	}
 
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->Update();
-
 }
 void Player::MoveX()
 {
@@ -472,11 +476,33 @@ void Player::LogicJumping()
 
 void Player::DrawDebug(const Color& col) const
 {
-	Entity::DrawHitbox(pos.x, pos.y, width, height, col);
+	if (isBlinking) {
+		if ((int)(GetTime() * 10) % 2 == 0) {
+			// Skip drawing the player to create a blinking effect
+			return;
+		}
+	}
 
+	Entity::DrawHitbox(pos.x, pos.y, width, height, col);
 	DrawText(TextFormat("Position: (%d,%d)\nSize: %dx%d\nFrame: %dx%d", pos.x, pos.y, width, height, frame_width, frame_height), 18 * 16, 0, 8, LIGHTGRAY);
 	DrawPixel(pos.x, pos.y, WHITE);
 }
+
+void Player::Draw() const
+{
+	if (isBlinking) {
+		if ((int)(GetTime() * 10) % 2 == 0) {
+			// Skip drawing the player to create a blinking effect
+			return;
+		}
+	}
+
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
+	if (sprite != nullptr) {
+		sprite->Draw(pos.x, pos.y);
+	}
+}
+
 void Player::Release()
 {
 	ResourceManager& data = ResourceManager::Instance();
@@ -492,10 +518,17 @@ int Player::GetLives()
 
 void Player::GetDamage()
 {
-	this->lives -= 10;
-	if (lives <= 0)
-	{
-		state = State::DEAD;
+	if (!isBlinking) {
+		this->lives -= 10;
+		if (lives <= 0)
+		{
+			state = State::DEAD;
+		}
+		else
+		{
+			StartTimer(&damageTimer, damageDuration);
+			isBlinking = true;
+		}
 	}
 }
 
