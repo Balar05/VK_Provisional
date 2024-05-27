@@ -351,7 +351,7 @@ AppStatus Scene::LoadLevel(int stage)
 void Scene::Update()
 {
 	Point p1, p2;
-	AABB hitbox;
+	AABB hitbox,area;
 
 	//Switch between the different debug modes: off, on (sprites & hitboxes), on (hitboxes) 
 	if (IsKeyPressed(KEY_F1))
@@ -378,6 +378,29 @@ void Scene::Update()
 	hitbox = player->GetHitbox();
 	enemies->Update(hitbox);
 
+	std::vector<Point> zombiePositions = enemies->GetZombiePositions();
+
+	for (const Point& zombiePos : zombiePositions)
+	{
+		// Si un zombie llega a la mitad de la pantalla
+		if (zombiePos.x == WINDOW_WIDTH / 2)
+		{
+			// Añade otro zombie
+			Point pos;
+			pos.y = 191; // Asumiendo que quieres que el nuevo zombie aparezca en la misma posición y que el jugador
+
+			if (player->GetPlayerPosX() > WINDOW_WIDTH / 2)
+			{
+				pos.x = 0;
+				enemies->Add(pos, EnemyType::ZOMBIE, area, Look::LEFT);
+			}
+			else
+			{
+				pos.x = (LEVEL_WIDTH - 1) * TILE_SIZE;
+				enemies->Add(pos, EnemyType::ZOMBIE, area, Look::RIGHT);
+			}
+		}
+	}
 
 }
 void Scene::Render()

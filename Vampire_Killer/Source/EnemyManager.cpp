@@ -86,3 +86,20 @@ void EnemyManager::Release()
 		delete enemy;
 	enemies.clear();
 }
+
+std::vector<Point> EnemyManager::GetZombiePositions() const
+{
+	std::vector<Point> positions;
+
+	// Recorre todos los enemigos
+	for (const Enemy* enemy : enemies)
+	{
+		// Si el enemigo es un zombie, añade su posición a la lista
+		if (dynamic_cast<const Zombie*>(enemy))
+		{
+			positions.push_back(enemy->GetPos());
+		}
+	}
+
+	return positions;
+}

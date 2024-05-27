@@ -18,6 +18,8 @@ enum class EnemyType { ZOMBIE, AQUAMAN };
 class Enemy : public Entity
 {
 public:
+
+
 	Enemy(const Point& p, int width, int height, int frame_width, int frame_height);
 	virtual ~Enemy();
 
@@ -31,6 +33,8 @@ public:
 
 	//Update the enemy according to its logic, return true if the enemy must shoot
 	virtual bool Update(const AABB& box) = 0;
+
+	Point GetPos() const { return pos; }
 
 protected:
 	//Return true if the given hitbox is within the visibility area and the enemy is facing it

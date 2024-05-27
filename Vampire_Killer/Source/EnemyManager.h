@@ -28,6 +28,8 @@ public:
 	//Delete all enemies and clear the enemy vector
 	void Release();
 
+	std::vector<Point> GetZombiePositions() const;
+
 private:
 	std::vector<Enemy*> enemies;
 
