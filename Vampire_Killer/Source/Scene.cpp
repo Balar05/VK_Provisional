@@ -669,6 +669,12 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(7);
 			break;
 		}
+		else if (y + PLAYER_PHYSICAL_HEIGHT >= LEVEL_HEIGHT * TILE_SIZE)
+		{
+			player->SetPos({ (10 * TILE_SIZE)-PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(8);
+			break;
+		}
 	case 6:
 		if (x < 0)
 		{
@@ -680,6 +686,12 @@ void Scene::UpdateBackground(int s)
 		{
 			player->SetPos({ 15, y });
 			LoadLevel(4);
+			break;
+		}
+		else if (y + PLAYER_PHYSICAL_HEIGHT >= LEVEL_HEIGHT * TILE_SIZE)
+		{
+			player->SetPos({ (5 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(11);
 			break;
 		}
 	case 7:
@@ -694,6 +706,69 @@ void Scene::UpdateBackground(int s)
 			player->SetPos({ 15, y });
 			LoadLevel(6);
 			break;
+		}
+	case 8:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(9);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(10);
+			break;
+		}
+		else if (y + PLAYER_PHYSICAL_HEIGHT <= LEVEL_HEIGHT * TILE_SIZE)
+		{
+			player->SetPos({ (11 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(5);
+			break;
+		}
+	case 9:
+		if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(8);
+			break;
+		}
+	case 10:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(8);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(11);
+			break;
+		}
+	case 11:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(10);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(12);
+			break;
+		}
+		else if (y + PLAYER_PHYSICAL_HEIGHT <= LEVEL_HEIGHT * TILE_SIZE)
+		{
+			player->SetPos({ (5 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(6);
+			break;
+		}
+	case 12:
+		if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			//Release();
 		}
 	}
 }
