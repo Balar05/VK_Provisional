@@ -36,9 +36,9 @@ void LevelBackground::RenderBackground(int stage)
 	case 10:
 		source = { 2 * width, 1 * height, width, height }; break;
 	case 11:
-		source = { 3 * width, 2 * height, width, height }; break;
+		source = { 3 * width, 1 * height, width, height }; break;
 	case 12:
-		source = { 0 * width, 3 * height, width, height }; break;
+		source = { 3 * width, 0 * height, width, height }; break;
 	default:
 		LOG("Level background does not exist.");
 	}

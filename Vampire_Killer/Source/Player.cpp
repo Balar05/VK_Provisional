@@ -225,11 +225,11 @@ void Player::StopSneaking()
 
 
 void Player::StartAttacking() {
-	// Establecer el estado a ATTACKING solo si no está actualmente atacando
+	// Establecer el estado a ATTACKING solo si no estï¿½ actualmente atacando
 	{
 		state = State::ATTACKING;
 		PlaySound(soundArray[0]);
-		// Establecer la animación de ataque según la dirección del jugador
+		// Establecer la animaciï¿½n de ataque segï¿½n la direcciï¿½n del jugador
 		if (IsLookingRight()) {
 			SetAnimation((int)PlayerAnim::ATTACKING_RIGHT);
 		}
@@ -291,7 +291,7 @@ void Player::Update()
 	}
 	else
 	{
-		// Lógica de retroceso (recoil)
+		// Lï¿½gica de retroceso (recoil)
 		if (damageDirection == Look::LEFT)
 		{
 			dir.x = PLAYER_SPEED_X;
@@ -413,7 +413,7 @@ void Player::MoveY_SNEAK()
 
 void Player::Attack()
 {
-	// Iniciar el ataque si se presiona la barra espaciadora y el jugador no está atacando
+	// Iniciar el ataque si se presiona la barra espaciadora y el jugador no estï¿½ atacando
 	if (IsKeyDown(KEY_SPACE) && state != State::ATTACKING && state != State::JUMPING && state != State::SNEAKING && state != State::DEAD)
 	{
 		StartAttacking();

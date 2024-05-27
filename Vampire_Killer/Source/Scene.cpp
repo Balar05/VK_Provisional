@@ -263,6 +263,101 @@ AppStatus Scene::LoadLevel(int stage)
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
 	}
+	else if (stage == 8)
+	{
+		currentStage = 8;
+		map = new int[size] {
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 2, 1, 2, 1, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0,
+			1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+		};
+	}
+	else if (stage == 9)
+	{
+	currentStage = 9;
+	map = new int [size] {
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 2, 1, 2, 0, 0, 1, 2, 1, 6, 0, 0, 0, 0, 0, 0,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0,
+			1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 1, 2, 1, 2,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+		};
+	}
+	else if (stage == 10)
+	{
+		currentStage = 10;
+		map = new int [size] {
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 1, 2, 1, 2, 1,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+		};
+	}
+	else if (stage == 11)
+	{
+		currentStage = 11;
+		map = new int[size] {
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 3, 1, 2, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 1, 2,
+				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 2,
+				1, 2, 1, 2, 7, 3, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+		};
+	}
+	else if (stage == 12)
+	{
+		currentStage = 12;
+		map = new int [size] {
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 3, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+		};
+	}
 	else
 	{
 		//Error level doesn't exist or incorrect level number
@@ -309,27 +404,27 @@ AppStatus Scene::LoadLevel(int stage)
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 
-				// Obtenemos la posición del jugador
+				// Obtenemos la posiciï¿½n del jugador
 				int playerPosX = player->GetPlayerPosX();
 
-				// Aquí agregas la condición para que los zombis solo aparezcan en los niveles
+				// Aquï¿½ agregas la condiciï¿½n para que los zombis solo aparezcan en los niveles
 				if (stage == 4)
 				{
 					hitbox = enemies->GetEnemyHitBox(pos, EnemyType::ZOMBIE);
 					area = level->GetSweptAreaX(hitbox);
 				}
-				// Comprobamos si el jugador está a la derecha o a la izquierda
+				// Comprobamos si el jugador estï¿½ a la derecha o a la izquierda
 				if (playerPosX > WINDOW_WIDTH / 2)
 				{
-					// Si el jugador está a la derecha, hacemos aparecer al zombie a la izquierda
+					// Si el jugador estï¿½ a la derecha, hacemos aparecer al zombie a la izquierda
 					pos.x = 0;
-					enemies->Add(pos, EnemyType::ZOMBIE, area, Look::LEFT); // El zombie se moverá hacia la derecha
+					enemies->Add(pos, EnemyType::ZOMBIE, area, Look::LEFT); // El zombie se moverï¿½ hacia la derecha
 				}
 				else
 				{
-					// Si el jugador está a la izquierda, hacemos aparecer al zombie a la derecha
+					// Si el jugador estï¿½ a la izquierda, hacemos aparecer al zombie a la derecha
 					pos.x = (LEVEL_WIDTH - 1) * TILE_SIZE; // Aseguramos que el zombie aparezca dentro del mapa
-					enemies->Add(pos, EnemyType::ZOMBIE, area, Look::RIGHT); // El zombie se moverá hacia la izquierda
+					enemies->Add(pos, EnemyType::ZOMBIE, area, Look::RIGHT); // El zombie se moverï¿½ hacia la izquierda
 				}
 
 			}
@@ -367,6 +462,11 @@ void Scene::Update()
 	else if (IsKeyPressed(KEY_SIX))		LoadLevel(6);
 	else if (IsKeyPressed(KEY_SEVEN))	LoadLevel(7);
 	else if (IsKeyPressed(KEY_D))		player->GetDamage(Look::RIGHT);
+	else if (IsKeyPressed(KEY_EIGHT))	LoadLevel(8);
+	else if (IsKeyPressed(KEY_NINE))	LoadLevel(9);
+	else if (IsKeyPressed(KEY_T))		LoadLevel(10);
+	else if (IsKeyPressed(KEY_Y))		LoadLevel(11);
+	else if (IsKeyPressed(KEY_U))		LoadLevel(12);
 
 	level->Update();
 	player->Update();
@@ -385,9 +485,9 @@ void Scene::Update()
 		// Si un zombie llega a la mitad de la pantalla
 		if (zombiePos.x == WINDOW_WIDTH / 2)
 		{
-			// Añade otro zombie
+			// Aï¿½ade otro zombie
 			Point pos;
-			pos.y = 191; // Asumiendo que quieres que el nuevo zombie aparezca en la misma posición y que el jugador
+			pos.y = 191; // Asumiendo que quieres que el nuevo zombie aparezca en la misma posiciï¿½n y que el jugador
 
 			if (player->GetPlayerPosX() > WINDOW_WIDTH / 2)
 			{
@@ -412,7 +512,7 @@ void Scene::Render()
 	if (debug == DebugMode::OFF || debug == DebugMode::SPRITES_AND_HITBOXES)
 	{
 		RenderObjects();
-		player->Draw(); // Llama a la nueva función Draw del jugador
+		player->Draw(); // Llama a la nueva funciï¿½n Draw del jugador
 		enemies->Draw();
 	}
 	if (debug == DebugMode::SPRITES_AND_HITBOXES || debug == DebugMode::ONLY_HITBOXES)
@@ -464,7 +564,7 @@ void Scene::CheckCollisions()
 		enemy_box = enemy->GetHitbox();
 		if (player_box.TestAABB(enemy_box))
 		{
-			// Determinar la dirección del daño
+			// Determinar la direcciï¿½n del daï¿½o
 			Look damageDirection = player->GetPlayerPosX() > enemy->GetPos().x ? Look::LEFT : Look::RIGHT;
 			player->GetDamage(damageDirection);
 			break; // Only take damage once per update cycle
@@ -571,6 +671,12 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(7);
 			break;
 		}
+		else if (y + PLAYER_PHYSICAL_HEIGHT >= LEVEL_HEIGHT * TILE_SIZE)
+		{
+			player->SetPos({ (10 * TILE_SIZE)-PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(8);
+			break;
+		}
 	case 6:
 		if (x < 0)
 		{
@@ -582,6 +688,12 @@ void Scene::UpdateBackground(int s)
 		{
 			player->SetPos({ 15, y });
 			LoadLevel(4);
+			break;
+		}
+		else if (y + PLAYER_PHYSICAL_HEIGHT >= LEVEL_HEIGHT * TILE_SIZE)
+		{
+			player->SetPos({ (5 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(11);
 			break;
 		}
 	case 7:
@@ -596,6 +708,69 @@ void Scene::UpdateBackground(int s)
 			player->SetPos({ 15, y });
 			LoadLevel(6);
 			break;
+		}
+	case 8:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(9);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(10);
+			break;
+		}
+		else if (y + PLAYER_PHYSICAL_HEIGHT <= LEVEL_HEIGHT * TILE_SIZE)
+		{
+			player->SetPos({ (11 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(5);
+			break;
+		}
+	case 9:
+		if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(8);
+			break;
+		}
+	case 10:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(8);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(11);
+			break;
+		}
+	case 11:
+		if (x < 0)
+		{
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(10);
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			player->SetPos({ 15, y });
+			LoadLevel(12);
+			break;
+		}
+		else if (y + PLAYER_PHYSICAL_HEIGHT <= LEVEL_HEIGHT * TILE_SIZE)
+		{
+			player->SetPos({ (5 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, y });
+			LoadLevel(6);
+			break;
+		}
+	case 12:
+		if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			//Release();
 		}
 	}
 }
