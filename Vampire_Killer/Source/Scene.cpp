@@ -54,7 +54,7 @@ Scene::~Scene()
 AppStatus Scene::Init()
 {
 	//Create player
-	player = new Player({ 0, LEVEL_HEIGHT * TILE_SIZE - TILE_SIZE }, State::IDLE, Look::RIGHT);
+	player = new Player({ 15, LEVEL_HEIGHT * TILE_SIZE - TILE_SIZE }, State::IDLE, Look::RIGHT);
 	if (player == nullptr)
 	{
 		LOG("Failed to allocate memory for Player");
@@ -367,12 +367,13 @@ AppStatus Scene::LoadLevel(int stage)
 
 	//Entities and objects
 	i = 0;
-	for (y = 0; y < LEVEL_HEIGHT; ++y)
+	for (y = 0; y <= LEVEL_HEIGHT-2; ++y)
+	//for(y=0; y < LEVEL_HEIGHT; ++y)
 	{
-		for (x = 0; x < LEVEL_WIDTH; ++x)
+	for(x=0; x < LEVEL_WIDTH; ++x)
 		{
 			tile = (Tile)map[i];
-			if (tile == Tile::EMPTY)
+			if (tile == Tile::AIR)
 			{
 				map[i] = 0;
 			}
@@ -404,32 +405,29 @@ AppStatus Scene::LoadLevel(int stage)
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 
-				// Obtenemos la posici�n del jugador
+				// Obtenemos la posicion del jugador
 				int playerPosX = player->GetPlayerPosX();
 
-				// Aqu� agregas la condici�n para que los zombis solo aparezcan en los niveles
+				// Aqui agregas la condicion para que los zombis solo aparezcan en los niveles
 				if (stage == 4)
 				{
 					hitbox = enemies->GetEnemyHitBox(pos, EnemyType::ZOMBIE);
 					area = level->GetSweptAreaX(hitbox);
 				}
-				// Comprobamos si el jugador est� a la derecha o a la izquierda
+				// Comprobamos si el jugador esta a la derecha o a la izquierda
 				if (playerPosX > WINDOW_WIDTH / 2)
 				{
-					// Si el jugador est� a la derecha, hacemos aparecer al zombie a la izquierda
+					// Si el jugador esta a la derecha, hacemos aparecer al zombie a la izquierda
 					pos.x = 0;
-					enemies->Add(pos, EnemyType::ZOMBIE, area, Look::LEFT); // El zombie se mover� hacia la derecha
+					enemies->Add(pos, EnemyType::ZOMBIE, area, Look::LEFT); // El zombie se movera hacia la derecha
 				}
 				else
 				{
-					// Si el jugador est� a la izquierda, hacemos aparecer al zombie a la derecha
+					// Si el jugador esta a la izquierda, hacemos aparecer al zombie a la derecha
 					pos.x = (LEVEL_WIDTH - 1) * TILE_SIZE; // Aseguramos que el zombie aparezca dentro del mapa
-					enemies->Add(pos, EnemyType::ZOMBIE, area, Look::RIGHT); // El zombie se mover� hacia la izquierda
+					enemies->Add(pos, EnemyType::ZOMBIE, area, Look::RIGHT); // El zombie se movera hacia la izquierda
 				}
-
 			}
-
-
 			else
 			{
 				LOG("Internal error loading scene: invalid entity or object tile id")
@@ -461,12 +459,12 @@ void Scene::Update()
 	else if (IsKeyPressed(KEY_FIVE))	LoadLevel(5);
 	else if (IsKeyPressed(KEY_SIX))		LoadLevel(6);
 	else if (IsKeyPressed(KEY_SEVEN))	LoadLevel(7);
-	else if (IsKeyPressed(KEY_D))		player->GetDamage(Look::RIGHT);
 	else if (IsKeyPressed(KEY_EIGHT))	LoadLevel(8);
 	else if (IsKeyPressed(KEY_NINE))	LoadLevel(9);
 	else if (IsKeyPressed(KEY_T))		LoadLevel(10);
 	else if (IsKeyPressed(KEY_Y))		LoadLevel(11);
 	else if (IsKeyPressed(KEY_U))		LoadLevel(12);
+	else if (IsKeyPressed(KEY_D))		player->GetDamage(Look::RIGHT);
 
 	level->Update();
 	player->Update();
@@ -671,12 +669,12 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(7);
 			break;
 		}
-		else if (y + PLAYER_PHYSICAL_HEIGHT >= LEVEL_HEIGHT * TILE_SIZE)
+		/*else if (y + PLAYER_PHYSICAL_HEIGHT >= LEVEL_HEIGHT * TILE_SIZE)
 		{
 			player->SetPos({ (10 * TILE_SIZE)-PLAYER_PHYSICAL_WIDTH, y });
 			LoadLevel(8);
 			break;
-		}
+		}*/
 	case 6:
 		if (x < 0)
 		{
@@ -690,12 +688,12 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(4);
 			break;
 		}
-		else if (y + PLAYER_PHYSICAL_HEIGHT >= LEVEL_HEIGHT * TILE_SIZE)
+	/*	else if (y + PLAYER_PHYSICAL_HEIGHT >= LEVEL_HEIGHT * TILE_SIZE)
 		{
 			player->SetPos({ (5 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, y });
 			LoadLevel(11);
 			break;
-		}
+		}*/
 	case 7:
 		if (x < 0)
 		{
@@ -722,12 +720,12 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(10);
 			break;
 		}
-		else if (y + PLAYER_PHYSICAL_HEIGHT <= LEVEL_HEIGHT * TILE_SIZE)
+	/*	else if (y + PLAYER_PHYSICAL_HEIGHT <= LEVEL_HEIGHT * TILE_SIZE)
 		{
 			player->SetPos({ (11 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, y });
 			LoadLevel(5);
 			break;
-		}
+		}*/
 	case 9:
 		if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
 		{
@@ -761,16 +759,22 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(12);
 			break;
 		}
-		else if (y + PLAYER_PHYSICAL_HEIGHT <= LEVEL_HEIGHT * TILE_SIZE)
+		/*else if (y + PLAYER_PHYSICAL_HEIGHT <= LEVEL_HEIGHT * TILE_SIZE)
 		{
 			player->SetPos({ (5 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, y });
 			LoadLevel(6);
 			break;
-		}
+		}*/
 	case 12:
 		if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
 		{
-			//Release();
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE - PLAYER_PHYSICAL_WIDTH), y });
+			break;
+		}
+		else if (x < 0)
+		{
+			player->SetPos({ 0,y });
+			break;
 		}
 	}
 }

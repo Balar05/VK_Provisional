@@ -386,7 +386,7 @@ void Player::MoveY()
 		}
 		else
 		{
-			if (state != State::FALLING) StartFalling_NJ();
+			if (state != State::FALLING) StartFalling();
 		}
 	}
 }
@@ -462,6 +462,7 @@ void Player::LogicJumping()
 			}
 			else if (IsDescending())
 			{
+				state = State::FALLING;
 				if (IsLookingRight())	SetAnimation((int)PlayerAnim::FALLING_RIGHT);
 				else					SetAnimation((int)PlayerAnim::FALLING_LEFT);
 			}
@@ -475,8 +476,7 @@ void Player::LogicJumping()
 			//This prevents scenarios where, after levitating due to a previous jump, we found
 			//ourselves inside a tile, and the entity would otherwise be placed above the tile,
 			//crossing it.
-			if (!map->TestCollisionGround(prev_box, &prev_y) &&
-				map->TestCollisionGround(box, &pos.y))
+			if (!map->TestCollisionGround(prev_box, &prev_y) && map->TestCollisionGround(box, &pos.y))
 			{
 				Stop();
 			}
