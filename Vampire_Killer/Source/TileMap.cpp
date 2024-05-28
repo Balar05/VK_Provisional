@@ -313,6 +313,7 @@ bool TileMap::TestOnLadder(const AABB& box, int* px) const
 	return false;
 }
 
+
 //int TileMap::GetLadderCenterPos(int pixel_x, int pixel_y) const
 //{
 //	int tx, ty;

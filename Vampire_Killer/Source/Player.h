@@ -35,7 +35,7 @@
 #define GRAVITY_FORCE			1
 
 //Logic states
-enum class State { IDLE, WALKING, JUMPING, SNEAKING, FALLING, ATTACKING,RECOILING, DEAD };
+enum class State { IDLE, WALKING, JUMPING, CLIMBING, SNEAKING, FALLING, ATTACKING,RECOILING, DEAD };
 
 
 typedef struct //Temporizador
@@ -55,6 +55,7 @@ enum class PlayerAnim {
 	ATTACKING_LEFT, ATTACKING_RIGHT,
 	DEAD_LEFT, DEAD_RIGHT,
 	CLIMBING, CLIMBING_PRE_TOP, CLIMBING_TOP,
+	CLIMBING_RIGHT, CLIMBING_LEFT,
 	SHOCK_LEFT, SHOCK_RIGHT,
 	TELEPORT_LEFT, TELEPORT_RIGHT,
 	NUM_ANIMATIONS
@@ -135,9 +136,9 @@ private:
 	void MoveY();
 	void MoveY_SNEAK();
 	void LogicJumping();
+	void LogicClimbing(); //new
 	void Attack();
-	//void LogicClimbing(); //new
-
+	
 	//Animation management
 	void SetAnimation(int id);
 	PlayerAnim GetAnimation();
@@ -147,6 +148,7 @@ private:
 	void StartFalling();
 	void StartFalling_NJ();
 	void StartJumping();
+	void StartClimbing();
 	//void StartClimbingRight(); //new
 	//void StartClimbingLeft();  //new
 	//void StartClimbingDownRight(); //new
@@ -170,7 +172,6 @@ private:
 	Timer damageTimer;     // Timer for damage invincibility
 	float damageDuration = 1.0f; // Duration of the invincibility
 	
-
 	State state;
 	Look look;
 	int jump_delay;

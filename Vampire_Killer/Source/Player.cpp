@@ -225,11 +225,11 @@ void Player::StopSneaking()
 
 
 void Player::StartAttacking() {
-	// Establecer el estado a ATTACKING solo si no est� actualmente atacando
+	// Establecer el estado a ATTACKING solo si no esta actualmente atacando
 	{
 		state = State::ATTACKING;
 		PlaySound(soundArray[0]);
-		// Establecer la animaci�n de ataque seg�n la direcci�n del jugador
+		// Establecer la animaci�n de ataque segun la direccion del jugador
 		if (IsLookingRight()) {
 			SetAnimation((int)PlayerAnim::ATTACKING_RIGHT);
 		}
@@ -369,6 +369,10 @@ void Player::MoveY()
 	{
 		LogicJumping();
 	}
+	else if (state == State::CLIMBING)
+	{
+		LogicClimbing();
+	}
 
 	else //idle, walking, falling
 	{
@@ -378,10 +382,14 @@ void Player::MoveY()
 		{
 			if (state == State::FALLING) Stop();
 
-
-			else if (IsKeyPressed(KEY_UP))
+			else if (IsKeyPressed(KEY_UP) && !map->TestOnLadder(box, &pos.y))
 			{
 				StartJumping();
+			}
+			else
+			{
+				if (IsKeyPressed(KEY_UP) && map->TestOnLadder(box, &pos.y))	StartClimbing();
+				else if (IsKeyPressed(KEY_DOWN) && map->TestOnLadder(box, &pos.y))	StartClimbing();
 			}
 		}
 		else
@@ -545,4 +553,97 @@ int Player::GetPlayerPosX()
 int Player::GetPlayerPosY()
 {
 	return pos.y;
+}
+
+void Player::LogicClimbing()
+{
+	AABB box;
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
+	int tmp;
+
+	if (IsKeyDown(KEY_UP))
+	{
+		pos.y -= PLAYER_LADDER_SPEED;
+		//CheckPosY();
+		if (IsLookingRight())
+		{
+			pos.x += PLAYER_LADDER_SPEED;
+		}
+		else if (IsLookingLeft())
+		{
+			pos.x -= PLAYER_LADDER_SPEED;
+		}
+		sprite->NextFrame();
+	}
+	else if (IsKeyDown(KEY_DOWN))
+	{
+		pos.y += PLAYER_LADDER_SPEED;
+		//CheckPosY();
+		if (IsLookingRight())
+		{
+			look = Look::LEFT;
+			pos.x -= PLAYER_LADDER_SPEED;
+		}
+		else if (IsLookingLeft())
+		{
+			look = Look::RIGHT;
+			pos.x -= PLAYER_LADDER_SPEED;
+		}
+		sprite->PrevFrame();
+	}
+
+	//It is important to first check LadderTop due to its condition as a collision ground.
+	//By doing so, we ensure that we don't stop climbing down immediately after starting the descent.
+
+	box = GetHitbox();
+	if (map->TestOnLadderTop(box, &tmp))
+	{
+		if (IsLookingRight())
+		{
+			if (IsInFirstHalfTile())	SetAnimation((int)PlayerAnim::CLIMBING_RIGHT);
+		}
+		else if (IsLookingLeft())
+		{
+			if (IsInSecondHalfTile())	SetAnimation((int)PlayerAnim::CLIMBING_LEFT);
+		}
+
+		else	LOG("Internal error, tile should be a LADDER_TOP, coord: (%d,%d)", box.pos.x, box.pos.y);
+	}
+
+	else if (map->TestCollisionGround(box, &pos.y))
+	{
+		//Case leaving the ladder descending.
+		Stop();
+		sprite->SetAutomaticMode();
+	}
+	else if (!map->TestOnLadder(box, &tmp))
+	{
+		//Case leaving the ladder ascending.
+		//If we are not in a LadderTop, colliding ground or in the Ladder it means we are leaving
+		//ther ladder ascending.
+		Stop();
+		sprite->SetAutomaticMode();
+	}
+	/*else
+	{
+		if (GetAnimation() != PlayerAnim::CLIMBING_RIGHT)	SetAnimation((int)PlayerAnim::CLIMBING_RIGHT);
+		else if (GetAnimation() != PlayerAnim::CLIMBING_LEFT)	SetAnimation((int)PlayerAnim::CLIMBING_LEFT);
+	}*/
+}
+
+void Player::StartClimbing()
+{
+	state = State::CLIMBING;
+	if (look == Look::RIGHT)
+	{
+		SetAnimation((int)PlayerAnim::CLIMBING_RIGHT);
+		Sprite* sprite = dynamic_cast<Sprite*>(render);
+		sprite->SetManualMode();
+	}
+	else if (look == Look::LEFT)
+	{
+		SetAnimation((int)PlayerAnim::CLIMBING_LEFT);
+		Sprite* sprite = dynamic_cast<Sprite*>(render);
+		sprite->SetManualMode();
+	}
 }
