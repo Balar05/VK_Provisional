@@ -197,7 +197,7 @@ bool TileMap::CollisionY(const Point& p, int distance) const
 		tile = GetTileIndex(x, y);
 
 		//One solid or laddertop tile is sufficient
-		if (IsTileSolid(tile)/* || IsTileLadderTop(tile)*/)
+		if (IsTileSolid(tile) || IsTileLadderTop(tile))
 			return true;
 	}
 	return false;

@@ -406,8 +406,8 @@ void Player::MoveY()
 				box = GetHitbox();
 				if (map->TestOnLadder(box, &pos.x))
 					StartClimbing();
-				else if (map->TestOnLadder(box, &pos.x))
-					StartClimbing();
+				/*else if (map->TestOnLadder(box, &pos.x))
+					StartClimbing();*/
 			}
 		}
 		else
@@ -582,7 +582,6 @@ void Player::LogicClimbing()
 	if (IsKeyDown(KEY_UP))
 	{
 		pos.y -= PLAYER_LADDER_SPEED;
-		//CheckPosY();
 		if (IsLookingRight())
 		{
 			pos.x += PLAYER_LADDER_SPEED;
@@ -596,22 +595,21 @@ void Player::LogicClimbing()
 	else if (IsKeyDown(KEY_DOWN))
 	{
 		pos.y += PLAYER_LADDER_SPEED;
-		//CheckPosY();
 		if (IsLookingRight())
 		{
-			look = Look::LEFT;
+			//look = Look::LEFT;
 			pos.x -= PLAYER_LADDER_SPEED;
 		}
 		else if (IsLookingLeft())
 		{
-			look = Look::RIGHT;
+			//look = Look::RIGHT;
 			pos.x -= PLAYER_LADDER_SPEED;
 		}
 		sprite->PrevFrame();
 	}
 
-	//It is important to first check LadderTop due to its condition as a collision ground.
-	//By doing so, we ensure that we don't stop climbing down immediately after starting the descent.
+	It is important to first check LadderTop due to its condition as a collision ground.
+	By doing so, we ensure that we don't stop climbing down immediately after starting the descent.
 
 	box = GetHitbox();
 	if (map->TestOnLadderTop(box, &tmp))
