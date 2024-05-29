@@ -29,7 +29,7 @@ private:
     void ClearLevel();
     void RenderObjects() const;
     void RenderObjectsDebug(const Color& col) const;
-
+    void GenerateZombies();
     //void RenderGUI() const;
 
     Player* player;
@@ -45,4 +45,5 @@ private:
     //Texture2D background = LoadTexture("images/Sprites/256x176 Levels.png");
     Rectangle rc;
     int currentStage;
+    int frameCounter;
 };

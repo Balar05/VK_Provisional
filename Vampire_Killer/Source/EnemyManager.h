@@ -9,6 +9,8 @@ public:
 
 	AppStatus Initialise();
 
+
+
 	//Add a new enemy with the given position, type, action area and looking direction
 	void Add(const Point& pos, EnemyType type, const AABB& area, Look look = Look::RIGHT);
 
@@ -30,7 +32,7 @@ public:
 
 	std::vector<Point> GetZombiePositions() const;
 
-	std::vector<Enemy*> GetEnemies() const { return enemies; }
+	std::vector<Enemy*>& GetEnemies() { return enemies; }
 
 private:
 	std::vector<Enemy*> enemies;

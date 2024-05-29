@@ -31,7 +31,7 @@ AppStatus Game::Initialise(float scale)
     InitWindow(screenWidth, screenHeight, "Vampire Killer MSX2");
 
     // Switch to fullscreen mode
-    ToggleFullscreen();
+    //ToggleFullscreen();
 
     InitAudioDevice();
 
@@ -123,7 +123,14 @@ AppStatus Game::Update()
     case GameState::INTRO:
     {
         if (IsKeyPressed(KEY_ESCAPE)) return AppStatus::QUIT;
-
+        if (IsKeyPressed(KEY_ZERO)) // Salto al estado PLAYING al presionar 0
+        {
+            introPlayed = true;
+            animation2Played = true;
+            music1Played = true;
+            state = GameState::PLAYING;
+            break;
+        }
         if (!introPlayed)
         {
             framesCounter++;

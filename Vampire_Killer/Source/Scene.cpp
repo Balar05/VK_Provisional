@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "LevelBackground.h"
 #include "Enemy.h"
+#include <algorithm>
 
 Scene::Scene() : currentStage(1)
 {
@@ -221,7 +222,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 10, 3, 1, 2, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 7, 0, 0/*candle*/, 0, 0, 0, 0/*candle */, 0, 0, 0, 0,
 				0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 7, 0, 0, 0, 200, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
 	}
@@ -269,6 +270,8 @@ AppStatus Scene::LoadLevel(int stage)
 		LOG("Failed to load level, stage %d doesn't exist", stage);
 		return AppStatus::ERROR;
 	}
+
+	enemies->Release();
 
 	//Entities and objects
 	i = 0;
@@ -346,12 +349,14 @@ AppStatus Scene::LoadLevel(int stage)
 	level->Load(map, LEVEL_WIDTH, LEVEL_HEIGHT);
 	delete map;
 
+	frameCounter = 0;
+
 	return AppStatus::OK;
 }
 void Scene::Update()
 {
 	Point p1, p2;
-	AABB hitbox,area;
+	AABB hitbox, area;
 
 	//Switch between the different debug modes: off, on (sprites & hitboxes), on (hitboxes) 
 	if (IsKeyPressed(KEY_F1))
@@ -359,17 +364,20 @@ void Scene::Update()
 		debug = (DebugMode)(((int)debug + 1) % (int)DebugMode::SIZE);
 	}
 	//Debug levels instantly
-	if (IsKeyPressed(KEY_ONE))			LoadLevel(1);
-	else if (IsKeyPressed(KEY_TWO))		LoadLevel(2);
-	else if (IsKeyPressed(KEY_THREE))	LoadLevel(3);
-	else if (IsKeyPressed(KEY_FOUR))	LoadLevel(4);
-	else if (IsKeyPressed(KEY_FIVE))	LoadLevel(5);
-	else if (IsKeyPressed(KEY_SIX))		LoadLevel(6);
-	else if (IsKeyPressed(KEY_SEVEN))	LoadLevel(7);
-	else if (IsKeyPressed(KEY_D))		player->GetDamage(Look::RIGHT);
+	if (IsKeyPressed(KEY_ONE))            LoadLevel(1);
+	else if (IsKeyPressed(KEY_TWO))        LoadLevel(2);
+	else if (IsKeyPressed(KEY_THREE))    LoadLevel(3);
+	else if (IsKeyPressed(KEY_FOUR))    LoadLevel(4);
+	else if (IsKeyPressed(KEY_FIVE))    LoadLevel(5);
+	else if (IsKeyPressed(KEY_SIX))        LoadLevel(6);
+	else if (IsKeyPressed(KEY_SEVEN))    LoadLevel(7);
+	else if (IsKeyPressed(KEY_D))        player->GetDamage(Look::RIGHT);
 
 	level->Update();
 	player->Update();
+
+	// Generar nuevos zombies según la lógica de tu juego
+	GenerateZombies();
 
 	UpdateBackground(currentStage);
 
@@ -378,30 +386,42 @@ void Scene::Update()
 	hitbox = player->GetHitbox();
 	enemies->Update(hitbox);
 
-	std::vector<Point> zombiePositions = enemies->GetZombiePositions();
+	// Eliminamos la lógica que generaba zombies aquí, para no duplicar la generación
 
-	for (const Point& zombiePos : zombiePositions)
+	// Si es necesario, podemos agregar cualquier otra lógica de actualización aquí
+}
+
+void Scene::GenerateZombies()
+{
+	if (currentStage != 4 && currentStage != 5)
 	{
-		// Si un zombie llega a la mitad de la pantalla
-		if (zombiePos.x == WINDOW_WIDTH / 2)
-		{
-			// Añade otro zombie
-			Point pos;
-			pos.y = 191; // Asumiendo que quieres que el nuevo zombie aparezca en la misma posición y que el jugador
-
-			if (player->GetPlayerPosX() > WINDOW_WIDTH / 2)
-			{
-				pos.x = 0;
-				enemies->Add(pos, EnemyType::ZOMBIE, area, Look::LEFT);
-			}
-			else
-			{
-				pos.x = (LEVEL_WIDTH - 1) * TILE_SIZE;
-				enemies->Add(pos, EnemyType::ZOMBIE, area, Look::RIGHT);
-			}
-		}
+		return; // No generar zombies si no estamos en el nivel 4 o 5
 	}
 
+	// Lógica de generación de zombies
+	static int frameCounter = 0;
+	frameCounter++;
+
+	if (frameCounter >= 120) // Genera un zombie cada 120 frames (2 segundos si el juego corre a 60 FPS)
+	{
+		frameCounter = 0;
+
+		Point pos;
+		pos.y = 191; // Altura en la que quieres que aparezcan los zombies
+
+		AABB area; // Crear un área adecuada para el enemigo
+
+		if (player->GetPlayerPosX() > WINDOW_WIDTH / 2)
+		{
+			pos.x = 0;
+			enemies->Add(pos, EnemyType::ZOMBIE, area, Look::LEFT);
+		}
+		else
+		{
+			pos.x = (LEVEL_WIDTH - 1) * TILE_SIZE;
+			enemies->Add(pos, EnemyType::ZOMBIE, area, Look::RIGHT);
+		}
+	}
 }
 void Scene::Render()
 {
@@ -459,18 +479,32 @@ void Scene::CheckCollisions()
 	}
 
 	// Check collisions with enemies
-	for (const Enemy* enemy : enemies->GetEnemies())
-	{
-		enemy_box = enemy->GetHitbox();
-		if (player_box.TestAABB(enemy_box))
-		{
-			// Determinar la dirección del daño
-			Look damageDirection = player->GetPlayerPosX() > enemy->GetPos().x ? Look::LEFT : Look::RIGHT;
-			player->GetDamage(damageDirection);
-			break; // Only take damage once per update cycle
-		}
-	}
+	auto& enemiesList = enemies->GetEnemies();
+	enemiesList.erase(std::remove_if(enemiesList.begin(), enemiesList.end(),
+		[this, &player_box](Enemy* enemy) {
+			AABB enemy_box = enemy->GetHitbox();
+
+			// Check collision with player hitbox
+			if (player_box.TestAABB(enemy_box)) {
+				// Determinar la dirección del daño
+				Look damageDirection = player->GetPlayerPosX() > enemy->GetPos().x ? Look::LEFT : Look::RIGHT;
+				player->GetDamage(damageDirection);
+				return false; // Don't remove enemy
+			}
+
+			// Check collision with player attack hitbox
+			AABB attack_hitbox = player->GetAttackHitbox();
+			if (attack_hitbox.TestAABB(enemy_box)) {
+				// Eliminar al zombie
+				delete enemy;
+				return true; // Remove enemy
+			}
+
+			return false; // Don't remove enemy
+		}), enemiesList.end());
 }
+
+
 void Scene::ClearLevel()
 {
 	for (Object* obj : objects)
