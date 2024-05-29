@@ -419,21 +419,25 @@ void Player::MoveY()
 
 void Player::MoveY_SNEAK()
 {
+	AABB box;
+
 	if (state == State::ATTACKING) {
 		return;
 	}
+	if (state == State::CLIMBING)	return;
 
 	if (IsKeyDown(KEY_DOWN))
 	{
-		if (state != State::SNEAKING)
-			StartSneaking();
-
+		if (!map->TestOnLadder(box, &pos.y))
+		{
+			if (state != State::SNEAKING)
+				StartSneaking();
+		}
 	}
 	else
 	{
 		if (state == State::SNEAKING)
 			StopSneaking();
-
 	}
 }
 
@@ -608,8 +612,8 @@ void Player::LogicClimbing()
 		sprite->PrevFrame();
 	}
 
-	It is important to first check LadderTop due to its condition as a collision ground.
-	By doing so, we ensure that we don't stop climbing down immediately after starting the descent.
+	/*It is important to first check LadderTop due to its condition as a collision ground.
+	By doing so, we ensure that we don't stop climbing down immediately after starting the descent.*/
 
 	box = GetHitbox();
 	if (map->TestOnLadderTop(box, &tmp))
