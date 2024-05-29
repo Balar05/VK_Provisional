@@ -94,6 +94,14 @@ AppStatus Player::Initialise()
 	for (i = 0; i < 4; ++i)
 		sprite->AddKeyFrame((int)PlayerAnim::CLIMBING, { (float)i * n, 6 * n, n, n });
 
+	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING_RIGHT, ANIM_LADDER_DELAY);
+	for (i = 0; i < 2; ++i)
+		sprite->AddKeyFrame((int)PlayerAnim::CLIMBING_RIGHT, { (float)i * n, 1 * n, n, n });
+	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING_LEFT, ANIM_LADDER_DELAY);
+	for (i = 0; i < 2; ++i)
+		sprite->AddKeyFrame((int)PlayerAnim::CLIMBING_LEFT, { (float)i * n, 1 * n, -n, n });
+
+
 	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING_PRE_TOP, ANIM_DELAY);
 	sprite->AddKeyFrame((int)PlayerAnim::CLIMBING_PRE_TOP, { 4 * n, 6 * n, n, n });
 	sprite->SetAnimationDelay((int)PlayerAnim::CLIMBING_TOP, ANIM_DELAY);
@@ -264,6 +272,7 @@ void Player::ChangeAnimRight()
 	case State::FALLING: SetAnimation((int)PlayerAnim::FALLING_RIGHT); break;
 	case State::ATTACKING: SetAnimation((int)PlayerAnim::ATTACKING_RIGHT); break;
 	case State::DEAD: SetAnimation((int)PlayerAnim::DEAD_RIGHT); break;
+	case State::CLIMBING: SetAnimation((int)PlayerAnim::CLIMBING_RIGHT); break;
 	}
 }
 void Player::ChangeAnimLeft()
@@ -278,6 +287,7 @@ void Player::ChangeAnimLeft()
 	case State::FALLING: SetAnimation((int)PlayerAnim::FALLING_LEFT); break;
 	case State::ATTACKING: SetAnimation((int)PlayerAnim::ATTACKING_LEFT); break;
 	case State::DEAD: SetAnimation((int)PlayerAnim::DEAD_LEFT); break;
+	case State::CLIMBING: SetAnimation((int)PlayerAnim::CLIMBING_LEFT); break;
 	}
 }
 void Player::Update()
@@ -291,7 +301,7 @@ void Player::Update()
 	}
 	else
 	{
-		// L�gica de retroceso (recoil)
+		// Logica de retroceso (recoil)
 		if (damageDirection == Look::LEFT)
 		{
 			dir.x = PLAYER_SPEED_X;
@@ -373,7 +383,6 @@ void Player::MoveY()
 	{
 		LogicClimbing();
 	}
-
 	else //idle, walking, falling
 	{
 		pos.y += PLAYER_SPEED_Y;
@@ -382,14 +391,23 @@ void Player::MoveY()
 		{
 			if (state == State::FALLING) Stop();
 
-			else if (IsKeyPressed(KEY_UP) && !map->TestOnLadder(box, &pos.y))
+			if (IsKeyDown(KEY_UP))
 			{
-				StartJumping();
+				box = GetHitbox();
+				if (map->TestOnLadder(box, &pos.x))
+					StartClimbing();
+				else
+				{
+					StartJumping();
+				}
 			}
-			else
+			else if (IsKeyDown(KEY_DOWN))
 			{
-				if (IsKeyPressed(KEY_UP) && map->TestOnLadder(box, &pos.y))	StartClimbing();
-				else if (IsKeyPressed(KEY_DOWN) && map->TestOnLadder(box, &pos.y))	StartClimbing();
+				box = GetHitbox();
+				if (map->TestOnLadder(box, &pos.x))
+					StartClimbing();
+				else if (map->TestOnLadder(box, &pos.x))
+					StartClimbing();
 			}
 		}
 		else
