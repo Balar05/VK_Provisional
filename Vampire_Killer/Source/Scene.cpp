@@ -280,7 +280,7 @@ AppStatus Scene::LoadLevel(int stage)
 			0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 9, 1, 2, 1, 2
+			1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 6, 1, 2, 1, 2
 		};
 	}
 	else if (stage == 9)
@@ -493,28 +493,10 @@ void Scene::GenerateZombies()
 {
 	if (currentStage != 4 && currentStage != 5)
 	{
-		// Si un zombie llega a la mitad de la pantalla
-		if (zombiePos.x == WINDOW_WIDTH / 2)
-		{
-			// A�ade otro zombie
-			Point pos;
-			pos.y = 191; // Asumiendo que quieres que el nuevo zombie aparezca en la misma posici�n y que el jugador
-
-			if (player->GetPlayerPosX() > WINDOW_WIDTH / 2)
-			{
-				pos.x = 0;
-				enemies->Add(pos, EnemyType::ZOMBIE, area, Look::LEFT);
-			}
-			else
-			{
-				pos.x = (LEVEL_WIDTH - 1) * TILE_SIZE;
-				enemies->Add(pos, EnemyType::ZOMBIE, area, Look::RIGHT);
-			}
-		}
 		return; // No generar zombies si no estamos en el nivel 4 o 5
 	}
 
-	// L�gica de generaci�n de zombies
+	// Lógica de generación de zombies
 	static int frameCounter = 0;
 	frameCounter++;
 
@@ -525,7 +507,7 @@ void Scene::GenerateZombies()
 		Point pos;
 		pos.y = 191; // Altura en la que quieres que aparezcan los zombies
 
-		AABB area; // Crear un �rea adecuada para el enemigo
+		AABB area; // Crear un área adecuada para el enemigo
 
 		if (player->GetPlayerPosX() > WINDOW_WIDTH / 2)
 		{
@@ -721,7 +703,7 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(7);
 			break;
 		}
-		else if (y - PLAYER_PHYSICAL_HEIGHT/4 < 2*TILE_SIZE)
+		else if (y < 2*TILE_SIZE)
 		{
 			player->SetPos({ (10 * TILE_SIZE)-PLAYER_PHYSICAL_WIDTH, (LEVEL_HEIGHT*TILE_SIZE)-(TILE_SIZE) });
 			LoadLevel(8);
@@ -740,10 +722,10 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(4);
 			break;
 		}
-		else if (y - PLAYER_PHYSICAL_HEIGHT / 4 < 2 * TILE_SIZE)
+		else if (y  < 2 * TILE_SIZE)
 		{
-			player->SetPos({ (5 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, (LEVEL_HEIGHT * TILE_SIZE) - (TILE_SIZE) });
-			LoadLevel(8);
+			player->SetPos({ (6 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, (LEVEL_HEIGHT * TILE_SIZE) - (TILE_SIZE) });
+			LoadLevel(11);
 			break;
 		}
 	case 7:
@@ -772,12 +754,13 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(10);
 			break;
 		}
-	/*	else if (y + PLAYER_PHYSICAL_HEIGHT <= LEVEL_HEIGHT * TILE_SIZE)
+		else if (y >= LEVEL_HEIGHT * TILE_SIZE)
 		{
-			player->SetPos({ (11 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, y });
 			LoadLevel(5);
+			player->SetPos({ (15 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, 4 * TILE_SIZE });
+
 			break;
-		}*/
+		}
 	case 9:
 		if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
 		{
@@ -816,12 +799,13 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(12);
 			break;
 		}
-		/*else if (y + PLAYER_PHYSICAL_HEIGHT <= LEVEL_HEIGHT * TILE_SIZE)
+		else if (y >= LEVEL_HEIGHT * TILE_SIZE)
 		{
-			player->SetPos({ (5 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, y });
 			LoadLevel(6);
+			player->SetPos({ (3 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, 4*TILE_SIZE });
+			
 			break;
-		}*/
+		}
 	case 12:
 		if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
 		{
