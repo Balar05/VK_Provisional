@@ -733,11 +733,11 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(8);
 			break;
 		}
-		/*else if (x < 2*TILE_SIZE || currentStage == 9)
+		else if (x < 0)
 		{
-			player->SetPos({ 2*TILE_SIZE,y });
+			player->SetPos({ 0,y });
 			break;
-		}*/
+		}
 	case 10:
 		if (x < 0)
 		{
