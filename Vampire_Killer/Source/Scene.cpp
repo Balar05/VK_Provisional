@@ -279,7 +279,7 @@ AppStatus Scene::LoadLevel(int stage)
 			0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+			1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 9, 1, 2, 1, 2
 		};
 	}
 	else if (stage == 9)
@@ -669,12 +669,12 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(7);
 			break;
 		}
-		/*else if (y + PLAYER_PHYSICAL_HEIGHT >= LEVEL_HEIGHT * TILE_SIZE)
+		else if (y - PLAYER_PHYSICAL_HEIGHT/4 < 2*TILE_SIZE)
 		{
-			player->SetPos({ (10 * TILE_SIZE)-PLAYER_PHYSICAL_WIDTH, y });
+			player->SetPos({ (10 * TILE_SIZE)-PLAYER_PHYSICAL_WIDTH, (LEVEL_HEIGHT*TILE_SIZE)-(TILE_SIZE) });
 			LoadLevel(8);
 			break;
-		}*/
+		}
 	case 6:
 		if (x < 0)
 		{
@@ -688,12 +688,12 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(4);
 			break;
 		}
-	/*	else if (y + PLAYER_PHYSICAL_HEIGHT >= LEVEL_HEIGHT * TILE_SIZE)
+		else if (y - PLAYER_PHYSICAL_HEIGHT / 4 < 2 * TILE_SIZE)
 		{
-			player->SetPos({ (5 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, y });
-			LoadLevel(11);
+			player->SetPos({ (5 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, (LEVEL_HEIGHT * TILE_SIZE) - (TILE_SIZE) });
+			LoadLevel(8);
 			break;
-		}*/
+		}
 	case 7:
 		if (x < 0)
 		{
@@ -733,6 +733,11 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(8);
 			break;
 		}
+		/*else if (x < 2*TILE_SIZE || currentStage == 9)
+		{
+			player->SetPos({ 2*TILE_SIZE,y });
+			break;
+		}*/
 	case 10:
 		if (x < 0)
 		{
@@ -755,7 +760,7 @@ void Scene::UpdateBackground(int s)
 		}
 		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
 		{
-			player->SetPos({ 15, y });
+			player->SetPos({ 15, (LEVEL_HEIGHT * TILE_SIZE) - (TILE_SIZE) });
 			LoadLevel(12);
 			break;
 		}

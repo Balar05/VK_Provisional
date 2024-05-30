@@ -394,7 +394,7 @@ void Player::MoveY()
 			if (IsKeyDown(KEY_UP))
 			{
 				box = GetHitbox();
-				if (map->TestOnLadder(box, &pos.x))
+				if (map->TestOnLadder(box, &pos.x) || map->TestOnLadderTop(box, &pos.y))
 					StartClimbing();
 				else
 				{
@@ -404,7 +404,7 @@ void Player::MoveY()
 			else if (IsKeyDown(KEY_DOWN))
 			{
 				box = GetHitbox();
-				if (map->TestOnLadder(box, &pos.x))
+				if (map->TestOnLadder(box, &pos.x) || map->TestOnLadderTop(box, &pos.y))
 					StartClimbing();
 				/*else if (map->TestOnLadder(box, &pos.x))
 					StartClimbing();*/
@@ -428,7 +428,7 @@ void Player::MoveY_SNEAK()
 
 	if (IsKeyDown(KEY_DOWN))
 	{
-		if (!map->TestOnLadder(box, &pos.y))
+		if (!map->TestOnLadder(box, &pos.y) || !map->TestOnLadderTop(box, &pos.y))
 		{
 			if (state != State::SNEAKING)
 				StartSneaking();
@@ -601,12 +601,12 @@ void Player::LogicClimbing()
 		pos.y += PLAYER_LADDER_SPEED;
 		if (IsLookingRight())
 		{
-			//look = Look::LEFT;
+			look = Look::LEFT;
 			pos.x -= PLAYER_LADDER_SPEED;
 		}
 		else if (IsLookingLeft())
 		{
-			//look = Look::RIGHT;
+			look = Look::RIGHT;
 			pos.x -= PLAYER_LADDER_SPEED;
 		}
 		sprite->PrevFrame();
@@ -620,11 +620,11 @@ void Player::LogicClimbing()
 	{
 		if (IsLookingRight())
 		{
-			if (IsInFirstHalfTile())	SetAnimation((int)PlayerAnim::CLIMBING_RIGHT);
+			/*if (IsInFirstHalfTile())*/	SetAnimation((int)PlayerAnim::CLIMBING_RIGHT);
 		}
 		else if (IsLookingLeft())
 		{
-			if (IsInSecondHalfTile())	SetAnimation((int)PlayerAnim::CLIMBING_LEFT);
+			/*if (IsInSecondHalfTile())*/	SetAnimation((int)PlayerAnim::CLIMBING_LEFT);
 		}
 
 		else	LOG("Internal error, tile should be a LADDER_TOP, coord: (%d,%d)", box.pos.x, box.pos.y);
