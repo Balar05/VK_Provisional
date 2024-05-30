@@ -667,3 +667,22 @@ void Player::StartClimbing()
 		sprite->SetManualMode();
 	}
 }
+
+AABB Player::GetAttackHitbox() const
+{
+	if (state == State::ATTACKING)
+	{
+		Point attack_pos = pos;
+		if (IsLookingRight())
+		{
+			attack_pos.x += width; // Ajuste para posicionar el hitbox de ataque a la derecha del jugador
+		}
+		else
+		{
+			attack_pos.x -= ATTACK_WIDTH; // Ajuste para posicionar el hitbox de ataque a la izquierda del jugador
+		}
+		attack_pos.y -= (height - ATTACK_HEIGHT) / 2; // Ajuste para centrar verticalmente el hitbox de ataque
+		return AABB(attack_pos, ATTACK_WIDTH, ATTACK_HEIGHT);
+	}
+	return AABB(); // Devuelve un hitbox vac�o si no est� atacando
+}

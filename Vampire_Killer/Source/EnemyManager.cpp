@@ -83,7 +83,9 @@ void EnemyManager::DrawDebug() const
 void EnemyManager::Release()
 {
 	for (Enemy* enemy : enemies)
+	{
 		delete enemy;
+	}
 	enemies.clear();
 }
 

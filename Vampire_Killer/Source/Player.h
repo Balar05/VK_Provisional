@@ -3,7 +3,7 @@
 #include "TileMap.h"
 
 //Representation model size: 32x32
-#define PLAYER_FRAME_SIZE		        32
+#define PLAYER_FRAME_SIZE		32
 
 //Logical model size: 12x28
 #define PLAYER_PHYSICAL_WIDTH	12
@@ -33,6 +33,8 @@
 
 //Gravity affects jumping velocity when jump_delay is 0
 #define GRAVITY_FORCE			1
+
+#define RECOIL_FORCE 5 // Nueva constante para la fuerza de retroceso
 
 //Logic states
 enum class State { IDLE, WALKING, JUMPING, CLIMBING, SNEAKING, FALLING, ATTACKING,RECOILING, DEAD };
@@ -79,6 +81,8 @@ public:
 	void Update();
 	void DrawDebug(const Color& col) const;
 	void Release();
+
+	AABB GetAttackHitbox() const;
 
 	const int totalFramesAttack = 3;
 	float currentFrameAttack = 0;

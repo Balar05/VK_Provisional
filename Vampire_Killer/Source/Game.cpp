@@ -25,14 +25,17 @@ Game::~Game()
 }
 AppStatus Game::Initialise(float scale)
 {
-    float w, h;
-    w = WINDOW_WIDTH * scale;
-    h = WINDOW_HEIGHT * scale;
+    // Initialize window with the native screen resolution
+    int screenWidth = GetScreenWidth();
+    int screenHeight = GetScreenHeight();
+    InitWindow(screenWidth, screenHeight, "Vampire Killer MSX2");
 
-    //Initialise window
-    InitWindow((int)w, (int)h, "Vampire Killer MSX2");
+    // Switch to fullscreen mode
+    //ToggleFullscreen();
+
     InitAudioDevice();
-    //Render texture initialisation, used to hold the rendering result so we can easily resize it
+
+    // Render texture initialization, used to hold the rendering result so we can easily resize it
     target = LoadRenderTexture(WINDOW_WIDTH, WINDOW_HEIGHT);
     if (target.id == 0)
     {
@@ -40,10 +43,11 @@ AppStatus Game::Initialise(float scale)
         return AppStatus::ERROR;
     }
     SetTextureFilter(target.texture, TEXTURE_FILTER_POINT);
-    src = { 0, 0, WINDOW_WIDTH, -WINDOW_HEIGHT };
-    dst = { 0, 0, w, h };
 
-    //Load resources
+    // Source rectangle is the size of the original game
+    src = { 0, 0, (float)WINDOW_WIDTH, -(float)WINDOW_HEIGHT };
+
+    // Load resources
     if (LoadResources() != AppStatus::OK)
     {
         LOG("Failed to load resources");
@@ -119,7 +123,14 @@ AppStatus Game::Update()
     case GameState::INTRO:
     {
         if (IsKeyPressed(KEY_ESCAPE)) return AppStatus::QUIT;
-
+        if (IsKeyPressed(KEY_ZERO)) // Salto al estado PLAYING al presionar 0
+        {
+            introPlayed = true;
+            animation2Played = true;
+            music1Played = true;
+            state = GameState::PLAYING;
+            break;
+        }
         if (!introPlayed)
         {
             framesCounter++;
@@ -434,11 +445,40 @@ void Game::Render()
 
     EndTextureMode();
 
-    //Draw render texture to screen, properly scaled
+    // Draw render texture to screen, properly scaled
     BeginDrawing();
-    DrawTexturePro(target.texture, src, dst, { 0, 0 }, 0.0f, WHITE);
+    ClearBackground(BLACK); // Clear the entire screen to black
+
+    // Calculate the center position for the render target
+    float screenWidth = (float)GetScreenWidth();
+    float screenHeight = (float)GetScreenHeight();
+    float scaleX = screenWidth / WINDOW_WIDTH;
+    float scaleY = screenHeight / WINDOW_HEIGHT;
+    float scale = (scaleX < scaleY) ? scaleX : scaleY;
+    float scaledWidth = WINDOW_WIDTH * scale;
+    float scaledHeight = WINDOW_HEIGHT * scale;
+    float offsetX = (screenWidth - scaledWidth) / 2;
+    float offsetY = (screenHeight - scaledHeight) / 2;
+
+    // Draw the render target texture centered on the screen
+    Rectangle dest = { offsetX, offsetY, scaledWidth, scaledHeight };
+    DrawTexturePro(target.texture, src, dest, { 0, 0 }, 0.0f, WHITE);
+
+    // Draw black bars (margins) if necessary to maintain aspect ratio
+    if (scaleX < scaleY) {
+        float barHeight = (screenHeight - scaledHeight) / 2;
+        DrawRectangle(0, 0, screenWidth, barHeight, BLACK); // Top bar
+        DrawRectangle(0, screenHeight - barHeight, screenWidth, barHeight, BLACK); // Bottom bar
+    }
+    else {
+        float barWidth = (screenWidth - scaledWidth) / 2;
+        DrawRectangle(0, 0, barWidth, screenHeight, BLACK); // Left bar
+        DrawRectangle(screenWidth - barWidth, 0, barWidth, screenHeight, BLACK); // Right bar
+    }
+
     EndDrawing();
 }
+
 
 void Game::Cleanup()
 {
