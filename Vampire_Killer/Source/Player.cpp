@@ -4,20 +4,36 @@
 #include "TileMap.h"
 #include "Globals.h"
 #include <raymath.h>
+#include "ResourceManager.h"
 
 Player::Player(const Point& p, State s, Look view) :
-	Entity(p, PLAYER_PHYSICAL_WIDTH, PLAYER_PHYSICAL_HEIGHT, PLAYER_FRAME_SIZE, PLAYER_FRAME_SIZE)
-{
+	Entity(p, PLAYER_PHYSICAL_WIDTH, PLAYER_PHYSICAL_HEIGHT, PLAYER_FRAME_SIZE, PLAYER_FRAME_SIZE) {
 	state = s;
 	look = view;
 	jump_delay = PLAYER_JUMP_DELAY;
 	map = nullptr;
 	score = 0;
-	lives = 100;
+	lives = 160;
+
+	healthBarSprite = nullptr; // Inicializar el puntero
 }
 Player::~Player()
 {
+	delete healthBarSprite;
+
 }
+void Player::Draw() const {
+    // Llama a la implementación base
+    Entity::Draw();
+
+    // Dibujar la barra de vida si está inicializada correctamente
+    if (healthBarSprite) {
+        for (int i = 0; i < lives / 10; ++i) {
+            healthBarSprite->Draw(59 + i * (HEALTH_BAR_WIDTH), 15);  // Ajustar la posición según sea necesario
+        }
+    }
+}
+
 AppStatus Player::Initialise()
 {
 	int i;
@@ -35,6 +51,20 @@ AppStatus Player::Initialise()
 	if (render == nullptr)
 	{
 		LOG("Failed to allocate memory for player sprite");
+		return AppStatus::ERROR;
+	}
+
+	if (data.LoadTexture(Resource::IMG_UI, "images/Sprites/orange.png") != AppStatus::OK) {
+		LOG("Failed to load health sprite texture");
+		return AppStatus::ERROR;
+	}
+
+	const Texture2D* healthTexture = data.GetTexture(Resource::IMG_UI);
+	if (healthTexture) {
+		healthBarSprite = new StaticImage(healthTexture, { 0, 0, HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT });
+	}
+	else {
+		LOG("Failed to get health sprite texture");
 		return AppStatus::ERROR;
 	}
 
@@ -391,7 +421,7 @@ void Player::MoveY()
 		{
 			if (state == State::FALLING) Stop();
 
-			if (IsKeyDown(KEY_UP))
+			if (IsKeyPressed(KEY_UP))
 			{
 				box = GetHitbox();
 				if (map->TestOnLadder(box, &pos.x) || map->TestOnLadderTop(box, &pos.y))
@@ -401,7 +431,7 @@ void Player::MoveY()
 					StartJumping();
 				}
 			}
-			else if (IsKeyDown(KEY_DOWN))
+			else if (IsKeyPressed(KEY_DOWN))
 			{
 				box = GetHitbox();
 				if (map->TestOnLadder(box, &pos.x) || map->TestOnLadderTop(box, &pos.y))
@@ -684,5 +714,5 @@ AABB Player::GetAttackHitbox() const
 		attack_pos.y -= (height - ATTACK_HEIGHT) / 2; // Ajuste para centrar verticalmente el hitbox de ataque
 		return AABB(attack_pos, ATTACK_WIDTH, ATTACK_HEIGHT);
 	}
-	return AABB(); // Devuelve un hitbox vac�o si no est� atacando
+	return AABB(); // Devuelve un hitbox vacio si no esta atacando
 }

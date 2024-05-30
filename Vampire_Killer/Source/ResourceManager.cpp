@@ -41,13 +41,12 @@ void ResourceManager::ReleaseTexture(Resource id)
 }
 
 //Get a texture by key
-const Texture2D* ResourceManager::GetTexture(Resource id) const
+const Texture2D* ResourceManager::GetTexture(Resource id) const 
 {
-    //Find the texture associated with the key and return it
     auto it = textures.find(id);
-    if (it != textures.end())   return &(it->second);
-
-    //Return nullptr if key is not found
+    if (it != textures.end()) {
+        return &(it->second);
+    }
     return nullptr;
 }
 
