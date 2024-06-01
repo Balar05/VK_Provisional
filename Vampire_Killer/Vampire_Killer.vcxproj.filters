@@ -81,6 +81,9 @@
     <ClCompile Include="Source\Murcielago.cpp">
       <Filter>Entities\Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="Source\LLama.cpp">
+      <Filter>Entities\Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Globals.h">
@@ -144,6 +147,9 @@
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="Source\Murcielago.h">
+      <Filter>Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LLama.h">
       <Filter>Entities\Enemies</Filter>
     </ClInclude>
   </ItemGroup>

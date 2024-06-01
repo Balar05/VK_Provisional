@@ -2,6 +2,7 @@
 #include "Zombie.h"
 #include "Guepardo.h"
 #include "Murcielago.h"
+#include "LLama.h"
 
 EnemyManager::EnemyManager()
 {
@@ -15,6 +16,11 @@ AppStatus EnemyManager::Initialise()
 {
 	ResourceManager& data = ResourceManager::Instance();
 	if (data.LoadTexture(Resource::IMG_ENEMIES, "images/sprites/32x32 Enemies.png") != AppStatus::OK)
+	{
+		LOG("Failed to load enemies sprite texture");
+		return AppStatus::ERROR;
+	}
+	else if (data.LoadTexture(Resource::IMG_LLAMA, "images/sprites/Llama.png") != AppStatus::OK)
 	{
 		LOG("Failed to load enemies sprite texture");
 		return AppStatus::ERROR;
@@ -34,6 +40,9 @@ void EnemyManager::Add(const Point& pos, EnemyType type, const AABB& area, Look 
 	}
 	else if (type == EnemyType::MURCIELAGO) {
 		enemy = new Murcielago(pos, MURCIELAGO_PHYSICAL_WIDTH, MURCIELAGO_PHYSICAL_HEIGHT, MURCIELAGO_FRAME_SIZE, MURCIELAGO_FRAME_SIZE);
+	}
+	else if (type == EnemyType::LLAMA) {
+		enemy = new LLama(pos, LLAMA_PHYSICAL_WIDTH, LLAMA_PHYSICAL_HEIGHT, LLAMA_FRAME_SIZE, LLAMA_PHYSICAL_HEIGHT);
 	}
 	else {
 		LOG("Internal error: trying to add a new enemy with invalid type");
@@ -60,6 +69,11 @@ AABB EnemyManager::GetEnemyHitBox(const Point& pos, EnemyType type) const
 	{
 		width = MURCIELAGO_PHYSICAL_WIDTH;
 		height = MURCIELAGO_PHYSICAL_HEIGHT;
+	}
+	else if (type == EnemyType::LLAMA)
+	{
+		width = LLAMA_PHYSICAL_WIDTH;
+		height = LLAMA_PHYSICAL_HEIGHT;
 	}
 
 	else
@@ -135,6 +149,20 @@ std::vector<Point> EnemyManager::GetMurcielagoPositions() const {
 	for (const Enemy* enemy : enemies) {
 		// Si el enemigo es un murcielago, añade su posición a la lista
 		if (dynamic_cast<const Guepardo*>(enemy)) {
+			positions.push_back(enemy->GetPos());
+		}
+	}
+
+	return positions;
+}
+
+std::vector<Point> EnemyManager::GetLLamaPositions() const {
+	std::vector<Point> positions;
+
+	// Recorre todos los enemigos
+	for (const Enemy* enemy : enemies) {
+		// Si el enemigo es un murcielago, añade su posición a la lista
+		if (dynamic_cast<const LLama*>(enemy)) {
 			positions.push_back(enemy->GetPos());
 		}
 	}

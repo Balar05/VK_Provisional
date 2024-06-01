@@ -7,7 +7,7 @@
 //#include "Murcielago.h"
 #include <algorithm>
 
-Scene::Scene() : currentStage(1), guepardoGenerated(false)
+Scene::Scene() : currentStage(1), guepardoGenerated(false), llamaGenerated(false)
 {
 	player = nullptr;
 	level = nullptr;
@@ -156,6 +156,7 @@ AppStatus Scene::LoadLevel(int stage)
 
 	size = LEVEL_WIDTH * LEVEL_HEIGHT;
 	guepardoGenerated = false;
+	llamaGenerated = false;
 
 	if (stage == 1)
 	{
@@ -172,7 +173,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 300, 0, 0, 0, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 
@@ -194,7 +195,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 300, 0, 0, 0, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 		};
@@ -214,7 +215,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 300, 0, 0, 0, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 		};
@@ -461,6 +462,15 @@ AppStatus Scene::LoadLevel(int stage)
 				enemies->Add(pos, EnemyType::MURCIELAGO, area, Look::RIGHT);
 				map[i] = 0;
 			}
+			else if (tile == Tile::LLAMA) {
+				pos.x = x * TILE_SIZE;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::LLAMA);
+				area = level->GetSweptAreaX(hitbox);
+				enemies->Add(pos, EnemyType::LLAMA, area, Look::RIGHT);
+				llamaGenerated = true;
+				map[i] = 0;
+			}
 		}
 	}
 	//Tile map
@@ -503,6 +513,8 @@ void Scene::Update() {
 	GenerateGuepardos();
 	// Generar nuevos murcielagos según la lógica de tu juego
 	GenerateMurcielagos();
+
+	GenerateLLama();
 
 	UpdateBackground(currentStage);
 
@@ -608,6 +620,31 @@ void Scene::GenerateMurcielagos()
 	}
 }
 
+void Scene::GenerateLLama() {
+
+	if ((currentStage == 1 || currentStage == 2 || currentStage == 3) && !llamaGenerated) {
+		Point pos;
+		AABB area;
+
+		if (currentStage == 1) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 64;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
+		}
+		else if (currentStage == 2) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 64;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
+		}
+		else if (currentStage == 3) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 64;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
+		}
+
+
+			enemies->Add(pos, EnemyType::LLAMA, area, Look::LEFT);
+			llamaGenerated = true;
+
+	}
+}
 
 
 

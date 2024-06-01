@@ -32,6 +32,7 @@ private:
     void GenerateZombies();
     void GenerateGuepardos();
     void GenerateMurcielagos();
+    void GenerateLLama();
     void RenderGUI() const;
 
     Player* player;
@@ -50,6 +51,7 @@ private:
     int frameCounter;
 
     bool guepardoGenerated;
+    bool llamaGenerated;
 
 
     Text* font1;
