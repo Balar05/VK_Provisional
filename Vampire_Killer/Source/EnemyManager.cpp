@@ -1,6 +1,7 @@
 ﻿#include "EnemyManager.h"
 #include "Zombie.h"
 #include "Guepardo.h"
+#include "Murcielago.h"
 
 EnemyManager::EnemyManager()
 {
@@ -31,6 +32,9 @@ void EnemyManager::Add(const Point& pos, EnemyType type, const AABB& area, Look 
 	else if (type == EnemyType::GUEPARDO) {
 		enemy = new Guepardo(pos, GUEPARDO_PHYSICAL_WIDTH, GUEPARDO_PHYSICAL_HEIGHT, GUEPARDO_FRAME_SIZE, GUEPARDO_FRAME_SIZE);
 	}
+	else if (type == EnemyType::MURCIELAGO) {
+		enemy = new Murcielago(pos, MURCIELAGO_PHYSICAL_WIDTH, MURCIELAGO_PHYSICAL_HEIGHT, MURCIELAGO_FRAME_SIZE, MURCIELAGO_FRAME_SIZE);
+	}
 	else {
 		LOG("Internal error: trying to add a new enemy with invalid type");
 		return;
@@ -51,6 +55,11 @@ AABB EnemyManager::GetEnemyHitBox(const Point& pos, EnemyType type) const
 	{
 		width = GUEPARDO_PHYSICAL_WIDTH;
 		height = GUEPARDO_PHYSICAL_HEIGHT;
+	}
+	else if (type == EnemyType::MURCIELAGO)
+	{
+		width = MURCIELAGO_PHYSICAL_WIDTH;
+		height = MURCIELAGO_PHYSICAL_HEIGHT;
 	}
 
 	else
@@ -111,6 +120,20 @@ std::vector<Point> EnemyManager::GetGuepardoPositions() const {
 	// Recorre todos los enemigos
 	for (const Enemy* enemy : enemies) {
 		// Si el enemigo es un guepardo, añade su posición a la lista
+		if (dynamic_cast<const Guepardo*>(enemy)) {
+			positions.push_back(enemy->GetPos());
+		}
+	}
+
+	return positions;
+}
+
+std::vector<Point> EnemyManager::GetMurcielagoPositions() const {
+	std::vector<Point> positions;
+
+	// Recorre todos los enemigos
+	for (const Enemy* enemy : enemies) {
+		// Si el enemigo es un murcielago, añade su posición a la lista
 		if (dynamic_cast<const Guepardo*>(enemy)) {
 			positions.push_back(enemy->GetPos());
 		}

@@ -32,6 +32,7 @@ public:
 
 	std::vector<Point> GetZombiePositions() const;
 	std::vector<Point> GetGuepardoPositions() const;
+	std::vector<Point> GetMurcielagoPositions() const;
 
 	std::vector<Enemy*>& GetEnemies() { return enemies; }
 

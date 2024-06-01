@@ -24,21 +24,21 @@ AppStatus Guepardo::Initialise(Look look, const AABB& area) {
     sprite->SetNumberAnimations((int)GuepardoAnim::NUM_ANIMATIONS);
 
     // IDLE animation (ensure this points to the correct part of your sprite sheet)
-    sprite->SetAnimationDelay((int)GuepardoAnim::IDLE_RIGHT, GUEPARDO_ANIM_DELAY);
+    sprite->SetAnimationDelay((int)GuepardoAnim::IDLE_RIGHT, 0);
     sprite->AddKeyFrame((int)GuepardoAnim::IDLE_RIGHT, { 0, 96, n, n });
-    sprite->SetAnimationDelay((int)GuepardoAnim::IDLE_LEFT, GUEPARDO_ANIM_DELAY);
+    sprite->SetAnimationDelay((int)GuepardoAnim::IDLE_LEFT, 0);
     sprite->AddKeyFrame((int)GuepardoAnim::IDLE_LEFT, { 0, 96 , -n, n });
 
-    sprite->SetAnimationDelay((int)GuepardoAnim::ROAMING_RIGHT, GUEPARDO_ANIM_DELAY);
+    sprite->SetAnimationDelay((int)GuepardoAnim::ROAMING_RIGHT, 10);
     for (int i = 1; i < 4; ++i)
         sprite->AddKeyFrame((int)GuepardoAnim::ROAMING_RIGHT, { (float)i * n, 96, -n, n });  // Aquí n es positivo
-    sprite->SetAnimationDelay((int)GuepardoAnim::ROAMING_LEFT, GUEPARDO_ANIM_DELAY);
+    sprite->SetAnimationDelay((int)GuepardoAnim::ROAMING_LEFT, 10);
     for (int i = 1; i < 4; ++i)
         sprite->AddKeyFrame((int)GuepardoAnim::ROAMING_LEFT, { (float)i * n, 96, n, n });  // Aquí n es negativo
 
-    sprite->SetAnimationDelay((int)GuepardoAnim::FALLING_RIGHT, GUEPARDO_ANIM_DELAY);
+    sprite->SetAnimationDelay((int)GuepardoAnim::FALLING_RIGHT, 10);
     sprite->AddKeyFrame((int)GuepardoAnim::FALLING_RIGHT, { 2 * n, 3 * n, n, n });
-    sprite->SetAnimationDelay((int)GuepardoAnim::FALLING_LEFT, GUEPARDO_ANIM_DELAY);
+    sprite->SetAnimationDelay((int)GuepardoAnim::FALLING_LEFT, 10);
     sprite->AddKeyFrame((int)GuepardoAnim::FALLING_LEFT, { 2 * n, 3 * n, -n, n });
 
     this->look = look;
@@ -55,7 +55,7 @@ AppStatus Guepardo::Initialise(Look look, const AABB& area) {
 }
 
 void Guepardo::InitPattern() {
-    const int n = GUEPARDO_ANIM_DELAY * 2;
+    const int n = GUEPARDO_ANIM_DELAY * 3;
     pattern.clear();
 
     if (look == Look::LEFT) {
@@ -87,25 +87,32 @@ bool Guepardo::Update(const AABB& player_box) {
 
     // Verificar si el jugador está dentro del área de detección y si el guepardo no ha sido activado
     if (!activated && detection_area.TestAABB(player_box)) {
-        activated = true;
         state = GuepardoState::ROAMING;
+        activated = true;
         look = (player_box.pos.x < pos.x) ? Look::LEFT : Look::RIGHT; // Actualizar la dirección basada en la posición del jugador
         InitPattern(); // Reinicializar el patrón para moverse en la nueva dirección
     }
 
-    // Lógica de movimiento horizontal
-    if (state == GuepardoState::ROAMING) {
+    int anim_id;
+
+    if (state == GuepardoState::ROAMING)
+    {
         pos += pattern[current_step].speed;
         current_frames++;
 
-        if (current_frames == pattern[current_step].frames) {
+        if (current_frames == pattern[current_step].frames)
+        {
             current_step++;
             current_step %= pattern.size();
             current_frames = 0;
+
+            anim_id = pattern[current_step].anim;
+            sprite->SetAnimation(anim_id);
+
         }
 
-        sprite->SetAnimation(pattern[current_step].anim);
-        sprite->NextFrame();  // Avanzar al siguiente frame de la animación
+
+
     }
 
     //// fisica de caida

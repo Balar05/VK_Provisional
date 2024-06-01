@@ -9,13 +9,16 @@
 
 #define GUEPARDO_PHYSICAL_WIDTH	    28
 #define GUEPARDO_PHYSICAL_HEIGHT	16
+
+#define MURCIELAGO_PHYSICAL_WIDTH	16
+#define MURCIELAGO_PHYSICAL_HEIGHT	16
 ////Representation model size: 32x32
 //#define AQUAMAN_FRAME_SIZE		32
 ////Logical model size: 0x0
 //#define AQUAMAN_PHYSICAL_WIDTH	32
 //#define AQUAMAN_PHYSICAL_HEIGHT	26
 
-enum class EnemyType { ZOMBIE, GUEPARDO };
+enum class EnemyType { ZOMBIE, GUEPARDO, MURCIELAGO };
 
 class Enemy : public Entity
 {

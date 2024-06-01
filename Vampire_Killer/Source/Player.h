@@ -130,7 +130,7 @@ public:
 	}
 
 	Timer attackTimer = { 0 };
-	float attackLife = 0.5f; // Duration of the attack animation
+	float attackLife = 0.3f; // Duration of the attack animation
 
 	int GetPlayerPosX();
 	int GetPlayerPosY();

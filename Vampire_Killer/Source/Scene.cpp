@@ -4,6 +4,7 @@
 #include "LevelBackground.h"
 #include "Enemy.h"
 #include "Guepardo.h"
+//#include "Murcielago.h"
 #include <algorithm>
 
 Scene::Scene() : currentStage(1), guepardoGenerated(false)
@@ -334,7 +335,7 @@ AppStatus Scene::LoadLevel(int stage)
 				1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 1, 2, 1, 2,
 				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 400, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
 	}
@@ -452,6 +453,14 @@ AppStatus Scene::LoadLevel(int stage)
 				guepardoGenerated = true;
 				map[i] = 0;
 			}
+			else if (tile == Tile::MURCIELAGO) {
+				pos.x = x * TILE_SIZE;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::MURCIELAGO);
+				area = level->GetSweptAreaX(hitbox);
+				enemies->Add(pos, EnemyType::MURCIELAGO, area, Look::RIGHT);
+				map[i] = 0;
+			}
 		}
 	}
 	//Tile map
@@ -492,6 +501,8 @@ void Scene::Update() {
 	GenerateZombies();
 	// Generar nuevos guepardos según la lógica de tu juego
 	GenerateGuepardos();
+	// Generar nuevos murcielagos según la lógica de tu juego
+	GenerateMurcielagos();
 
 	UpdateBackground(currentStage);
 
@@ -564,6 +575,40 @@ void Scene::GenerateGuepardos() {
 	}
 }
 
+void Scene::GenerateMurcielagos()
+{
+	if (currentStage != 9)
+	{
+		return; // No generar Murcielagos si no estamos en el nivel 4 o 5
+	}
+
+	// Lógica de generación de Murcielagos
+	static int frameCounter = 0;
+	frameCounter++;
+
+	if (frameCounter >= 200) // Genera un zombie cada 120 frames (2 segundos si el juego corre a 60 FPS)
+	{
+		frameCounter = 0;
+
+		Point pos;
+		pos.y = player->GetPlayerPosY()-10; // Altura en la que quieres que aparezcan los zombies
+
+		AABB area; // Crear un área adecuada para el enemigo
+
+		if (player->GetPlayerPosX() > WINDOW_WIDTH / 2)
+		{
+			pos.x = 0;
+			enemies->Add(pos, EnemyType::MURCIELAGO, area, Look::LEFT);
+		}
+		else
+		{
+			pos.x = (LEVEL_WIDTH - 1) * TILE_SIZE;
+			enemies->Add(pos, EnemyType::MURCIELAGO, area, Look::RIGHT);
+		}
+	}
+}
+
+
 
 
 void Scene::Render()
@@ -591,6 +636,7 @@ void Scene::Render()
 				guepardo->DrawDetectionArea();
 			}
 		}
+
 	}
 
 	EndMode2D();
@@ -637,7 +683,7 @@ void Scene::CheckCollisions()
 
 			// Check collision with player hitbox
 			if (player_box.TestAABB(enemy_box)) {
-				// Determinar la direcci�n del da�o
+				// Determinar la direccion del daño
 				Look damageDirection = player->GetPlayerPosX() > enemy->GetPos().x ? Look::LEFT : Look::RIGHT;
 				player->GetDamage(damageDirection);
 				return false; // Don't remove enemy

@@ -2,7 +2,7 @@
 #include "Enemy.h"
 #include "TileMap.h"
 
-#define GUEPARDO_SPEED_X       1
+#define GUEPARDO_SPEED_X       2
 #define GUEPARDO_SPEED_Y       2
 #define GUEPARDO_JUMP_FORCE    3
 #define GUEPARDO_ANIM_DELAY    (2*ANIM_DELAY)

@@ -31,6 +31,7 @@ private:
     void RenderObjectsDebug(const Color& col) const;
     void GenerateZombies();
     void GenerateGuepardos();
+    void GenerateMurcielagos();
     void RenderGUI() const;
 
     Player* player;
@@ -49,6 +50,7 @@ private:
     int frameCounter;
 
     bool guepardoGenerated;
+
 
     Text* font1;
 };
