@@ -391,7 +391,7 @@ void Player::MoveY()
 		{
 			if (state == State::FALLING) Stop();
 
-			if (IsKeyDown(KEY_UP))
+			if (IsKeyPressed(KEY_UP))
 			{
 				box = GetHitbox();
 				if (map->TestOnLadder(box, &pos.x) || map->TestOnLadderTop(box, &pos.y))
@@ -401,7 +401,7 @@ void Player::MoveY()
 					StartJumping();
 				}
 			}
-			else if (IsKeyDown(KEY_DOWN))
+			else if (IsKeyPressed(KEY_DOWN))
 			{
 				box = GetHitbox();
 				if (map->TestOnLadder(box, &pos.x) || map->TestOnLadderTop(box, &pos.y))
