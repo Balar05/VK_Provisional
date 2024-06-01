@@ -2,18 +2,20 @@
 #include "Entity.h"
 
 //Representation model size: 32x32
-#define ZOMBIE_FRAME_SIZE		32
+#define ENEMIES_FRAME_SIZE		    32
 //Logical model size: 24x30
-#define ZOMBIE_PHYSICAL_WIDTH	12
-#define ZOMBIE_PHYSICAL_HEIGHT	28
+#define ZOMBIE_PHYSICAL_WIDTH	    12
+#define ZOMBIE_PHYSICAL_HEIGHT	    28
 
+#define GUEPARDO_PHYSICAL_WIDTH	    28
+#define GUEPARDO_PHYSICAL_HEIGHT	16
 ////Representation model size: 32x32
 //#define AQUAMAN_FRAME_SIZE		32
 ////Logical model size: 0x0
 //#define AQUAMAN_PHYSICAL_WIDTH	32
 //#define AQUAMAN_PHYSICAL_HEIGHT	26
 
-enum class EnemyType { ZOMBIE, AQUAMAN };
+enum class EnemyType { ZOMBIE, GUEPARDO };
 
 class Enemy : public Entity
 {

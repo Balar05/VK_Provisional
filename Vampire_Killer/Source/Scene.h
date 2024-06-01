@@ -30,6 +30,7 @@ private:
     void RenderObjects() const;
     void RenderObjectsDebug(const Color& col) const;
     void GenerateZombies();
+    void GenerateGuepardos();
     //void RenderGUI() const;
 
     Player* player;
@@ -46,4 +47,6 @@ private:
     Rectangle rc;
     int currentStage;
     int frameCounter;
+
+    bool guepardoGenerated;
 };

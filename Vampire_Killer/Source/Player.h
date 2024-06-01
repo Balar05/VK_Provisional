@@ -6,6 +6,9 @@
 #define HEALTH_BAR_WIDTH 4
 #define HEALTH_BAR_HEIGHT 4
 
+//#define E_HEALTH_BAR_WIDTH 4
+//#define E_HEALTH_BAR_HEIGHT 4
+
 //Representation model size: 32x32
 #define PLAYER_FRAME_SIZE		32
 

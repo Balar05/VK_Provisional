@@ -72,6 +72,9 @@
     <ClCompile Include="Source\EnemyManager.cpp">
       <Filter>Entities\Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Guepardo.cpp">
+      <Filter>Entities\Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Globals.h">
@@ -126,6 +129,9 @@
       <Filter>Entities\Enemies</Filter>
     </ClInclude>
     <ClInclude Include="Source\EnemyManager.h">
+      <Filter>Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Guepardo.h">
       <Filter>Entities\Enemies</Filter>
     </ClInclude>
   </ItemGroup>

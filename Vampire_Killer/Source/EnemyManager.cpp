@@ -1,5 +1,6 @@
-#include "EnemyManager.h"
+﻿#include "EnemyManager.h"
 #include "Zombie.h"
+#include "Guepardo.h"
 
 EnemyManager::EnemyManager()
 {
@@ -21,20 +22,16 @@ AppStatus EnemyManager::Initialise()
 	return AppStatus::OK;
 }
 
-void EnemyManager::Add(const Point& pos, EnemyType type, const AABB& area, Look look)
-{
+void EnemyManager::Add(const Point& pos, EnemyType type, const AABB& area, Look look) {
 	Enemy* enemy;
 
-	if (type == EnemyType::ZOMBIE)
-	{
-		enemy = new Zombie(pos, ZOMBIE_PHYSICAL_WIDTH, ZOMBIE_PHYSICAL_HEIGHT, ZOMBIE_FRAME_SIZE, ZOMBIE_FRAME_SIZE); //Slime.h
+	if (type == EnemyType::ZOMBIE) {
+		enemy = new Zombie(pos, ZOMBIE_PHYSICAL_WIDTH, ZOMBIE_PHYSICAL_HEIGHT, ENEMIES_FRAME_SIZE, ENEMIES_FRAME_SIZE);
 	}
-	//else if (type == EnemyType::AQUAMAN)
-	//{
-	//	enemy = new Aquaman(pos, AQUAMAN_PHYSICAL_WIDTH, AQUAMAN_PHYSICAL_HEIGHT, AQUAMAN_FRAME_SIZE, AQUAMAN_FRAME_SIZE); //Turret.h
-	//}
-	else
-	{
+	else if (type == EnemyType::GUEPARDO) {
+		enemy = new Guepardo(pos, GUEPARDO_PHYSICAL_WIDTH, GUEPARDO_PHYSICAL_HEIGHT, GUEPARDO_FRAME_SIZE, GUEPARDO_FRAME_SIZE);
+	}
+	else {
 		LOG("Internal error: trying to add a new enemy with invalid type");
 		return;
 	}
@@ -50,6 +47,11 @@ AABB EnemyManager::GetEnemyHitBox(const Point& pos, EnemyType type) const
 		width = ZOMBIE_PHYSICAL_WIDTH;
 		height = ZOMBIE_PHYSICAL_HEIGHT;
 	}
+	else if (type == EnemyType::GUEPARDO)
+	{
+		width = GUEPARDO_PHYSICAL_WIDTH;
+		height = GUEPARDO_PHYSICAL_HEIGHT;
+	}
 
 	else
 	{
@@ -64,7 +66,7 @@ void EnemyManager::Update(const AABB& player_hitbox)
 {
 	for (Enemy* enemy : enemies)
 	{
-		enemy->Update(player_hitbox); // Llama a la funci�n Update de cada enemigo
+		enemy->Update(player_hitbox); // Llama a la función Update de cada enemigo
 	}
 }
 void EnemyManager::Draw() const
@@ -89,16 +91,27 @@ void EnemyManager::Release()
 	enemies.clear();
 }
 
-std::vector<Point> EnemyManager::GetZombiePositions() const
-{
+std::vector<Point> EnemyManager::GetZombiePositions() const {
 	std::vector<Point> positions;
 
 	// Recorre todos los enemigos
-	for (const Enemy* enemy : enemies)
-	{
-		// Si el enemigo es un zombie, a�ade su posici�n a la lista
-		if (dynamic_cast<const Zombie*>(enemy))
-		{
+	for (const Enemy* enemy : enemies) {
+		// Si el enemigo es un zombie, añade su posición a la lista
+		if (dynamic_cast<const Zombie*>(enemy)) {
+			positions.push_back(enemy->GetPos());
+		}
+	}
+
+	return positions;
+}
+
+std::vector<Point> EnemyManager::GetGuepardoPositions() const {
+	std::vector<Point> positions;
+
+	// Recorre todos los enemigos
+	for (const Enemy* enemy : enemies) {
+		// Si el enemigo es un guepardo, añade su posición a la lista
+		if (dynamic_cast<const Guepardo*>(enemy)) {
 			positions.push_back(enemy->GetPos());
 		}
 	}

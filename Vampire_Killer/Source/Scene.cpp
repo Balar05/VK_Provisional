@@ -3,9 +3,10 @@
 #include "Globals.h"
 #include "LevelBackground.h"
 #include "Enemy.h"
+#include "Guepardo.h"
 #include <algorithm>
 
-Scene::Scene() : currentStage(1)
+Scene::Scene() : currentStage(1), guepardoGenerated(false)
 {
 	player = nullptr;
 	level = nullptr;
@@ -56,6 +57,7 @@ AppStatus Scene::Init()
 {
 	//Create player
 	player = new Player({ 15, LEVEL_HEIGHT * TILE_SIZE - TILE_SIZE }, State::IDLE, Look::RIGHT);
+
 	if (player == nullptr)
 	{
 		LOG("Failed to allocate memory for Player");
@@ -128,10 +130,12 @@ AppStatus Scene::LoadLevel(int stage)
 	ClearLevel();
 
 	size = LEVEL_WIDTH * LEVEL_HEIGHT;
+	guepardoGenerated = false;
 
 	if (stage == 1)
 	{
 		currentStage = 1;
+		//guepardoGenerated = false;
 		map = new int[size] {
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -144,7 +148,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 300, 0, 0, 0, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 
 		};
@@ -153,6 +157,7 @@ AppStatus Scene::LoadLevel(int stage)
 	else if (stage == 2)
 	{
 		currentStage = 2;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -165,13 +170,14 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 300, 0, 0, 0, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 		};
 	}
 	else if (stage == 3)
 	{
 		currentStage = 3;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -184,13 +190,14 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 300, 0, 0, 0, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 		};
 	}
 	else if (stage == 4)
 	{
 		currentStage = 4;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -210,6 +217,7 @@ AppStatus Scene::LoadLevel(int stage)
 	else if (stage == 5)
 	{
 		currentStage = 5;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -229,11 +237,12 @@ AppStatus Scene::LoadLevel(int stage)
 	else if (stage == 6)
 	{
 		currentStage = 6;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 7, 0, 300 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 3, 9, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0,
@@ -248,6 +257,7 @@ AppStatus Scene::LoadLevel(int stage)
 	else if (stage == 7)
 	{
 		currentStage = 7;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -267,6 +277,7 @@ AppStatus Scene::LoadLevel(int stage)
 	else if (stage == 8)
 	{
 		currentStage = 8;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -286,6 +297,7 @@ AppStatus Scene::LoadLevel(int stage)
 	else if (stage == 9)
 	{
 	currentStage = 9;
+	//guepardoGenerated = false;
 	map = new int [size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -305,6 +317,7 @@ AppStatus Scene::LoadLevel(int stage)
 	else if (stage == 10)
 	{
 		currentStage = 10;
+		//guepardoGenerated = false;
 		map = new int [size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -324,6 +337,7 @@ AppStatus Scene::LoadLevel(int stage)
 	else if (stage == 11)
 	{
 		currentStage = 11;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -343,6 +357,7 @@ AppStatus Scene::LoadLevel(int stage)
 	else if (stage == 12)
 	{
 		currentStage = 12;
+		//guepardoGenerated = false;
 		map = new int [size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -370,72 +385,49 @@ AppStatus Scene::LoadLevel(int stage)
 
 	//Entities and objects
 	i = 0;
-	for (y = 0; y <= LEVEL_HEIGHT-2; ++y)
-	//for(y=0; y < LEVEL_HEIGHT; ++y)
-	{
-	for(x=0; x < LEVEL_WIDTH; ++x)
-		{
+	for (y = 0; y <= LEVEL_HEIGHT - 2; ++y) {
+		for (x = 0; x < LEVEL_WIDTH; ++x) {
 			tile = (Tile)map[i];
-			if (tile == Tile::AIR)
-			{
+			if (tile == Tile::AIR) {
 				map[i] = 0;
 			}
-			else if (tile == Tile::PLAYER)
-			{
+			else if (tile == Tile::PLAYER) {
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				player->SetPos(pos);
 				map[i] = 0;
 			}
-			else if (tile == Tile::GOLDEN_KEY)
-			{
+			else if (tile == Tile::GOLDEN_KEY) {
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				obj = new Object(pos, ObjectType::GOLDEN_KEY);
 				objects.push_back(obj);
 				map[i] = 0;
 			}
-			else if (tile == Tile::SILVER_KEY)
-			{
+			else if (tile == Tile::SILVER_KEY) {
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				obj = new Object(pos, ObjectType::SILVER_KEY);
 				objects.push_back(obj);
 				map[i] = 0;
 			}
-			else if (tile == Tile::ZOMBIE)
-			{
+			else if (tile == Tile::ZOMBIE) {
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
-
-				// Obtenemos la posicion del jugador
-				int playerPosX = player->GetPlayerPosX();
-
-				// Aqui agregas la condicion para que los zombis solo aparezcan en los niveles
-				if (stage == 4)
-				{
-					hitbox = enemies->GetEnemyHitBox(pos, EnemyType::ZOMBIE);
-					area = level->GetSweptAreaX(hitbox);
-				}
-				// Comprobamos si el jugador esta a la derecha o a la izquierda
-				if (playerPosX > WINDOW_WIDTH / 2)
-				{
-					// Si el jugador esta a la derecha, hacemos aparecer al zombie a la izquierda
-					pos.x = 0;
-					enemies->Add(pos, EnemyType::ZOMBIE, area, Look::LEFT); // El zombie se movera hacia la derecha
-				}
-				else
-				{
-					// Si el jugador esta a la izquierda, hacemos aparecer al zombie a la derecha
-					pos.x = (LEVEL_WIDTH - 1) * TILE_SIZE; // Aseguramos que el zombie aparezca dentro del mapa
-					enemies->Add(pos, EnemyType::ZOMBIE, area, Look::RIGHT); // El zombie se movera hacia la izquierda
-				}
+				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::ZOMBIE);
+				area = level->GetSweptAreaX(hitbox);
+				enemies->Add(pos, EnemyType::ZOMBIE, area, Look::RIGHT);
+				map[i] = 0;
 			}
-			/*else
-			{
-				LOG("Internal error loading scene: invalid entity or object tile id")
-			}*/
-			++i;
+			else if (tile == Tile::GUEPARDO) {
+				pos.x = x * TILE_SIZE;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::GUEPARDO);
+				area = level->GetSweptAreaX(hitbox);
+				enemies->Add(pos, EnemyType::GUEPARDO, area, Look::RIGHT);
+				guepardoGenerated = true;
+				map[i] = 0;
+			}
 		}
 	}
 	//Tile map
@@ -446,36 +438,36 @@ AppStatus Scene::LoadLevel(int stage)
 
 	return AppStatus::OK;
 }
-void Scene::Update()
-{
+void Scene::Update() {
 	Point p1, p2;
 	AABB hitbox, area;
 
 	//Switch between the different debug modes: off, on (sprites & hitboxes), on (hitboxes) 
-	if (IsKeyPressed(KEY_F1))
-	{
+	if (IsKeyPressed(KEY_F1)) {
 		debug = (DebugMode)(((int)debug + 1) % (int)DebugMode::SIZE);
 	}
 	//Debug levels instantly
-	if (IsKeyPressed(KEY_ONE))			LoadLevel(1);
-	else if (IsKeyPressed(KEY_TWO))		LoadLevel(2);
-	else if (IsKeyPressed(KEY_THREE))	LoadLevel(3);
-	else if (IsKeyPressed(KEY_FOUR))	LoadLevel(4);
-	else if (IsKeyPressed(KEY_FIVE))	LoadLevel(5);
-	else if (IsKeyPressed(KEY_SIX))		LoadLevel(6);
-	else if (IsKeyPressed(KEY_SEVEN))	LoadLevel(7);
-	else if (IsKeyPressed(KEY_EIGHT))	LoadLevel(8);
-	else if (IsKeyPressed(KEY_NINE))	LoadLevel(9);
-	else if (IsKeyPressed(KEY_T))		LoadLevel(10);
-	else if (IsKeyPressed(KEY_Y))		LoadLevel(11);
-	else if (IsKeyPressed(KEY_U))		LoadLevel(12);
-	else if (IsKeyPressed(KEY_D))		player->GetDamage(Look::RIGHT);
+	if (IsKeyPressed(KEY_ONE))        LoadLevel(1);
+	else if (IsKeyPressed(KEY_TWO))   LoadLevel(2);
+	else if (IsKeyPressed(KEY_THREE)) LoadLevel(3);
+	else if (IsKeyPressed(KEY_FOUR))  LoadLevel(4);
+	else if (IsKeyPressed(KEY_FIVE))  LoadLevel(5);
+	else if (IsKeyPressed(KEY_SIX))   LoadLevel(6);
+	else if (IsKeyPressed(KEY_SEVEN)) LoadLevel(7);
+	else if (IsKeyPressed(KEY_EIGHT)) LoadLevel(8);
+	else if (IsKeyPressed(KEY_NINE))  LoadLevel(9);
+	else if (IsKeyPressed(KEY_T))     LoadLevel(10);
+	else if (IsKeyPressed(KEY_Y))     LoadLevel(11);
+	else if (IsKeyPressed(KEY_U))     LoadLevel(12);
+	else if (IsKeyPressed(KEY_D))     player->GetDamage(Look::RIGHT);
 
 	level->Update();
 	player->Update();
 
-	// Generar nuevos zombies seg�n la l�gica de tu juego
+	// Generar nuevos zombies según la lógica de tu juego
 	GenerateZombies();
+	// Generar nuevos guepardos según la lógica de tu juego
+	GenerateGuepardos();
 
 	UpdateBackground(currentStage);
 
@@ -484,10 +476,9 @@ void Scene::Update()
 	hitbox = player->GetHitbox();
 	enemies->Update(hitbox);
 
-	// Eliminamos la l�gica que generaba zombies aqu�, para no duplicar la generaci�n
-
-	// Si es necesario, podemos agregar cualquier otra l�gica de actualizaci�n aqu�
+	// Si es necesario, podemos agregar cualquier otra lógica de actualización aquí
 }
+
 
 void Scene::GenerateZombies()
 {
@@ -521,6 +512,43 @@ void Scene::GenerateZombies()
 		}
 	}
 }
+void Scene::GenerateGuepardos() {
+	if ((currentStage == 6 || currentStage == 3) && !guepardoGenerated) {
+		Point pos;
+		AABB area; // Crear un área adecuada para el enemigo
+
+		// Establecer las posiciones específicas según el nivel
+		if (currentStage == 6) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 46; // Ajusta la posición X según sea necesario
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 32; // Ajusta la posición Y para el nivel 6
+		}
+		else if (currentStage == 3) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE; // Ajusta la posición X según sea necesario
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 96; // Ajusta la posición Y para el nivel 3
+		}
+
+		// Crear el guepardo y asignar el mapa de colisiones
+		Guepardo* guepardo = new Guepardo(pos, GUEPARDO_FRAME_SIZE, GUEPARDO_FRAME_SIZE, GUEPARDO_FRAME_SIZE, GUEPARDO_FRAME_SIZE);
+		if (guepardo == nullptr) {
+			LOG("Failed to allocate memory for Guepardo");
+			return;
+		}
+		guepardo->SetTileMap(level);
+
+		// Inicializar el guepardo y añadirlo a la lista de enemigos
+		if (guepardo->Initialise(Look::RIGHT, area) == AppStatus::OK) {
+			enemies->Add(pos, EnemyType::GUEPARDO, area, Look::RIGHT);
+			guepardoGenerated = true; // Marcar que el guepardo ha sido generado en este nivel
+		}
+		else {
+			delete guepardo;
+			LOG("Failed to initialise Guepardo");
+		}
+	}
+}
+
+
+
 void Scene::Render()
 {
 	BeginMode2D(camera);
@@ -538,6 +566,14 @@ void Scene::Render()
 		RenderObjectsDebug(YELLOW);
 		player->DrawDebug(GREEN);
 		enemies->DrawDebug();
+		// Dibuja las áreas de detección de los guepardos si el modo debug está activo
+		auto& enemiesList = enemies->GetEnemies();
+		for (Enemy* enemy : enemiesList) {
+			Guepardo* guepardo = dynamic_cast<Guepardo*>(enemy);
+			if (guepardo) {
+				guepardo->DrawDetectionArea();
+			}
+		}
 	}
 
 	EndMode2D();

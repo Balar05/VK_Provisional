@@ -36,6 +36,7 @@ enum class Tile {
 	// id >= 100: entities' initial locations
 	PLAYER = 100,
 	ZOMBIE = 200,
+	GUEPARDO = 300,
 
 	STATIC_FIRST = BLOCK_LEFT,
 	STATIC_LAST = CHEST,

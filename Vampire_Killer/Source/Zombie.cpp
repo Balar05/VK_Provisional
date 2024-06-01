@@ -18,7 +18,7 @@ Zombie::~Zombie()
 AppStatus Zombie::Initialise(Look look, const AABB& area)
 {
 	int i;
-	const int n = ZOMBIE_FRAME_SIZE;
+	const int n = ENEMIES_FRAME_SIZE;
 	state = ZombieState::ROAMING;
 	ResourceManager& data = ResourceManager::Instance();
 	render = new Sprite(data.GetTexture(Resource::IMG_ENEMIES));
@@ -61,13 +61,9 @@ void Zombie::InitPattern()
 	if (look == Look::LEFT)
 	{
 		pattern.push_back({ {ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_RIGHT });
-		pattern.push_back({ {ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_RIGHT });
-		pattern.push_back({ {ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_RIGHT });
 	}
 	else
 	{
-		pattern.push_back({ {-ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_LEFT });
-		pattern.push_back({ {-ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_LEFT });
 		pattern.push_back({ {-ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_LEFT });
 	}
 

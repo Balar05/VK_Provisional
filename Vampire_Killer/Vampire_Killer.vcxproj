@@ -25,6 +25,7 @@
     <ClCompile Include="Source\Entity.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Globals.cpp" />
+    <ClCompile Include="Source\Guepardo.cpp" />
     <ClCompile Include="Source\LevelBackground.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Object.cpp" />
@@ -44,6 +45,7 @@
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\Game.h" />
     <ClInclude Include="Source\Globals.h" />
+    <ClInclude Include="Source\Guepardo.h" />
     <ClInclude Include="Source\LevelBackground.h" />
     <ClInclude Include="Source\MemLeaks.h" />
     <ClInclude Include="Source\Object.h" />

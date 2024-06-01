@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Enemy.h"
 
 class EnemyManager
@@ -31,6 +31,7 @@ public:
 	void Release();
 
 	std::vector<Point> GetZombiePositions() const;
+	std::vector<Point> GetGuepardoPositions() const;
 
 	std::vector<Enemy*>& GetEnemies() { return enemies; }
 
