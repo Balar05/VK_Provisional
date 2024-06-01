@@ -2,13 +2,17 @@
 #include "Enemy.h"
 #include "TileMap.h"
 
-#define GUEPARDO_SPEED        1
-#define GUEPARDO_ANIM_DELAY   (2*ANIM_DELAY)
-#define GUEPARDO_FRAME_SIZE   32
+#define GUEPARDO_SPEED_X       1
+#define GUEPARDO_SPEED_Y       2
+#define GUEPARDO_JUMP_FORCE    3
+#define GUEPARDO_ANIM_DELAY    (2*ANIM_DELAY)
+#define GUEPARDO_FRAME_SIZE    32
+#define GRAVITY                0.2f
+#define MAX_FALL_SPEED         5.0f
 
-enum class GuepardoState { IDLE, ROAMING, FALLING };
+enum class GuepardoState { IDLE, ROAMING, JUMPING, FALLING, ATTACKING };
 enum class GuepardoAnim {
-    IDLE_RIGHT, IDLE_LEFT, ROAMING_RIGHT, ROAMING_LEFT, FALLING_RIGHT, FALLING_LEFT,
+    IDLE_RIGHT, IDLE_LEFT, ROAMING_RIGHT, ROAMING_LEFT, JUMPING_RIGHT, JUMPING_LEFT, FALLING_RIGHT, FALLING_LEFT,
     NUM_ANIMATIONS
 };
 
@@ -29,10 +33,22 @@ public:
 
     void SetTileMap(TileMap* tilemap); // Método para establecer el mapa de colisiones
 
+    //void MoveX();
+    //void MoveY();
+    //void LogicJumping();
+
+    //void StartFalling_NJ();
+    //bool IsAscending() const;
+    //bool IsLevitating() const;
+    //bool IsDescending() const;
+    //void ChangeAnimRight();
+    //void ChangeAnimLeft();
+    //bool IsLookingRight() const;
+    //bool IsLookingLeft() const;
+
 private:
     void InitPattern();
     void UpdateLook(int anim_id);
-    //void StartFalling_NJ();
 
     GuepardoState state;
     int current_step;
@@ -45,4 +61,5 @@ private:
 
     TileMap* map; // Puntero al TileMap
 
+    float verticalSpeed; // Nueva variable para manejar la velocidad vertical
 };

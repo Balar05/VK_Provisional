@@ -5,7 +5,7 @@
 #include "Object.h"
 #include "LevelBackground.h"
 #include "EnemyManager.h"
-
+#include "text.h"
 
 
 enum class DebugMode { OFF, SPRITES_AND_HITBOXES, ONLY_HITBOXES, SIZE };
@@ -31,7 +31,7 @@ private:
     void RenderObjectsDebug(const Color& col) const;
     void GenerateZombies();
     void GenerateGuepardos();
-    //void RenderGUI() const;
+    void RenderGUI() const;
 
     Player* player;
     TileMap* level;
@@ -49,4 +49,6 @@ private:
     int frameCounter;
 
     bool guepardoGenerated;
+
+    Text* font1;
 };

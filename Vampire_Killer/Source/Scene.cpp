@@ -13,6 +13,8 @@ Scene::Scene() : currentStage(1), guepardoGenerated(false)
 	background = nullptr;
 	enemies = nullptr;
 
+	font1 = nullptr;
+
 	camera.target = { 0, 0 };				//Center of the screen
 	camera.offset = { 0, 0 };	//Offset from the target (center of the screen)
 	camera.rotation = 0.0f;					//No rotation
@@ -41,6 +43,11 @@ Scene::~Scene()
 		delete background;
 		background = nullptr;
 	}
+	if (font1 != nullptr)
+	{
+		delete font1;
+		font1 = nullptr;
+	}
 	for (Entity* obj : objects)
 	{
 		delete obj;
@@ -55,9 +62,12 @@ Scene::~Scene()
 }
 AppStatus Scene::Init()
 {
+	Point pos;
+
+	Guepardo* guepardo = new Guepardo(pos, GUEPARDO_FRAME_SIZE, GUEPARDO_FRAME_SIZE, GUEPARDO_FRAME_SIZE, GUEPARDO_FRAME_SIZE);
+	guepardo->SetTileMap(level);
 	//Create player
 	player = new Player({ 15, LEVEL_HEIGHT * TILE_SIZE - TILE_SIZE }, State::IDLE, Look::RIGHT);
-
 	if (player == nullptr)
 	{
 		LOG("Failed to allocate memory for Player");
@@ -115,6 +125,20 @@ AppStatus Scene::Init()
 	//Assign the tile map reference to the player to check collisions while navigating
 	player->SetTileMap(level);
 
+	//Create text font 1
+	font1 = new Text();
+	if (font1 == nullptr)
+	{
+		LOG("Failed to allocate memory for font 1");
+		return AppStatus::ERROR;
+	}
+	//Initialise text font 1
+	if (font1->Initialise(Resource::IMG_FONT1, "images/font8x8.png", ' ', 8) != AppStatus::OK)
+	{
+		LOG("Failed to initialise Level");
+		return AppStatus::ERROR;
+	}
+
 	return AppStatus::OK;
 }
 AppStatus Scene::LoadLevel(int stage)
@@ -137,7 +161,7 @@ AppStatus Scene::LoadLevel(int stage)
 		currentStage = 1;
 		//guepardoGenerated = false;
 		map = new int[size] {
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -242,12 +266,12 @@ AppStatus Scene::LoadLevel(int stage)
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 7, 0, 300 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 7, 0, 300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 3, 9, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0,
-				0, 0, 1, 2, 1, 2,10, 3, 1, 2, 1, 2, 0, 0, 0, 0,
+				0, 0, 1, 2, 1, 2, 10, 3, 1, 2, 1, 2, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -261,9 +285,9 @@ AppStatus Scene::LoadLevel(int stage)
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		   	   -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				-1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,10, 3,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 3,
 				0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0,
 				1, 2, 1, 2, 3, 9, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 7, 0, 0, 0, 0,
@@ -280,38 +304,38 @@ AppStatus Scene::LoadLevel(int stage)
 		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 1, 2, 1, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 6, 1, 2, 1, 2
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 6, 1, 2, 1, 2
 		};
 	}
 	else if (stage == 9)
 	{
-	currentStage = 9;
-	//guepardoGenerated = false;
-	map = new int [size] {
+		currentStage = 9;
+		//guepardoGenerated = false;
+		map = new int [size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 1, 2, 0, 0, 1, 2, 1, 9, 0, 0, 0, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0,
-			1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 1, 2, 1, 2,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 0, 0, 1, 2, 1, 9, 0, 0, 0, 0, 0, 0,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 1, 2, 1, 2,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
 	}
 	else if (stage == 10)
@@ -327,7 +351,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,10, 1, 2, 1, 2, 1,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 1, 2, 1, 2, 1,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -345,7 +369,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,10, 3, 1, 2, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 3, 1, 2, 1, 2,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 1, 2,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 1, 2,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2,
@@ -513,36 +537,29 @@ void Scene::GenerateZombies()
 	}
 }
 void Scene::GenerateGuepardos() {
+
 	if ((currentStage == 6 || currentStage == 3) && !guepardoGenerated) {
 		Point pos;
-		AABB area; // Crear un área adecuada para el enemigo
+		AABB area;
 
-		// Establecer las posiciones específicas según el nivel
 		if (currentStage == 6) {
-			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 46; // Ajusta la posición X según sea necesario
-			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 32; // Ajusta la posición Y para el nivel 6
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 46;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 32;
 		}
 		else if (currentStage == 3) {
-			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE; // Ajusta la posición X según sea necesario
-			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 96; // Ajusta la posición Y para el nivel 3
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 96;
 		}
 
-		// Crear el guepardo y asignar el mapa de colisiones
-		Guepardo* guepardo = new Guepardo(pos, GUEPARDO_FRAME_SIZE, GUEPARDO_FRAME_SIZE, GUEPARDO_FRAME_SIZE, GUEPARDO_FRAME_SIZE);
-		if (guepardo == nullptr) {
-			LOG("Failed to allocate memory for Guepardo");
-			return;
+		if (player->GetPlayerPosX() > WINDOW_WIDTH / 2)
+		{
+			enemies->Add(pos, EnemyType::GUEPARDO, area, Look::LEFT);
+			guepardoGenerated = true;
 		}
-		guepardo->SetTileMap(level);
-
-		// Inicializar el guepardo y añadirlo a la lista de enemigos
-		if (guepardo->Initialise(Look::RIGHT, area) == AppStatus::OK) {
+		else
+		{
 			enemies->Add(pos, EnemyType::GUEPARDO, area, Look::RIGHT);
-			guepardoGenerated = true; // Marcar que el guepardo ha sido generado en este nivel
-		}
-		else {
-			delete guepardo;
-			LOG("Failed to initialise Guepardo");
+			guepardoGenerated = true;
 		}
 	}
 }
@@ -578,7 +595,7 @@ void Scene::Render()
 
 	EndMode2D();
 
-	//RenderGUI();
+	RenderGUI();
 }
 void Scene::Release()
 {
@@ -630,6 +647,7 @@ void Scene::CheckCollisions()
 			AABB attack_hitbox = player->GetAttackHitbox();
 			if (attack_hitbox.TestAABB(enemy_box)) {
 				// Eliminar al zombie
+				player->IncrScore(100);
 				delete enemy;
 				return true; // Remove enemy
 			}
@@ -662,11 +680,39 @@ void Scene::RenderObjectsDebug(const Color& col) const
 		obj->DrawDebug(col);
 	}
 }
-//void Scene::RenderGUI() const
-//{
-//	//Temporal approach
-//	DrawText(TextFormat("LIVES : %d", player->GetLives()), 10, 10, 8, WHITE);
-//}
+void Scene::RenderGUI() const
+{
+	static int frame;
+	frame++;
+	frame %= 1000;
+
+	//UI stages
+	if (currentStage == 1) {
+		font1->Draw(155, 1, TextFormat("%d%d", 0, 0));
+	}
+	if (currentStage == 2) {
+		font1->Draw(155, 1, TextFormat("%d%d", 0, 0));
+	}
+	if (currentStage == 3) {
+		font1->Draw(155, 1, TextFormat("%d%d", 0, 0));
+	}
+	if (currentStage == 4) {
+		font1->Draw(155, 1, TextFormat("%d%d", 0, 1));
+	}
+	if (currentStage == 5) {
+		font1->Draw(155, 1, TextFormat("%d%d", 0, 1));
+	}
+	if (currentStage == 6) {
+		font1->Draw(155, 1, TextFormat("%d%d", 0, 1));
+	}
+	if (currentStage == 7) {
+		font1->Draw(155, 1, TextFormat("%d%d", 0, 1));
+	}
+	// UI score
+	font1->Draw(192, 1, TextFormat("%d%d", 0, 3));
+	font1->Draw(228, 1, TextFormat("%d%d", 0, 0));
+	font1->Draw(58, 1, TextFormat("%d", player->GetScore()));
+}
 
 void Scene::UpdateBackground(int s)
 {
@@ -739,9 +785,9 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(7);
 			break;
 		}
-		else if (y < 2*TILE_SIZE)
+		else if (y < 2 * TILE_SIZE)
 		{
-			player->SetPos({ (10 * TILE_SIZE)-PLAYER_PHYSICAL_WIDTH, (LEVEL_HEIGHT*TILE_SIZE)-(TILE_SIZE) });
+			player->SetPos({ (10 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, (LEVEL_HEIGHT * TILE_SIZE) - (TILE_SIZE) });
 			LoadLevel(8);
 			break;
 		}
@@ -758,7 +804,7 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(4);
 			break;
 		}
-		else if (y  < 2 * TILE_SIZE)
+		else if (y < 2 * TILE_SIZE)
 		{
 			player->SetPos({ (6 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, (LEVEL_HEIGHT * TILE_SIZE) - (TILE_SIZE) });
 			LoadLevel(11);
@@ -838,8 +884,8 @@ void Scene::UpdateBackground(int s)
 		else if (y >= LEVEL_HEIGHT * TILE_SIZE)
 		{
 			LoadLevel(6);
-			player->SetPos({ (3 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, 4*TILE_SIZE });
-			
+			player->SetPos({ (3 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, 4 * TILE_SIZE });
+
 			break;
 		}
 	case 12:

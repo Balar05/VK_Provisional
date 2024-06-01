@@ -35,6 +35,7 @@
     <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\Sprite.cpp" />
     <ClCompile Include="Source\StaticImage.cpp" />
+    <ClCompile Include="Source\text.cpp" />
     <ClCompile Include="Source\TileMap.cpp" />
     <ClCompile Include="Source\Zombie.cpp" />
   </ItemGroup>
@@ -56,6 +57,7 @@
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\Sprite.h" />
     <ClInclude Include="Source\StaticImage.h" />
+    <ClInclude Include="Source\text.h" />
     <ClInclude Include="Source\TileMap.h" />
     <ClInclude Include="Source\Zombie.h" />
   </ItemGroup>
