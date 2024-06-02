@@ -1007,35 +1007,40 @@ void Scene::UpdateBackground(int s)
 		}
 		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
 		{
-			player->SetPos({ 15, y });
 			LoadLevel(2);
+			player->SetPos({ 15, y });
+			
 			break;
 		}
 	case 2:
 		if (x < 0)
 		{
-			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
 			LoadLevel(1);
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			
 			break;
 		}
 		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
 		{
+			LoadLevel(3);
 			player->SetPos({ 15, y });
-			LoadLevel(3);
-			LoadLevel(3);
+			
+			
 			break;
 		}
 	case 3:
 		if (x < 0)
 		{
-			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
 			LoadLevel(2);
+			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE) - 15 - PLAYER_PHYSICAL_WIDTH, y });
+			
 			break;
 		}
-		else if (x + PLAYER_PHYSICAL_WIDTH >= 210)
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
 		{
-			player->SetPos({ 15, y });
 			LoadLevel(4);
+			player->SetPos({ 15, y });
+			
 			break;
 		}
 	case 4:
