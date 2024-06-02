@@ -84,6 +84,12 @@
     <ClCompile Include="Source\LLama.cpp">
       <Filter>Entities\Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Candle.cpp">
+      <Filter>Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FakeWall.cpp">
+      <Filter>Entities\Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Globals.h">
@@ -150,6 +156,12 @@
       <Filter>Entities\Enemies</Filter>
     </ClInclude>
     <ClInclude Include="Source\LLama.h">
+      <Filter>Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Candle.h">
+      <Filter>Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FakeWall.h">
       <Filter>Entities\Enemies</Filter>
     </ClInclude>
   </ItemGroup>

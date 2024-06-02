@@ -348,8 +348,7 @@ void Player::Update()
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->Update();
 }
-void Player::MoveX()
-{
+void Player::MoveX() {
 	AABB box;
 	int prev_x = pos.x;
 
@@ -357,95 +356,87 @@ void Player::MoveX()
 		return;
 	}
 
-	if (IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT) && state != State::SNEAKING)
-	{
-		pos.x += -PLAYER_SPEED_X;
-		if (state == State::IDLE) StartWalkingLeft();
-		else
-		{
-			if (IsLookingRight()) ChangeAnimLeft();
+	if (IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT) && state != State::SNEAKING) {
+		pos.x -= PLAYER_SPEED_X;
+		if (state == State::IDLE) {
+			StartWalkingLeft();
+		}
+		else if (IsLookingRight()) {
+			ChangeAnimLeft();
 		}
 
 		box = GetHitbox();
-		if (map->TestCollisionWallLeft(box))
-		{
+		if (map->TestCollisionWallLeft(box)) {
 			pos.x = prev_x;
 			if (state == State::WALKING) Stop();
 		}
 
-
 	}
-	else if (IsKeyDown(KEY_RIGHT) && state != State::SNEAKING)
-	{
+	else if (IsKeyDown(KEY_RIGHT) && state != State::SNEAKING) {
 		pos.x += PLAYER_SPEED_X;
-		if (state == State::IDLE) StartWalkingRight();
-		else
-		{
-			if (IsLookingLeft()) ChangeAnimRight();
+		if (state == State::IDLE) {
+			StartWalkingRight();
+		}
+		else if (IsLookingLeft()) {
+			ChangeAnimRight();
 		}
 
 		box = GetHitbox();
-		if (map->TestCollisionWallRight(box))
-		{
+		if (map->TestCollisionWallRight(box)) {
 			pos.x = prev_x;
 			if (state == State::WALKING) Stop();
 		}
 	}
-	else
-	{
+	else {
 		if (state == State::WALKING) Stop();
 	}
 }
 
-void Player::MoveY()
-{
+void Player::MoveY() {
 	AABB box;
 
 	if (state == State::ATTACKING) {
 		return;
 	}
 
-	if (state == State::JUMPING)
-	{
+	if (state == State::JUMPING) {
 		LogicJumping();
 	}
-	else if (state == State::CLIMBING)
-	{
+	else if (state == State::CLIMBING) {
 		LogicClimbing();
 	}
-	else //idle, walking, falling
-	{
+	else {
 		pos.y += PLAYER_SPEED_Y;
 		box = GetHitbox();
-		if (map->TestCollisionGround(box, &pos.y))
-		{
-			if (state == State::FALLING) Stop();
+		if (map->TestCollisionGround(box, &pos.y)) {
+			if (state == State::FALLING) {
+				Stop();
+			}
 
-			if (IsKeyPressed(KEY_UP))
-			{
+			if (IsKeyPressed(KEY_UP)) {
 				box = GetHitbox();
-				if (map->TestOnLadder(box, &pos.x) || map->TestOnLadderTop(box, &pos.y))
+				if (map->TestOnLadder(box, &pos.x) || map->TestOnLadderTop(box, &pos.y)) {
 					StartClimbing();
-				else
-				{
+				}
+				else {
 					StartJumping();
 				}
 			}
-			else if (IsKeyPressed(KEY_DOWN))
-			{
+			else if (IsKeyPressed(KEY_DOWN)) {
 				box = GetHitbox();
-				if (map->TestOnLadder(box, &pos.x) || map->TestOnLadderTop(box, &pos.y))
+				if (map->TestOnLadder(box, &pos.x) || map->TestOnLadderTop(box, &pos.y)) {
 					StartClimbing();
-				/*else if (map->TestOnLadder(box, &pos.x))
-					StartClimbing();*/
+				}
 			}
 		}
-		else
-		{
-			if (state != State::FALLING) StartFalling();
+		else {
+			if (state != State::FALLING) {
+				StartFalling();
+			}
 		}
 	}
 }
+
 
 void Player::MoveY_SNEAK()
 {

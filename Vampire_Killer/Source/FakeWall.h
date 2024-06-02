@@ -2,30 +2,30 @@
 #include "Enemy.h"
 #include "TileMap.h"
 
-#define LLAMA_SPEED_X       2
-#define LLAMA_SPEED_Y       2
-#define LLAMA_JUMP_FORCE    3
-#define LLAMA_ANIM_DELAY    (3*ANIM_DELAY)
-#define LLAMA_FRAME_SIZE    16
+#define FAKEWALL_SPEED_X       2
+#define FAKEWALL_SPEED_Y       2
+#define FAKEWALLJUMP_FORCE    3
+#define FAKEWALL_ANIM_DELAY    (3*ANIM_DELAY)
+#define FAKEWALL_FRAME_SIZE    32
 //#define MURCIELAGO_WAVE_AMPLITUDE 15  // Amplitud de la onda
 //#define MURCIELAGO_WAVE_FREQUENCY 0.1  // Frecuencia de la onda,
 
-enum class LLamaState { IDLE, ROAMING };
-enum class LLamaAnim {
+enum class FakeWallState { IDLE, ROAMING };
+enum class FakeWallAnim {
     IDLE, ROAMING,
     NUM_ANIMATIONS
 };
 
-struct LLamaStep {
+struct FakeWallStep {
     Point speed;
     int frames;
     int anim;
 };
 
-class LLama : public Enemy {
+class FakeWall : public Enemy {
 public:
-    LLama(const Point& p, int width, int height, int frame_width, int frame_height);
-    ~LLama();
+    FakeWall(const Point& p, int width, int height, int frame_width, int frame_height);
+    ~FakeWall();
 
     AppStatus Initialise(Look look, const AABB& area) override;
     bool Update(const AABB& box) override;
@@ -51,10 +51,10 @@ private:
     void InitPattern();
     void UpdateLook(int anim_id);
 
-    LLamaState state;
+    FakeWallState state;
     int current_step;
     int current_frames;
-    std::vector<LLamaStep> pattern;
+    std::vector<FakeWallStep> pattern;
 
     float base_y;
     //bool activated;
@@ -62,6 +62,9 @@ private:
     Point dir;
 
     TileMap* map; // Puntero al TileMap
+    AABB hitbox;
 
     //float verticalSpeed; // Nueva variable para manejar la velocidad vertical
 };
+
+

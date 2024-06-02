@@ -33,6 +33,8 @@ private:
     void GenerateGuepardos();
     void GenerateMurcielagos();
     void GenerateLLama();
+    void GenerateCandle();
+    void GenerateFakeWall();
     void RenderGUI() const;
 
     Player* player;
@@ -52,6 +54,8 @@ private:
 
     bool guepardoGenerated;
     bool llamaGenerated;
+    bool candleGenerated;
+    bool fakewallGenerated;
 
 
     Text* font1;

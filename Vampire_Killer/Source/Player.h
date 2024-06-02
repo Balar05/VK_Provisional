@@ -93,6 +93,8 @@ public:
 
 	AABB GetAttackHitbox() const;
 
+	/*AABB GetHitbox() const { return AABB(pos, width, height); }*/
+
 	const int totalFramesAttack = 3;
 	float currentFrameAttack = 0;
 	float framesCounter = 0;

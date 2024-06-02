@@ -34,6 +34,8 @@ public:
 	std::vector<Point> GetGuepardoPositions() const;
 	std::vector<Point> GetMurcielagoPositions() const;
 	std::vector<Point> GetLLamaPositions() const;
+	std::vector<Point> GetCandlePositions() const;
+	std::vector<Point> GetFakeWallPositions() const;
 
 	std::vector<Enemy*>& GetEnemies() { return enemies; }
 

@@ -6,8 +6,9 @@
 #include "Guepardo.h"
 //#include "Murcielago.h"
 #include <algorithm>
+#include "FakeWall.h"
 
-Scene::Scene() : currentStage(1), guepardoGenerated(false), llamaGenerated(false)
+Scene::Scene() : currentStage(1), guepardoGenerated(false), llamaGenerated(false), candleGenerated(false), fakewallGenerated(false)
 {
 	player = nullptr;
 	level = nullptr;
@@ -63,10 +64,7 @@ Scene::~Scene()
 }
 AppStatus Scene::Init()
 {
-	Point pos;
 
-	Guepardo* guepardo = new Guepardo(pos, GUEPARDO_FRAME_SIZE, GUEPARDO_FRAME_SIZE, GUEPARDO_FRAME_SIZE, GUEPARDO_FRAME_SIZE);
-	guepardo->SetTileMap(level);
 	//Create player
 	player = new Player({ 15, LEVEL_HEIGHT * TILE_SIZE - TILE_SIZE }, State::IDLE, Look::RIGHT);
 	if (player == nullptr)
@@ -157,6 +155,8 @@ AppStatus Scene::LoadLevel(int stage)
 	size = LEVEL_WIDTH * LEVEL_HEIGHT;
 	guepardoGenerated = false;
 	llamaGenerated = false;
+	candleGenerated = false;
+	fakewallGenerated = false;
 
 	if (stage == 1)
 	{
@@ -234,7 +234,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0/*candle*/, 0, 0, 0, 0/*candle */, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 600/*candle*/, 0, 0, 0, 0/*candle */, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 44, 0, 200, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
@@ -255,7 +255,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 10, 3, 1, 2, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 7, 0, 0/*candle*/, 0, 0, 0, 0/*candle */, 0, 0, 0, 0,
-				0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 7, 600, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 7, 0, 0, 0, 200, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
@@ -275,7 +275,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0,
 				0, 0, 1, 2, 1, 2, 10, 3, 1, 2, 1, 2, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 7, 0, 0, 600, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
@@ -375,8 +375,8 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 1, 2,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 1, 2,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 2,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2,
 				1, 2, 1, 2, 7, 3, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
 	}
@@ -471,6 +471,24 @@ AppStatus Scene::LoadLevel(int stage)
 				llamaGenerated = true;
 				map[i] = 0;
 			}
+			else if (tile == Tile::CANDLE) {
+				pos.x = x * TILE_SIZE;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::CANDLE);
+				area = level->GetSweptAreaX(hitbox);
+				enemies->Add(pos, EnemyType::CANDLE, area, Look::RIGHT);
+				candleGenerated = true;
+				map[i] = 0;
+			}
+			else if (tile == Tile::FAKEWALL) {
+				pos.x = x * TILE_SIZE;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::FAKEWALL);
+				area = level->GetSweptAreaX(hitbox);
+				enemies->Add(pos, EnemyType::FAKEWALL, area, Look::RIGHT);
+				fakewallGenerated = true;
+				map[i] = 0;
+			}
 		}
 	}
 	//Tile map
@@ -515,6 +533,10 @@ void Scene::Update() {
 	GenerateMurcielagos();
 
 	GenerateLLama();
+
+	GenerateCandle();
+
+	GenerateFakeWall();
 
 	UpdateBackground(currentStage);
 
@@ -623,16 +645,20 @@ void Scene::GenerateMurcielagos()
 void Scene::GenerateLLama() {
 
 	if ((currentStage == 1 || currentStage == 2 || currentStage == 3) && !llamaGenerated) {
-		Point pos;
+		Point pos, pos2;
 		AABB area;
 
 		if (currentStage == 1) {
 			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 64;
 			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 64;
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
 		}
 		else if (currentStage == 2) {
 			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 64;
 			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 64;
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
 		}
 		else if (currentStage == 3) {
 			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 64;
@@ -640,12 +666,123 @@ void Scene::GenerateLLama() {
 		}
 
 
-			enemies->Add(pos, EnemyType::LLAMA, area, Look::LEFT);
+			enemies->Add(pos, EnemyType::CANDLE, area, Look::LEFT);
+			enemies->Add(pos2, EnemyType::LLAMA, area, Look::LEFT);
 			llamaGenerated = true;
 
 	}
 }
 
+void Scene::GenerateCandle() {
+
+	if ((currentStage == 4 || currentStage == 5 || currentStage == 6 || currentStage == 7 || currentStage == 8 || currentStage == 9 || currentStage == 10 || currentStage == 11) && !candleGenerated) {
+		Point pos, pos2, pos3, pos4, pos5;
+		AABB area;
+
+		if (currentStage == 4) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 16;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48;
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+		}
+		else if (currentStage == 5) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 16;  //derecha inf
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63; 
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 81; //izquierda inf
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+			pos3.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 16; //izquierda superior 
+			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE -17;
+			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48; //derecha superior
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 47;
+		}
+		else if (currentStage == 6) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE ;		 //derecha inf 	
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;  
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 97; //izquierda inf
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
+			pos3.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 65; //izquierda superior 
+			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 15;
+			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48; //derecha superior 
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE -1;
+		}
+		else if (currentStage == 7) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 80;		 //derecha inf 	
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+			pos3.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 32; //izquierda superior 
+			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 17;
+			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48; //derecha superior 
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 17;
+		}
+		else if (currentStage == 8) {
+	
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 65; //izquierda inf
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+
+			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 16; //derecha superior
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 47;
+		}
+		else if (currentStage == 9) {
+
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 16;  //derecha inf
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 81; //izquierda inf
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 15;
+			pos3.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 81; //izquierda superior 
+			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 49;
+			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48; //derecha superior
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 47;
+			pos5.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48; //derecha superior
+			pos5.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 17;
+		}
+		else if (currentStage == 10) {
+
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 16; //izquierda inf
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 47;
+
+			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 80; //derecha superior 
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 1;
+		}
+		else if (currentStage == 11) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 32;		 //derecha inf 	
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 32; //izquierda inf
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
+		}
+
+		enemies->Add(pos, EnemyType::CANDLE, area, Look::LEFT);
+		enemies->Add(pos2, EnemyType::CANDLE, area, Look::LEFT);
+		enemies->Add(pos3, EnemyType::CANDLE, area, Look::LEFT);
+		enemies->Add(pos4, EnemyType::CANDLE, area, Look::LEFT);
+		enemies->Add(pos5, EnemyType::CANDLE, area, Look::LEFT);
+		candleGenerated = true;
+
+	}
+}
+
+void Scene::GenerateFakeWall() {
+
+	if ((currentStage == 7 || currentStage == 11) && !fakewallGenerated) {
+		Point pos;
+		AABB area;
+
+		if (currentStage == 7) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
+
+		}
+		else if (currentStage == 11) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 64;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
+
+		}
+
+
+		enemies->Add(pos, EnemyType::FAKEWALL, area, Look::LEFT);
+
+		fakewallGenerated = true;
+
+	}
+}
 
 
 void Scene::Render()
@@ -657,15 +794,16 @@ void Scene::Render()
 	if (debug == DebugMode::OFF || debug == DebugMode::SPRITES_AND_HITBOXES)
 	{
 		RenderObjects();
-		player->Draw(); // Llama a la nueva funci�n Draw del jugador
 		enemies->Draw();
+		player->Draw(); 
+		
 	}
 	if (debug == DebugMode::SPRITES_AND_HITBOXES || debug == DebugMode::ONLY_HITBOXES)
 	{
 		RenderObjectsDebug(YELLOW);
 		player->DrawDebug(GREEN);
 		enemies->DrawDebug();
-		// Dibuja las áreas de detección de los guepardos si el modo debug está activo
+		//dibujar area de detección
 		auto& enemiesList = enemies->GetEnemies();
 		for (Enemy* enemy : enemiesList) {
 			Guepardo* guepardo = dynamic_cast<Guepardo*>(enemy);
@@ -687,6 +825,7 @@ void Scene::Release()
 	player->Release();
 	ClearLevel();
 }
+
 void Scene::CheckCollisions()
 {
 	AABB player_box, obj_box, enemy_box;
@@ -720,9 +859,11 @@ void Scene::CheckCollisions()
 
 			// Check collision with player hitbox
 			if (player_box.TestAABB(enemy_box)) {
-				// Determinar la direccion del daño
-				Look damageDirection = player->GetPlayerPosX() > enemy->GetPos().x ? Look::LEFT : Look::RIGHT;
-				player->GetDamage(damageDirection);
+				if (enemy->CausesDamage()) {
+					// Determinar la direccion del daño
+					Look damageDirection = player->GetPlayerPosX() > enemy->GetPos().x ? Look::LEFT : Look::RIGHT;
+					player->GetDamage(damageDirection);
+				}
 				return false; // Don't remove enemy
 			}
 
@@ -737,7 +878,29 @@ void Scene::CheckCollisions()
 
 			return false; // Don't remove enemy
 		}), enemiesList.end());
+
+	// Check collisions with fake walls
+	for (const auto& enemy : enemiesList) {
+		FakeWall* fakeWall = dynamic_cast<FakeWall*>(enemy);
+		if (fakeWall) {
+			AABB fakewall_box = fakeWall->GetHitbox();
+			if (player_box.TestAABB(fakewall_box)) {
+				// Ajustar la posición del jugador para evitar la colisión
+				if (player_box.pos.x < fakewall_box.pos.x) {
+					player->SetPos({ fakewall_box.pos.x - player_box.width, player->GetPlayerPosY() });
+				}
+				else if (player_box.pos.x > fakewall_box.pos.x) {
+					player->SetPos({ fakewall_box.pos.x + fakewall_box.width, player->GetPlayerPosY() });
+				}
+			}
+		}
+	}
 }
+
+
+
+
+
 
 
 void Scene::ClearLevel()

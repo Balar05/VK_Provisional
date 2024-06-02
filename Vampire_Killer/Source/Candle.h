@@ -2,30 +2,30 @@
 #include "Enemy.h"
 #include "TileMap.h"
 
-#define LLAMA_SPEED_X       2
-#define LLAMA_SPEED_Y       2
-#define LLAMA_JUMP_FORCE    3
-#define LLAMA_ANIM_DELAY    (3*ANIM_DELAY)
-#define LLAMA_FRAME_SIZE    16
+#define CANDLE_SPEED_X       2
+#define CANDLE_SPEED_Y       2
+#define CANDLEJUMP_FORCE    3
+#define CANDLE_ANIM_DELAY    (3*ANIM_DELAY)
+#define CANDLE_FRAME_SIZE    16
 //#define MURCIELAGO_WAVE_AMPLITUDE 15  // Amplitud de la onda
 //#define MURCIELAGO_WAVE_FREQUENCY 0.1  // Frecuencia de la onda,
 
-enum class LLamaState { IDLE, ROAMING };
-enum class LLamaAnim {
+enum class CandleState { IDLE, ROAMING };
+enum class CandleAnim {
     IDLE, ROAMING,
     NUM_ANIMATIONS
 };
 
-struct LLamaStep {
+struct CandleStep {
     Point speed;
     int frames;
     int anim;
 };
 
-class LLama : public Enemy {
+class Candle : public Enemy {
 public:
-    LLama(const Point& p, int width, int height, int frame_width, int frame_height);
-    ~LLama();
+    Candle(const Point& p, int width, int height, int frame_width, int frame_height);
+    ~Candle();
 
     AppStatus Initialise(Look look, const AABB& area) override;
     bool Update(const AABB& box) override;
@@ -51,10 +51,10 @@ private:
     void InitPattern();
     void UpdateLook(int anim_id);
 
-    LLamaState state;
+    CandleState state;
     int current_step;
     int current_frames;
-    std::vector<LLamaStep> pattern;
+    std::vector<CandleStep> pattern;
 
     float base_y;
     //bool activated;
