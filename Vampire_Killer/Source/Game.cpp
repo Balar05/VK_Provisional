@@ -33,7 +33,7 @@ AppStatus Game::Initialise(float scale)
     InitWindow(screenWidth, screenHeight, "Vampire Killer MSX2");
 
     // Switch to fullscreen mode
-    //ToggleFullscreen();
+    ToggleFullscreen();
 
     InitAudioDevice();
 
