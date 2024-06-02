@@ -584,7 +584,7 @@ void Scene::GenerateZombies()
 }
 void Scene::GenerateGuepardos() {
 
-	if ((currentStage == 6 || currentStage == 3) && !guepardoGenerated) {
+	if ((currentStage == 6 || currentStage == 11) && !guepardoGenerated) {
 		Point pos;
 		AABB area;
 
@@ -592,9 +592,9 @@ void Scene::GenerateGuepardos() {
 			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 46;
 			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 32;
 		}
-		else if (currentStage == 3) {
-			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE;
-			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 96;
+		else if (currentStage == 11) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE-16;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 32;
 		}
 
 		if (player->GetPlayerPosX() > WINDOW_WIDTH / 2)
@@ -667,7 +667,7 @@ void Scene::GenerateLLama() {
 		}
 
 
-			enemies->Add(pos, EnemyType::CANDLE, area, Look::LEFT);
+			enemies->Add(pos, EnemyType::LLAMA, area, Look::LEFT);
 			enemies->Add(pos2, EnemyType::LLAMA, area, Look::LEFT);
 			llamaGenerated = true;
 
@@ -1000,7 +1000,7 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(2);
 			break;
 		}
-		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		else if (x + PLAYER_PHYSICAL_WIDTH >= 210)
 		{
 			player->SetPos({ 15, y });
 			LoadLevel(4);

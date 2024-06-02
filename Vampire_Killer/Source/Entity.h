@@ -25,7 +25,6 @@ public:
 
 	//Draw representation model
 	void Draw() const;
-	//void Draw2() const;
 	void DrawTint(const Color& col) const;
 
 	//Draw logical/physical model (hitbox)
