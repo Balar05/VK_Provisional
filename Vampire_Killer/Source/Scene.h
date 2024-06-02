@@ -30,7 +30,8 @@ private:
     void RenderObjects() const;
     void RenderObjectsDebug(const Color& col) const;
     void GenerateZombies();
-    //void RenderGUI() const;
+    void RenderGUI() const;
+    std::vector<ObjectType> collectedObjects;
 
     Player* player;
     TileMap* level;

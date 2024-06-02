@@ -254,12 +254,12 @@ AppStatus Scene::LoadLevel(int stage)
 		   	   -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,10, 3,
-				0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0,
 				1, 2, 1, 2, 3, 9, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 7, 0, 0, 0, 0,
 				0, 0, 0, 0, 1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 1, 2, 1, 2, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0,
+				44,0, 0, 0, 0, 0, 1, 2, 45, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
@@ -298,7 +298,7 @@ AppStatus Scene::LoadLevel(int stage)
 			1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 1, 2, 1, 2,
 			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 2, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
 	}
@@ -332,7 +332,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,10, 3, 1, 2, 1, 2,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 44, 7, 0, 0, 0, 0, 1, 2,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 1, 2,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 2,
@@ -369,6 +369,9 @@ AppStatus Scene::LoadLevel(int stage)
 	enemies->Release();
 
 	//Entities and objects
+	auto isCollected = [this](ObjectType type) {
+		return std::find(collectedObjects.begin(), collectedObjects.end(), type) != collectedObjects.end();
+	};
 	i = 0;
 	for (y = 0; y <= LEVEL_HEIGHT-2; ++y)
 	//for(y=0; y < LEVEL_HEIGHT; ++y)
@@ -389,18 +392,22 @@ AppStatus Scene::LoadLevel(int stage)
 			}
 			else if (tile == Tile::GOLDEN_KEY)
 			{
-				pos.x = x * TILE_SIZE;
-				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
-				obj = new Object(pos, ObjectType::GOLDEN_KEY);
-				objects.push_back(obj);
+				if (!isCollected(ObjectType::GOLDEN_KEY)) {
+					pos.x = x * TILE_SIZE;
+					pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+					obj = new Object(pos, ObjectType::GOLDEN_KEY);
+					objects.push_back(obj);
+				}
 				map[i] = 0;
 			}
 			else if (tile == Tile::SILVER_KEY)
 			{
-				pos.x = x * TILE_SIZE;
-				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
-				obj = new Object(pos, ObjectType::SILVER_KEY);
-				objects.push_back(obj);
+				if (!isCollected(ObjectType::SILVER_KEY)) {
+					pos.x = x * TILE_SIZE;
+					pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+					obj = new Object(pos, ObjectType::SILVER_KEY);
+					objects.push_back(obj);
+				}
 				map[i] = 0;
 			}
 			else if (tile == Tile::ZOMBIE)
@@ -542,7 +549,7 @@ void Scene::Render()
 
 	EndMode2D();
 
-	//RenderGUI();
+	RenderGUI();
 }
 void Scene::Release()
 {
@@ -562,9 +569,9 @@ void Scene::CheckCollisions()
 		obj_box = (*it)->GetHitbox();
 		if (player_box.TestAABB(obj_box))
 		{
-			//player->IncrScore((*it)->Points());
 
-			//Delete the object
+			player->items.push_back((*it)->type);
+			collectedObjects.push_back((*it)->type);
 			delete* it;
 			//Erase the object from the vector and get the iterator to the next valid element
 			it = objects.erase(it);
@@ -626,11 +633,30 @@ void Scene::RenderObjectsDebug(const Color& col) const
 		obj->DrawDebug(col);
 	}
 }
-//void Scene::RenderGUI() const
-//{
-//	//Temporal approach
-//	DrawText(TextFormat("LIVES : %d", player->GetLives()), 10, 10, 8, WHITE);
-//}
+void Scene::RenderGUI() const
+{
+
+	const std::vector<ObjectType>& items = player->GetItems();
+
+	for (int i = 0; i < items.size(); ++i)
+	{
+		Vector2 pos;
+		if (items[i] == ObjectType::GOLDEN_KEY || items[i] == ObjectType::SILVER_KEY)
+		{
+			
+			pos = { static_cast<float>(146 + i * (OBJECT_FRAME_SIZE )), 13.0f };
+		}
+		else
+		{
+			
+			pos = { static_cast<float>(167 + i * (OBJECT_FRAME_SIZE + 1)), 12.0f };
+		}
+
+		// Dibuja el ítem en la interfaz
+		player->DrawItem(items[i], pos);
+	}
+
+}
 
 void Scene::UpdateBackground(int s)
 {

@@ -54,8 +54,8 @@ void TileMap::InitTileDictionary()
 	dict_rect[(int)Tile::CANDLE_BIG] = { 20 * n, n, n, n };
 	dict_rect[(int)Tile::CANDLE_SMALL] = { 21 * n, n, n, n };
 
-	dict_rect[(int)Tile::GOLDEN_KEY] = { 16 * n,  0, n, n };
-	dict_rect[(int)Tile::SILVER_KEY] = { 17 * n,  0, n, n };
+	
+
 
 	dict_rect[(int)Tile::SMALL_HEART] = { 18 * n,  0, n, n };
 	dict_rect[(int)Tile::BIG_HEART] = { 19 * n,  0, n, n };

@@ -1,6 +1,8 @@
 #pragma once
 #include "Entity.h"
 #include "TileMap.h"
+#include "Object.h" 
+#include <vector>
 
 //Representation model size: 32x32
 #define PLAYER_FRAME_SIZE		32
@@ -83,12 +85,17 @@ public:
 	void Release();
 
 	AABB GetAttackHitbox() const;
-
+	std::vector<ObjectType> items;
+    const std::vector<ObjectType>& GetItems() const { return items; }
 	const int totalFramesAttack = 3;
 	float currentFrameAttack = 0;
 	float framesCounter = 0;
 	float framesSpeed = 1;
-
+	void DrawItem(ObjectType type, Vector2 pos);
+	
+	Texture2D GetItemTexture(ObjectType type);
+	
+	
 
 	//Temporizador
 	void StartTimer(Timer* timer, float lifetime)
@@ -126,6 +133,7 @@ public:
 	int GetPlayerPosX();
 	int GetPlayerPosY();
 	//void CheckPosY(); //new
+
 
 
 private:
