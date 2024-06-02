@@ -21,6 +21,9 @@ public:
     void UpdateBackground(int s);
     void Render();
     void Release();
+    int returnStage();
+    int currentStage;
+    bool exit;
 
 private:
     AppStatus LoadLevel(int stage);
@@ -44,6 +47,6 @@ private:
     EnemyManager* enemies;
     //Texture2D background = LoadTexture("images/Sprites/256x176 Levels.png");
     Rectangle rc;
-    int currentStage;
+    
     int frameCounter;
 };

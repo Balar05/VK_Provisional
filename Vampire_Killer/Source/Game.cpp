@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "ResourceManager.h"
 #include <stdio.h>
+#include "Scene.h"
 
 
 Game::Game()
@@ -292,6 +293,7 @@ AppStatus Game::Update()
             music2Played = true;
 
         }
+        else if (scene->currentStage == 12 && scene->exit == true)  state = GameState::CREDITS;
         else {
             // Lógica de juego
             scene->Update();

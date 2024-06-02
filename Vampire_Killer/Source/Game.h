@@ -55,6 +55,8 @@ public:
     Vector2 bat_introPosition = { WINDOW_WIDTH / 2 + 20, 70 }; // Posición inicial del murciélago
 
     Vector2 bat_intro2Position = { WINDOW_WIDTH / 2 - 100, 120 }; // Posición inicial del murciélago
+    
+
 
 private:
     AppStatus BeginPlay();

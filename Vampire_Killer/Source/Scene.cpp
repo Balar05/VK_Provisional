@@ -4,6 +4,7 @@
 #include "LevelBackground.h"
 #include "Enemy.h"
 #include <algorithm>
+#include "Game.h"
 
 Scene::Scene() : currentStage(1)
 {
@@ -807,14 +808,15 @@ void Scene::UpdateBackground(int s)
 			break;
 		}
 	case 12:
-		if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
-		{
-			player->SetPos({ (LEVEL_WIDTH * TILE_SIZE - PLAYER_PHYSICAL_WIDTH), y });
-			break;
-		}
-		else if (x < 0)
+		
+		if (x < 0)
 		{
 			player->SetPos({ 0,y });
+			break;
+		}
+		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		{
+			exit = true;
 			break;
 		}
 	}
