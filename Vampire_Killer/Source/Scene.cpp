@@ -472,6 +472,7 @@ void Scene::Update()
 	else if (IsKeyPressed(KEY_U))		LoadLevel(12);
 	else if (IsKeyPressed(KEY_D))		player->GetDamage(Look::RIGHT);
 	else if (IsKeyPressed(KEY_F2))		player->god = true;
+	else if (IsKeyPressed(KEY_F3))		player->god = false;
 
 	level->Update();
 	player->Update();
