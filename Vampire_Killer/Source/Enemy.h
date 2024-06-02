@@ -2,18 +2,28 @@
 #include "Entity.h"
 
 //Representation model size: 32x32
-#define ZOMBIE_FRAME_SIZE		32
+#define ENEMIES_FRAME_SIZE		    32
 //Logical model size: 24x30
-#define ZOMBIE_PHYSICAL_WIDTH	12
-#define ZOMBIE_PHYSICAL_HEIGHT	28
+#define ZOMBIE_PHYSICAL_WIDTH	    12
+#define ZOMBIE_PHYSICAL_HEIGHT	    28
 
-////Representation model size: 32x32
-//#define AQUAMAN_FRAME_SIZE		32
-////Logical model size: 0x0
-//#define AQUAMAN_PHYSICAL_WIDTH	32
-//#define AQUAMAN_PHYSICAL_HEIGHT	26
+#define GUEPARDO_PHYSICAL_WIDTH	    28
+#define GUEPARDO_PHYSICAL_HEIGHT	16
 
-enum class EnemyType { ZOMBIE, AQUAMAN };
+#define MURCIELAGO_PHYSICAL_WIDTH	16
+#define MURCIELAGO_PHYSICAL_HEIGHT	16
+
+#define LLAMA_PHYSICAL_WIDTH		16
+#define LLAMA_PHYSICAL_HEIGHT		32
+
+#define CANDLE_PHYSICAL_WIDTH		16
+#define CANDLE_PHYSICAL_HEIGHT		16
+
+#define FAKEWALL_PHYSICAL_WIDTH		32
+#define FAKEWALL_PHYSICAL_HEIGHT	32
+
+
+enum class EnemyType { ZOMBIE, GUEPARDO, MURCIELAGO, LLAMA, CANDLE, FAKEWALL };
 
 class Enemy : public Entity
 {
@@ -33,6 +43,8 @@ public:
 
 	//Update the enemy according to its logic, return true if the enemy must shoot
 	virtual bool Update(const AABB& box) = 0;
+
+	virtual bool CausesDamage() const { return true; }
 
 	Point GetPos() const { return pos; }
 

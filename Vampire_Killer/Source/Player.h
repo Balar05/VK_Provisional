@@ -1,6 +1,13 @@
 #pragma once
 #include "Entity.h"
 #include "TileMap.h"
+#include "StaticImage.h"
+
+#define HEALTH_BAR_WIDTH 4
+#define HEALTH_BAR_HEIGHT 4
+
+//#define E_HEALTH_BAR_WIDTH 4
+//#define E_HEALTH_BAR_HEIGHT 4
 
 //Representation model size: 32x32
 #define PLAYER_FRAME_SIZE		32
@@ -23,7 +30,7 @@
 #define ANIM_LADDER_DELAY		(2*ANIM_DELAY)
 
 //When jumping, initial jump speed and maximum falling speed
-#define PLAYER_JUMP_FORCE		4//3
+#define PLAYER_JUMP_FORCE		3//3
 
 //Frame delay for updating the jump velocity
 #define PLAYER_JUMP_DELAY		4
@@ -81,8 +88,12 @@ public:
 	void Update();
 	void DrawDebug(const Color& col) const;
 	void Release();
+	void Draw() const;
+
 
 	AABB GetAttackHitbox() const;
+
+	/*AABB GetHitbox() const { return AABB(pos, width, height); }*/
 
 	const int totalFramesAttack = 3;
 	float currentFrameAttack = 0;
@@ -121,7 +132,7 @@ public:
 	}
 
 	Timer attackTimer = { 0 };
-	float attackLife = 0.5f; // Duration of the attack animation
+	float attackLife = 0.3f; // Duration of the attack animation
 
 	int GetPlayerPosX();
 	int GetPlayerPosY();
@@ -186,4 +197,6 @@ private:
 
 	int lives;
 
+	StaticImage* healthBarSprite;
+	Texture2D* healthTexture;
 };

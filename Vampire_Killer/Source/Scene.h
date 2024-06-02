@@ -5,7 +5,7 @@
 #include "Object.h"
 #include "LevelBackground.h"
 #include "EnemyManager.h"
-
+#include "text.h"
 
 
 enum class DebugMode { OFF, SPRITES_AND_HITBOXES, ONLY_HITBOXES, SIZE };
@@ -33,7 +33,12 @@ private:
     void RenderObjects() const;
     void RenderObjectsDebug(const Color& col) const;
     void GenerateZombies();
-    //void RenderGUI() const;
+    void GenerateGuepardos();
+    void GenerateMurcielagos();
+    void GenerateLLama();
+    void GenerateCandle();
+    void GenerateFakeWall();
+    void RenderGUI() const;
 
     Player* player;
     TileMap* level;
@@ -49,4 +54,12 @@ private:
     Rectangle rc;
     
     int frameCounter;
+
+    bool guepardoGenerated;
+    bool llamaGenerated;
+    bool candleGenerated;
+    bool fakewallGenerated;
+
+
+    Text* font1;
 };

@@ -18,7 +18,7 @@ Zombie::~Zombie()
 AppStatus Zombie::Initialise(Look look, const AABB& area)
 {
 	int i;
-	const int n = ZOMBIE_FRAME_SIZE;
+	const int n = ENEMIES_FRAME_SIZE;
 	state = ZombieState::ROAMING;
 	ResourceManager& data = ResourceManager::Instance();
 	render = new Sprite(data.GetTexture(Resource::IMG_ENEMIES));
@@ -31,10 +31,10 @@ AppStatus Zombie::Initialise(Look look, const AABB& area)
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->SetNumberAnimations((int)ZombieAnim::NUM_ANIMATIONS);
 
-	sprite->SetAnimationDelay((int)ZombieAnim::IDLE_RIGHT, ZOMBIE_ANIM_DELAY);
-	sprite->AddKeyFrame((int)ZombieAnim::IDLE_RIGHT, { 0, 0 * n, n, n });
-	sprite->SetAnimationDelay((int)ZombieAnim::IDLE_LEFT, ZOMBIE_ANIM_DELAY);
-	sprite->AddKeyFrame((int)ZombieAnim::IDLE_LEFT, { 0, 0, -n, n });
+	//sprite->SetAnimationDelay((int)ZombieAnim::IDLE_RIGHT, ZOMBIE_ANIM_DELAY);
+	//sprite->AddKeyFrame((int)ZombieAnim::IDLE_RIGHT, { 0, 0 * n, n, n });
+	//sprite->SetAnimationDelay((int)ZombieAnim::IDLE_LEFT, ZOMBIE_ANIM_DELAY);
+	//sprite->AddKeyFrame((int)ZombieAnim::IDLE_LEFT, { 0, 0, -n, n });
 
 	sprite->SetAnimationDelay((int)ZombieAnim::WALKING_RIGHT, ZOMBIE_ANIM_DELAY);
 	for (i = 0; i < 2; ++i)
@@ -44,8 +44,8 @@ AppStatus Zombie::Initialise(Look look, const AABB& area)
 		sprite->AddKeyFrame((int)ZombieAnim::WALKING_LEFT, { (float)i * n, 0 * n, n, n });
 
 	this->look = look;
-	if (look == Look::LEFT)        sprite->SetAnimation((int)ZombieAnim::IDLE_LEFT);
-	else if (look == Look::RIGHT) sprite->SetAnimation((int)ZombieAnim::IDLE_RIGHT);
+	if (look == Look::LEFT)        sprite->SetAnimation((int)ZombieAnim::WALKING_RIGHT);
+	else if (look == Look::RIGHT) sprite->SetAnimation((int)ZombieAnim::WALKING_LEFT);
 
 	visibility_area = area;
 
@@ -61,13 +61,9 @@ void Zombie::InitPattern()
 	if (look == Look::LEFT)
 	{
 		pattern.push_back({ {ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_RIGHT });
-		pattern.push_back({ {ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_RIGHT });
-		pattern.push_back({ {ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_RIGHT });
 	}
 	else
 	{
-		pattern.push_back({ {-ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_LEFT });
-		pattern.push_back({ {-ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_LEFT });
 		pattern.push_back({ {-ZOMBIE_SPEED, 0}, n, (int)ZombieAnim::WALKING_LEFT });
 	}
 

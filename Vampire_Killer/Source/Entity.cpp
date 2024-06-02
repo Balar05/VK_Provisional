@@ -65,6 +65,16 @@ void Entity::Draw() const
 	Point p = GetRenderingPosition();
 	render->Draw(p.x, p.y);
 }
+//void Entity::Draw2() const
+//{
+//	if (isBlinking && (int)(GetTime() * 10) % 2 == 0)
+//	{
+//		return;
+//	}
+//
+//	Point p = GetRenderingPosition();
+//	render->Draw(p.x, p.y);
+//}
 void Entity::DrawTint(const Color& col) const
 {
 	if (isBlinking && (int)(GetTime() * 10) % 2 == 0)
