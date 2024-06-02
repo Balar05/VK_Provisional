@@ -23,7 +23,6 @@ AppStatus Guepardo::Initialise(Look look, const AABB& area) {
     Sprite* sprite = dynamic_cast<Sprite*>(render);
     sprite->SetNumberAnimations((int)GuepardoAnim::NUM_ANIMATIONS);
 
-    // IDLE animation (ensure this points to the correct part of your sprite sheet)
     sprite->SetAnimationDelay((int)GuepardoAnim::IDLE_RIGHT, 0);
     sprite->AddKeyFrame((int)GuepardoAnim::IDLE_RIGHT, { 0, 96, n, n });
     sprite->SetAnimationDelay((int)GuepardoAnim::IDLE_LEFT, 0);
@@ -31,10 +30,10 @@ AppStatus Guepardo::Initialise(Look look, const AABB& area) {
 
     sprite->SetAnimationDelay((int)GuepardoAnim::ROAMING_RIGHT, 10);
     for (int i = 1; i < 4; ++i)
-        sprite->AddKeyFrame((int)GuepardoAnim::ROAMING_RIGHT, { (float)i * n, 96, -n, n });  // Aquí n es positivo
+        sprite->AddKeyFrame((int)GuepardoAnim::ROAMING_RIGHT, { (float)i * n, 96, -n, n });  
     sprite->SetAnimationDelay((int)GuepardoAnim::ROAMING_LEFT, 10);
     for (int i = 1; i < 4; ++i)
-        sprite->AddKeyFrame((int)GuepardoAnim::ROAMING_LEFT, { (float)i * n, 96, n, n });  // Aquí n es negativo
+        sprite->AddKeyFrame((int)GuepardoAnim::ROAMING_LEFT, { (float)i * n, 96, n, n }); 
 
     sprite->SetAnimationDelay((int)GuepardoAnim::FALLING_RIGHT, 10);
     sprite->AddKeyFrame((int)GuepardoAnim::FALLING_RIGHT, { 2 * n, 3 * n, n, n });

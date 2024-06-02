@@ -296,8 +296,8 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 7, 0, 0, 0, 0,
 				0, 0, 0, 0, 1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 1, 2, 1, 2, 0, 0, 0, 0, 0, 0,
-				44,0, 0, 0, 0, 0, 1, 2, 45, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0,
+				0,0, 0, 0, 0, 0, 1, 2, 45, 0, 0, 0, 0, 0, 0, 0,
+				44, 0, 0, 0, 0, 0, 1, 2, 5, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
 	}
@@ -317,7 +317,7 @@ AppStatus Scene::LoadLevel(int stage)
 				1, 2, 1, 2, 1, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 200, 0, 6, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 6, 1, 2, 1, 2
 		};
 	}
@@ -357,7 +357,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 1, 2, 1, 2, 1,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 200, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
 	}
@@ -395,7 +395,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 3, 1, 2,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
@@ -563,7 +563,7 @@ void Scene::Update() {
 
 void Scene::GenerateZombies()
 {
-	if (currentStage != 4 && currentStage != 5)
+	if (currentStage != 4 && currentStage != 5 && currentStage != 8 && currentStage != 10)
 	{
 		return; // No generar zombies si no estamos en el nivel 4 o 5
 	}
@@ -693,72 +693,72 @@ void Scene::GenerateCandle() {
 
 		if (currentStage == 4) {
 			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 16;
-			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
 			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48;
-			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
 		}
 		else if (currentStage == 5) {
 			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 16;  //derecha inf
-			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63; 
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79; 
 			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 81; //izquierda inf
-			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
 			pos3.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 16; //izquierda superior 
-			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE -17;
+			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE -1;
 			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48; //derecha superior
-			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 47;
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
 		}
 		else if (currentStage == 6) {
 			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE ;		 //derecha inf 	
-			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;  
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;  
 			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 97; //izquierda inf
-			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
 			pos3.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 65; //izquierda superior 
-			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 15;
+			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 31;
 			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48; //derecha superior 
-			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE -1;
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 15;
 		}
 		else if (currentStage == 7) {
 			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 80;		 //derecha inf 	
-			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
 			pos3.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 32; //izquierda superior 
-			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 17;
+			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 1;
 			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48; //derecha superior 
-			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 17;
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 1;
 		}
 		else if (currentStage == 8) {
 	
 			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 65; //izquierda inf
-			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
 
 			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 16; //derecha superior
-			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 47;
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
 		}
 		else if (currentStage == 9) {
 
-			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 16;  //derecha inf
-			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 32;  //derecha inf
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
 			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 81; //izquierda inf
-			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 15;
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 31;
 			pos3.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 81; //izquierda superior 
-			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 49;
-			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48; //derecha superior
-			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 47;
+			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 33;
+			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 32; //derecha superior
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
 			pos5.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48; //derecha superior
-			pos5.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 17;
+			pos5.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 1;
 		}
 		else if (currentStage == 10) {
 
 			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 16; //izquierda inf
-			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 47;
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
 
 			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 80; //derecha superior 
-			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 1;
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 15;
 		}
 		else if (currentStage == 11) {
 			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 32;		 //derecha inf 	
-			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
 			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 32; //izquierda inf
-			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
 		}
 
 		enemies->Add(pos, EnemyType::CANDLE, area, Look::LEFT);

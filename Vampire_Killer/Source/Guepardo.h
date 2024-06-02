@@ -31,20 +31,8 @@ public:
     bool Update(const AABB& box) override;
     void DrawDetectionArea() const;
 
-    void SetTileMap(TileMap* tilemap); // Método para establecer el mapa de colisiones
+    void SetTileMap(TileMap* tilemap); 
 
-    //void MoveX();
-    //void MoveY();
-    //void LogicJumping();
-
-    //void StartFalling_NJ();
-    //bool IsAscending() const;
-    //bool IsLevitating() const;
-    //bool IsDescending() const;
-    //void ChangeAnimRight();
-    //void ChangeAnimLeft();
-    //bool IsLookingRight() const;
-    //bool IsLookingLeft() const;
 
 private:
     void InitPattern();
@@ -59,7 +47,7 @@ private:
     AABB detection_area;
     Point dir;
 
-    TileMap* map; // Puntero al TileMap
+    TileMap* map; 
 
-    float verticalSpeed; // Nueva variable para manejar la velocidad vertical
+    float verticalSpeed;
 };

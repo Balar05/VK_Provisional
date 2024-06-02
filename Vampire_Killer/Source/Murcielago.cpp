@@ -68,7 +68,7 @@ bool Murcielago::Update(const AABB& player_box) {
         // Actualizar la posición X
         pos.x += pattern[current_step].speed.x;
 
-        // Actualizar la posición Y usando una onda sinusoidal alrededor de base_y
+  
         pos.y = base_y + MURCIELAGO_WAVE_AMPLITUDE * std::sin(current_frames * MURCIELAGO_WAVE_FREQUENCY);
 
         current_frames++;

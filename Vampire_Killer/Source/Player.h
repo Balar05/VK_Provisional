@@ -35,7 +35,7 @@
 #define PLAYER_JUMP_FORCE		4//3
 
 //Frame delay for updating the jump velocity
-#define PLAYER_JUMP_DELAY		4
+#define PLAYER_JUMP_DELAY		3
 
 //Player is levitating when abs(speed) <= this value
 #define PLAYER_LEVITATING_SPEED	0

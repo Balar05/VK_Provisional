@@ -15,21 +15,21 @@ enum class AppStatus { OK = 0, ERROR, QUIT };
 void log(const char file[], int line, const char* text, ...);
 
 //Window size
-#define WINDOW_WIDTH    256 //400 //256
-#define WINDOW_HEIGHT   212 //176+12 //300 //176
+#define WINDOW_WIDTH    256 
+#define WINDOW_HEIGHT   212
 
 //Game constants
-//#define MARGIN_GUI_Y	36 //28
+//#define MARGIN_GUI_Y	36 
 #define TILE_SIZE		16
-#define LEVEL_WIDTH		16 //25
-#define LEVEL_HEIGHT	13 //17
+#define LEVEL_WIDTH		16 
+#define LEVEL_HEIGHT	13
 
 
 //Entities animation delay
-#define ANIM_DELAY		10 //4
+#define ANIM_DELAY		10 
 
 #define EXPLOSION_SIZE 276
 #define SPRITE_SIZE 32
 #define CLOUD_SIZE 64
 
-#define CREDIT_SCROLL_SPEED 0.25f
+#define CREDIT_SCROLL_SPEED 0.3f

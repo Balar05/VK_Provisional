@@ -381,7 +381,7 @@ void Game::Render()
     {
     case GameState::MAIN_MENU:
     {
-        Image imgMenu = LoadImage("images/Sprites/initial screen.png");
+        Image imgMenu = LoadImage("images/Sprites/initial screen2.0.png");
         ImageResize(&imgMenu, WINDOW_WIDTH, WINDOW_HEIGHT);
         Texture2D img_menu = LoadTextureFromImage(imgMenu);
         UnloadImage(imgMenu);

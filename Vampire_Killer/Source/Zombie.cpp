@@ -31,10 +31,6 @@ AppStatus Zombie::Initialise(Look look, const AABB& area)
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->SetNumberAnimations((int)ZombieAnim::NUM_ANIMATIONS);
 
-	//sprite->SetAnimationDelay((int)ZombieAnim::IDLE_RIGHT, ZOMBIE_ANIM_DELAY);
-	//sprite->AddKeyFrame((int)ZombieAnim::IDLE_RIGHT, { 0, 0 * n, n, n });
-	//sprite->SetAnimationDelay((int)ZombieAnim::IDLE_LEFT, ZOMBIE_ANIM_DELAY);
-	//sprite->AddKeyFrame((int)ZombieAnim::IDLE_LEFT, { 0, 0, -n, n });
 
 	sprite->SetAnimationDelay((int)ZombieAnim::WALKING_RIGHT, ZOMBIE_ANIM_DELAY);
 	for (i = 0; i < 2; ++i)
