@@ -20,13 +20,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\AABB.cpp" />
+    <ClCompile Include="Source\Candle.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
     <ClCompile Include="Source\EnemyManager.cpp" />
     <ClCompile Include="Source\Entity.cpp" />
+    <ClCompile Include="Source\FakeWall.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Globals.cpp" />
+    <ClCompile Include="Source\Guepardo.cpp" />
     <ClCompile Include="Source\LevelBackground.cpp" />
+    <ClCompile Include="Source\LLama.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Murcielago.cpp" />
     <ClCompile Include="Source\Object.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\RenderComponent.cpp" />
@@ -34,18 +39,24 @@
     <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\Sprite.cpp" />
     <ClCompile Include="Source\StaticImage.cpp" />
+    <ClCompile Include="Source\text.cpp" />
     <ClCompile Include="Source\TileMap.cpp" />
     <ClCompile Include="Source\Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AABB.h" />
+    <ClInclude Include="Source\Candle.h" />
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\EnemyManager.h" />
     <ClInclude Include="Source\Entity.h" />
+    <ClInclude Include="Source\FakeWall.h" />
     <ClInclude Include="Source\Game.h" />
     <ClInclude Include="Source\Globals.h" />
+    <ClInclude Include="Source\Guepardo.h" />
     <ClInclude Include="Source\LevelBackground.h" />
+    <ClInclude Include="Source\LLama.h" />
     <ClInclude Include="Source\MemLeaks.h" />
+    <ClInclude Include="Source\Murcielago.h" />
     <ClInclude Include="Source\Object.h" />
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\Point.h" />
@@ -54,6 +65,7 @@
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\Sprite.h" />
     <ClInclude Include="Source\StaticImage.h" />
+    <ClInclude Include="Source\text.h" />
     <ClInclude Include="Source\TileMap.h" />
     <ClInclude Include="Source\Zombie.h" />
   </ItemGroup>
@@ -119,8 +131,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\arnau\Desktop\raylib\raylib\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\arnau\Desktop\raylib\raylib\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\haosh\Downloads\raylib\raylib\include;C:\Users\arnau\Desktop\raylib\raylib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\haosh\Downloads\raylib\raylib\lib;C:\Users\arnau\Desktop\raylib\raylib\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

@@ -3,15 +3,20 @@
 #include "Globals.h"
 #include "LevelBackground.h"
 #include "Enemy.h"
+#include "Guepardo.h"
+//#include "Murcielago.h"
 #include <algorithm>
 #include "Game.h"
+#include "FakeWall.h"
 
-Scene::Scene() : currentStage(1)
+Scene::Scene() : currentStage(1), guepardoGenerated(false), llamaGenerated(false), candleGenerated(false), fakewallGenerated(false)
 {
 	player = nullptr;
 	level = nullptr;
 	background = nullptr;
 	enemies = nullptr;
+
+	font1 = nullptr;
 
 	camera.target = { 0, 0 };				//Center of the screen
 	camera.offset = { 0, 0 };	//Offset from the target (center of the screen)
@@ -41,6 +46,11 @@ Scene::~Scene()
 		delete background;
 		background = nullptr;
 	}
+	if (font1 != nullptr)
+	{
+		delete font1;
+		font1 = nullptr;
+	}
 	for (Entity* obj : objects)
 	{
 		delete obj;
@@ -55,6 +65,7 @@ Scene::~Scene()
 }
 AppStatus Scene::Init()
 {
+
 	//Create player
 	player = new Player({ 15, LEVEL_HEIGHT * TILE_SIZE - TILE_SIZE }, State::IDLE, Look::RIGHT);
 	if (player == nullptr)
@@ -114,6 +125,20 @@ AppStatus Scene::Init()
 	//Assign the tile map reference to the player to check collisions while navigating
 	player->SetTileMap(level);
 
+	//Create text font 1
+	font1 = new Text();
+	if (font1 == nullptr)
+	{
+		LOG("Failed to allocate memory for font 1");
+		return AppStatus::ERROR;
+	}
+	//Initialise text font 1
+	if (font1->Initialise(Resource::IMG_FONT1, "images/font8x8.png", ' ', 8) != AppStatus::OK)
+	{
+		LOG("Failed to initialise Level");
+		return AppStatus::ERROR;
+	}
+
 	return AppStatus::OK;
 }
 AppStatus Scene::LoadLevel(int stage)
@@ -129,11 +154,17 @@ AppStatus Scene::LoadLevel(int stage)
 	ClearLevel();
 
 	size = LEVEL_WIDTH * LEVEL_HEIGHT;
+	guepardoGenerated = false;
+	llamaGenerated = false;
+	candleGenerated = false;
+	fakewallGenerated = false;
 
 	if (stage == 1)
 	{
 		currentStage = 1;
+		//guepardoGenerated = false;
 		map = new int[size] {
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -143,9 +174,8 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 300, 0, 0, 0, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 
 		};
@@ -154,6 +184,7 @@ AppStatus Scene::LoadLevel(int stage)
 	else if (stage == 2)
 	{
 		currentStage = 2;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -165,14 +196,15 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 300, 0, 0, 0, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 		};
 	}
 	else if (stage == 3)
 	{
 		currentStage = 3;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -184,14 +216,15 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 300, 0, 0, 0, 0, 0, 0, 0,
 				4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 		};
 	}
 	else if (stage == 4)
 	{
 		currentStage = 4;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -202,7 +235,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0/*candle*/, 0, 0, 0, 0/*candle */, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 600/*candle*/, 0, 0, 0, 0/*candle */, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 44, 0, 200, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
@@ -211,6 +244,7 @@ AppStatus Scene::LoadLevel(int stage)
 	else if (stage == 5)
 	{
 		currentStage = 5;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -222,7 +256,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 10, 3, 1, 2, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 7, 0, 0/*candle*/, 0, 0, 0, 0/*candle */, 0, 0, 0, 0,
-				0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 7, 600, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 7, 0, 0, 0, 200, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
@@ -230,18 +264,19 @@ AppStatus Scene::LoadLevel(int stage)
 	else if (stage == 6)
 	{
 		currentStage = 6;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 7, 0, 300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 3, 9, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0,
-				0, 0, 1, 2, 1, 2,10, 3, 1, 2, 1, 2, 0, 0, 0, 0,
+				0, 0, 1, 2, 1, 2, 10, 3, 1, 2, 1, 2, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 7, 0, 0, 600, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
@@ -249,12 +284,13 @@ AppStatus Scene::LoadLevel(int stage)
 	else if (stage == 7)
 	{
 		currentStage = 7;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		   	   -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				-1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,10, 3,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 3,
 				0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0,
 				1, 2, 1, 2, 3, 9, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 7, 0, 0, 0, 0,
@@ -268,44 +304,47 @@ AppStatus Scene::LoadLevel(int stage)
 	else if (stage == 8)
 	{
 		currentStage = 8;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 1, 2, 1, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 6, 1, 2, 1, 2
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 6, 1, 2, 1, 2
 		};
 	}
 	else if (stage == 9)
 	{
-	currentStage = 9;
-	map = new int [size] {
+		currentStage = 9;
+		//guepardoGenerated = false;
+		map = new int [size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 1, 2, 0, 0, 1, 2, 1, 9, 0, 0, 0, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0,
-			1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 1, 2, 1, 2,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 0, 0, 1, 2, 1, 9, 0, 0, 0, 0, 0, 0,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 1, 2, 1, 2,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 2, 0, 0, 0, 0, 0, 0, 0, 400, 0, 0, 0, 0, 0, 0,
+				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
 	}
 	else if (stage == 10)
 	{
 		currentStage = 10;
+		//guepardoGenerated = false;
 		map = new int [size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -315,7 +354,7 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,10, 1, 2, 1, 2, 1,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 1, 2, 1, 2, 1,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -325,6 +364,7 @@ AppStatus Scene::LoadLevel(int stage)
 	else if (stage == 11)
 	{
 		currentStage = 11;
+		//guepardoGenerated = false;
 		map = new int[size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -332,18 +372,19 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,10, 3, 1, 2, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 3, 1, 2, 1, 2,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 1, 2,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 1, 2,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 2,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2,
 				1, 2, 1, 2, 7, 3, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
 	}
 	else if (stage == 12)
 	{
 		currentStage = 12;
+		//guepardoGenerated = false;
 		map = new int [size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -371,72 +412,84 @@ AppStatus Scene::LoadLevel(int stage)
 
 	//Entities and objects
 	i = 0;
-	for (y = 0; y <= LEVEL_HEIGHT-2; ++y)
-	//for(y=0; y < LEVEL_HEIGHT; ++y)
-	{
-	for(x=0; x < LEVEL_WIDTH; ++x)
-		{
+	for (y = 0; y <= LEVEL_HEIGHT - 2; ++y) {
+		for (x = 0; x < LEVEL_WIDTH; ++x) {
 			tile = (Tile)map[i];
-			if (tile == Tile::AIR)
-			{
+			if (tile == Tile::AIR) {
 				map[i] = 0;
 			}
-			else if (tile == Tile::PLAYER)
-			{
+			else if (tile == Tile::PLAYER) {
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				player->SetPos(pos);
 				map[i] = 0;
 			}
-			else if (tile == Tile::GOLDEN_KEY)
-			{
+			else if (tile == Tile::GOLDEN_KEY) {
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				obj = new Object(pos, ObjectType::GOLDEN_KEY);
 				objects.push_back(obj);
 				map[i] = 0;
 			}
-			else if (tile == Tile::SILVER_KEY)
-			{
+			else if (tile == Tile::SILVER_KEY) {
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				obj = new Object(pos, ObjectType::SILVER_KEY);
 				objects.push_back(obj);
 				map[i] = 0;
 			}
-			else if (tile == Tile::ZOMBIE)
-			{
+			else if (tile == Tile::ZOMBIE) {
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
-
-				// Obtenemos la posicion del jugador
-				int playerPosX = player->GetPlayerPosX();
-
-				// Aqui agregas la condicion para que los zombis solo aparezcan en los niveles
-				if (stage == 4)
-				{
-					hitbox = enemies->GetEnemyHitBox(pos, EnemyType::ZOMBIE);
-					area = level->GetSweptAreaX(hitbox);
-				}
-				// Comprobamos si el jugador esta a la derecha o a la izquierda
-				if (playerPosX > WINDOW_WIDTH / 2)
-				{
-					// Si el jugador esta a la derecha, hacemos aparecer al zombie a la izquierda
-					pos.x = 0;
-					enemies->Add(pos, EnemyType::ZOMBIE, area, Look::LEFT); // El zombie se movera hacia la derecha
-				}
-				else
-				{
-					// Si el jugador esta a la izquierda, hacemos aparecer al zombie a la derecha
-					pos.x = (LEVEL_WIDTH - 1) * TILE_SIZE; // Aseguramos que el zombie aparezca dentro del mapa
-					enemies->Add(pos, EnemyType::ZOMBIE, area, Look::RIGHT); // El zombie se movera hacia la izquierda
-				}
+				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::ZOMBIE);
+				area = level->GetSweptAreaX(hitbox);
+				enemies->Add(pos, EnemyType::ZOMBIE, area, Look::RIGHT);
+				map[i] = 0;
 			}
-			/*else
-			{
-				LOG("Internal error loading scene: invalid entity or object tile id")
-			}*/
-			++i;
+			else if (tile == Tile::GUEPARDO) {
+				pos.x = x * TILE_SIZE;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::GUEPARDO);
+				area = level->GetSweptAreaX(hitbox);
+				enemies->Add(pos, EnemyType::GUEPARDO, area, Look::RIGHT);
+				guepardoGenerated = true;
+				map[i] = 0;
+			}
+			else if (tile == Tile::MURCIELAGO) {
+				pos.x = x * TILE_SIZE;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::MURCIELAGO);
+				area = level->GetSweptAreaX(hitbox);
+				enemies->Add(pos, EnemyType::MURCIELAGO, area, Look::RIGHT);
+				map[i] = 0;
+			}
+			else if (tile == Tile::LLAMA) {
+				pos.x = x * TILE_SIZE;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::LLAMA);
+				area = level->GetSweptAreaX(hitbox);
+				enemies->Add(pos, EnemyType::LLAMA, area, Look::RIGHT);
+				llamaGenerated = true;
+				map[i] = 0;
+			}
+			else if (tile == Tile::CANDLE) {
+				pos.x = x * TILE_SIZE;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::CANDLE);
+				area = level->GetSweptAreaX(hitbox);
+				enemies->Add(pos, EnemyType::CANDLE, area, Look::RIGHT);
+				candleGenerated = true;
+				map[i] = 0;
+			}
+			else if (tile == Tile::FAKEWALL) {
+				pos.x = x * TILE_SIZE;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				hitbox = enemies->GetEnemyHitBox(pos, EnemyType::FAKEWALL);
+				area = level->GetSweptAreaX(hitbox);
+				enemies->Add(pos, EnemyType::FAKEWALL, area, Look::RIGHT);
+				fakewallGenerated = true;
+				map[i] = 0;
+			}
 		}
 	}
 	//Tile map
@@ -447,14 +500,12 @@ AppStatus Scene::LoadLevel(int stage)
 
 	return AppStatus::OK;
 }
-void Scene::Update()
-{
+void Scene::Update() {
 	Point p1, p2;
 	AABB hitbox, area;
 
 	//Switch between the different debug modes: off, on (sprites & hitboxes), on (hitboxes) 
-	if (IsKeyPressed(KEY_F1))
-	{
+	if (IsKeyPressed(KEY_F1)) {
 		debug = (DebugMode)(((int)debug + 1) % (int)DebugMode::SIZE);
 	}
 	//Debug levels instantly
@@ -477,8 +528,18 @@ void Scene::Update()
 	level->Update();
 	player->Update();
 
-	// Generar nuevos zombies seg�n la l�gica de tu juego
+	// Generar nuevos zombies según la lógica de tu juego
 	GenerateZombies();
+	// Generar nuevos guepardos según la lógica de tu juego
+	GenerateGuepardos();
+	// Generar nuevos murcielagos según la lógica de tu juego
+	GenerateMurcielagos();
+
+	GenerateLLama();
+
+	GenerateCandle();
+
+	GenerateFakeWall();
 
 	UpdateBackground(currentStage);
 
@@ -487,10 +548,9 @@ void Scene::Update()
 	hitbox = player->GetHitbox();
 	enemies->Update(hitbox);
 
-	// Eliminamos la l�gica que generaba zombies aqu�, para no duplicar la generaci�n
-
-	// Si es necesario, podemos agregar cualquier otra l�gica de actualizaci�n aqu�
+	// Si es necesario, podemos agregar cualquier otra lógica de actualización aquí
 }
+
 
 void Scene::GenerateZombies()
 {
@@ -524,6 +584,210 @@ void Scene::GenerateZombies()
 		}
 	}
 }
+void Scene::GenerateGuepardos() {
+
+	if ((currentStage == 6 || currentStage == 11) && !guepardoGenerated) {
+		Point pos;
+		AABB area;
+
+		if (currentStage == 6) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 46;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 32;
+		}
+		else if (currentStage == 11) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE-16;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 32;
+		}
+
+		if (player->GetPlayerPosX() > WINDOW_WIDTH / 2)
+		{
+			enemies->Add(pos, EnemyType::GUEPARDO, area, Look::LEFT);
+			guepardoGenerated = true;
+		}
+		else
+		{
+			enemies->Add(pos, EnemyType::GUEPARDO, area, Look::RIGHT);
+			guepardoGenerated = true;
+		}
+	}
+}
+
+void Scene::GenerateMurcielagos()
+{
+	if (currentStage != 9)
+	{
+		return; // No generar Murcielagos si no estamos en el nivel 4 o 5
+	}
+
+	// Lógica de generación de Murcielagos
+	static int frameCounter = 0;
+	frameCounter++;
+
+	if (frameCounter >= 200) // Genera un zombie cada 120 frames (2 segundos si el juego corre a 60 FPS)
+	{
+		frameCounter = 0;
+
+		Point pos;
+		pos.y = player->GetPlayerPosY()-10; // Altura en la que quieres que aparezcan los zombies
+
+		AABB area; // Crear un área adecuada para el enemigo
+
+		if (player->GetPlayerPosX() > WINDOW_WIDTH / 2)
+		{
+			pos.x = 0;
+			enemies->Add(pos, EnemyType::MURCIELAGO, area, Look::LEFT);
+		}
+		else
+		{
+			pos.x = (LEVEL_WIDTH - 1) * TILE_SIZE;
+			enemies->Add(pos, EnemyType::MURCIELAGO, area, Look::RIGHT);
+		}
+	}
+}
+
+void Scene::GenerateLLama() {
+
+	if ((currentStage == 1 || currentStage == 2 || currentStage == 3) && !llamaGenerated) {
+		Point pos, pos2;
+		AABB area;
+
+		if (currentStage == 1) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 64;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 64;
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
+		}
+		else if (currentStage == 2) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 64;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 64;
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
+		}
+		else if (currentStage == 3) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 64;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
+		}
+
+
+			enemies->Add(pos, EnemyType::LLAMA, area, Look::LEFT);
+			enemies->Add(pos2, EnemyType::LLAMA, area, Look::LEFT);
+			llamaGenerated = true;
+
+	}
+}
+
+void Scene::GenerateCandle() {
+
+	if ((currentStage == 4 || currentStage == 5 || currentStage == 6 || currentStage == 7 || currentStage == 8 || currentStage == 9 || currentStage == 10 || currentStage == 11) && !candleGenerated) {
+		Point pos, pos2, pos3, pos4, pos5;
+		AABB area;
+
+		if (currentStage == 4) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 16;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48;
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+		}
+		else if (currentStage == 5) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 16;  //derecha inf
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63; 
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 81; //izquierda inf
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+			pos3.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 16; //izquierda superior 
+			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE -17;
+			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48; //derecha superior
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 47;
+		}
+		else if (currentStage == 6) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE ;		 //derecha inf 	
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;  
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 97; //izquierda inf
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
+			pos3.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 65; //izquierda superior 
+			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 15;
+			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48; //derecha superior 
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE -1;
+		}
+		else if (currentStage == 7) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 80;		 //derecha inf 	
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+			pos3.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 32; //izquierda superior 
+			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 17;
+			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48; //derecha superior 
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 17;
+		}
+		else if (currentStage == 8) {
+	
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 65; //izquierda inf
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+
+			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 16; //derecha superior
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 47;
+		}
+		else if (currentStage == 9) {
+
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 16;  //derecha inf
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 63;
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 81; //izquierda inf
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 15;
+			pos3.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 81; //izquierda superior 
+			pos3.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 49;
+			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48; //derecha superior
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 47;
+			pos5.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 48; //derecha superior
+			pos5.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 17;
+		}
+		else if (currentStage == 10) {
+
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 16; //izquierda inf
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 47;
+
+			pos4.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 80; //derecha superior 
+			pos4.y = (LEVEL_HEIGHT / 2) * TILE_SIZE - 1;
+		}
+		else if (currentStage == 11) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE - 32;		 //derecha inf 	
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
+			pos2.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 32; //izquierda inf
+			pos2.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 79;
+		}
+
+		enemies->Add(pos, EnemyType::CANDLE, area, Look::LEFT);
+		enemies->Add(pos2, EnemyType::CANDLE, area, Look::LEFT);
+		enemies->Add(pos3, EnemyType::CANDLE, area, Look::LEFT);
+		enemies->Add(pos4, EnemyType::CANDLE, area, Look::LEFT);
+		enemies->Add(pos5, EnemyType::CANDLE, area, Look::LEFT);
+		candleGenerated = true;
+
+	}
+}
+
+void Scene::GenerateFakeWall() {
+
+	if ((currentStage == 7 || currentStage == 11) && !fakewallGenerated) {
+		Point pos;
+		AABB area;
+
+		if (currentStage == 7) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
+
+		}
+		else if (currentStage == 11) {
+			pos.x = (LEVEL_WIDTH / 2) * TILE_SIZE + 64;
+			pos.y = (LEVEL_HEIGHT / 2) * TILE_SIZE + 95;
+
+		}
+
+
+		enemies->Add(pos, EnemyType::FAKEWALL, area, Look::LEFT);
+
+		fakewallGenerated = true;
+
+	}
+}
+
+
 void Scene::Render()
 {
 	BeginMode2D(camera);
@@ -533,19 +797,29 @@ void Scene::Render()
 	if (debug == DebugMode::OFF || debug == DebugMode::SPRITES_AND_HITBOXES)
 	{
 		RenderObjects();
-		player->Draw(); // Llama a la nueva funci�n Draw del jugador
 		enemies->Draw();
+		player->Draw(); 
+		
 	}
 	if (debug == DebugMode::SPRITES_AND_HITBOXES || debug == DebugMode::ONLY_HITBOXES)
 	{
 		RenderObjectsDebug(YELLOW);
 		player->DrawDebug(GREEN);
 		enemies->DrawDebug();
+		//dibujar area de detección
+		auto& enemiesList = enemies->GetEnemies();
+		for (Enemy* enemy : enemiesList) {
+			Guepardo* guepardo = dynamic_cast<Guepardo*>(enemy);
+			if (guepardo) {
+				guepardo->DrawDetectionArea();
+			}
+		}
+
 	}
 
 	EndMode2D();
 
-	//RenderGUI();
+	RenderGUI();
 }
 void Scene::Release()
 {
@@ -554,6 +828,7 @@ void Scene::Release()
 	player->Release();
 	ClearLevel();
 }
+
 void Scene::CheckCollisions()
 {
 	AABB player_box, obj_box, enemy_box;
@@ -587,9 +862,11 @@ void Scene::CheckCollisions()
 
 			// Check collision with player hitbox
 			if (player_box.TestAABB(enemy_box)) {
-				// Determinar la direcci�n del da�o
-				Look damageDirection = player->GetPlayerPosX() > enemy->GetPos().x ? Look::LEFT : Look::RIGHT;
-				player->GetDamage(damageDirection);
+				if (enemy->CausesDamage()) {
+					// Determinar la direccion del daño
+					Look damageDirection = player->GetPlayerPosX() > enemy->GetPos().x ? Look::LEFT : Look::RIGHT;
+					player->GetDamage(damageDirection);
+				}
 				return false; // Don't remove enemy
 			}
 
@@ -597,13 +874,36 @@ void Scene::CheckCollisions()
 			AABB attack_hitbox = player->GetAttackHitbox();
 			if (attack_hitbox.TestAABB(enemy_box)) {
 				// Eliminar al zombie
+				player->IncrScore(100);
 				delete enemy;
 				return true; // Remove enemy
 			}
 
 			return false; // Don't remove enemy
 		}), enemiesList.end());
+
+	// Check collisions with fake walls
+	for (const auto& enemy : enemiesList) {
+		FakeWall* fakeWall = dynamic_cast<FakeWall*>(enemy);
+		if (fakeWall) {
+			AABB fakewall_box = fakeWall->GetHitbox();
+			if (player_box.TestAABB(fakewall_box)) {
+				// Ajustar la posición del jugador para evitar la colisión
+				if (player_box.pos.x < fakewall_box.pos.x) {
+					player->SetPos({ fakewall_box.pos.x - player_box.width, player->GetPlayerPosY() });
+				}
+				else if (player_box.pos.x > fakewall_box.pos.x) {
+					player->SetPos({ fakewall_box.pos.x + fakewall_box.width, player->GetPlayerPosY() });
+				}
+			}
+		}
+	}
 }
+
+
+
+
+
 
 
 void Scene::ClearLevel()
@@ -629,11 +929,39 @@ void Scene::RenderObjectsDebug(const Color& col) const
 		obj->DrawDebug(col);
 	}
 }
-//void Scene::RenderGUI() const
-//{
-//	//Temporal approach
-//	DrawText(TextFormat("LIVES : %d", player->GetLives()), 10, 10, 8, WHITE);
-//}
+void Scene::RenderGUI() const
+{
+	static int frame;
+	frame++;
+	frame %= 1000;
+
+	//UI stages
+	if (currentStage == 1) {
+		font1->Draw(155, 1, TextFormat("%d%d", 0, 0));
+	}
+	if (currentStage == 2) {
+		font1->Draw(155, 1, TextFormat("%d%d", 0, 0));
+	}
+	if (currentStage == 3) {
+		font1->Draw(155, 1, TextFormat("%d%d", 0, 0));
+	}
+	if (currentStage == 4) {
+		font1->Draw(155, 1, TextFormat("%d%d", 0, 1));
+	}
+	if (currentStage == 5) {
+		font1->Draw(155, 1, TextFormat("%d%d", 0, 1));
+	}
+	if (currentStage == 6) {
+		font1->Draw(155, 1, TextFormat("%d%d", 0, 1));
+	}
+	if (currentStage == 7) {
+		font1->Draw(155, 1, TextFormat("%d%d", 0, 1));
+	}
+	// UI score
+	font1->Draw(192, 1, TextFormat("%d%d", 0, 3));
+	font1->Draw(228, 1, TextFormat("%d%d", 0, 0));
+	font1->Draw(58, 1, TextFormat("%d", player->GetScore()));
+}
 
 void Scene::UpdateBackground(int s)
 {
@@ -674,7 +1002,7 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(2);
 			break;
 		}
-		else if (x + PLAYER_PHYSICAL_WIDTH >= LEVEL_WIDTH * TILE_SIZE)
+		else if (x + PLAYER_PHYSICAL_WIDTH >= 210)
 		{
 			player->SetPos({ 15, y });
 			LoadLevel(4);
@@ -706,9 +1034,9 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(7);
 			break;
 		}
-		else if (y < 2*TILE_SIZE)
+		else if (y < 2 * TILE_SIZE)
 		{
-			player->SetPos({ (10 * TILE_SIZE)-PLAYER_PHYSICAL_WIDTH, (LEVEL_HEIGHT*TILE_SIZE)-(TILE_SIZE) });
+			player->SetPos({ (10 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, (LEVEL_HEIGHT * TILE_SIZE) - (TILE_SIZE) });
 			LoadLevel(8);
 			break;
 		}
@@ -725,7 +1053,7 @@ void Scene::UpdateBackground(int s)
 			LoadLevel(4);
 			break;
 		}
-		else if (y  < 2 * TILE_SIZE)
+		else if (y < 2 * TILE_SIZE)
 		{
 			player->SetPos({ (6 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, (LEVEL_HEIGHT * TILE_SIZE) - (TILE_SIZE) });
 			LoadLevel(11);
@@ -805,8 +1133,8 @@ void Scene::UpdateBackground(int s)
 		else if (y >= LEVEL_HEIGHT * TILE_SIZE)
 		{
 			LoadLevel(6);
-			player->SetPos({ (3 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, 4*TILE_SIZE });
-			
+			player->SetPos({ (3 * TILE_SIZE) - PLAYER_PHYSICAL_WIDTH, 4 * TILE_SIZE });
+
 			break;
 		}
 	case 12:
