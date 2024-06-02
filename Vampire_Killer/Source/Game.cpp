@@ -3,6 +3,7 @@
 #include "ResourceManager.h"
 #include <stdio.h>
 #include "Scene.h"
+#include "Player.h"
 
 
 Game::Game()

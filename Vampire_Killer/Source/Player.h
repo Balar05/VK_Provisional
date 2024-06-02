@@ -76,6 +76,7 @@ public:
 	void IncrScore(int n);
 	int GetScore();
 	int GetLives();
+
 	void GetDamage(Look damageDirection);
 
 	void Update();
@@ -127,6 +128,7 @@ public:
 	int GetPlayerPosY();
 	//void CheckPosY(); //new
 
+	bool god;
 
 private:
 
@@ -186,4 +188,5 @@ private:
 
 	int lives;
 
+	
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include "Globals.h"
 #include "Scene.h"
+#include "Player.h"
 
 enum class GameState { MAIN_MENU, PLAYING, INTRO, SETTINGS, CREDITS };
 
@@ -55,8 +56,6 @@ public:
     Vector2 bat_introPosition = { WINDOW_WIDTH / 2 + 20, 70 }; // Posición inicial del murciélago
 
     Vector2 bat_intro2Position = { WINDOW_WIDTH / 2 - 100, 120 }; // Posición inicial del murciélago
-    
-
 
 private:
     AppStatus BeginPlay();
@@ -87,7 +86,4 @@ private:
     Texture2D bat_intro; 
     Texture2D bat_intro2; 
     Texture2D creditImage;
-
-
-
 };

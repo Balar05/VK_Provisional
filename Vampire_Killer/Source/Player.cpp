@@ -551,18 +551,22 @@ int Player::GetLives()
 
 void Player::GetDamage(Look damageDirection)
 {
-	if (!IsBlinking())
+	if (god == true)	return;
+	else
 	{
-		lives -= 10;
-		if (lives <= 0)
+		if (!IsBlinking())
 		{
-			state = State::DEAD;
-		}
-		else
-		{
-			StartBlinking(damageDuration, damageDirection);
-			state = State::RECOILING;
-			dir.y = -PLAYER_JUMP_FORCE;
+			lives -= 10;
+			if (lives <= 0)
+			{
+				state = State::DEAD;
+			}
+			else
+			{
+				StartBlinking(damageDuration, damageDirection);
+				state = State::RECOILING;
+				dir.y = -PLAYER_JUMP_FORCE;
+			}
 		}
 	}
 }
