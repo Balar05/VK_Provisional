@@ -290,13 +290,13 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				-1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 3,
-				0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,10, 3,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0,
 				1, 2, 1, 2, 3, 9, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 7, 0, 0, 0, 0,
 				0, 0, 0, 0, 1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 1, 2, 1, 2, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0,
+				44,0, 0, 0, 0, 0, 1, 2, 45, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
@@ -327,18 +327,18 @@ AppStatus Scene::LoadLevel(int stage)
 		//guepardoGenerated = false;
 		map = new int [size] {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 2, 1, 2, 0, 0, 1, 2, 1, 9, 0, 0, 0, 0, 0, 0,
-				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0,
-				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0,
-				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0,
-				1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 1, 2, 1, 2,
-				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 2, 0, 0, 0, 0, 0, 0, 0, 400, 0, 0, 0, 0, 0, 0,
-				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 2, 1, 2, 0, 0, 1, 2, 1, 9, 0, 0, 0, 0, 0, 0,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0,
+			1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 1, 2, 1, 2,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 2, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
 		};
 	}
 	else if (stage == 10)
@@ -372,8 +372,8 @@ AppStatus Scene::LoadLevel(int stage)
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 3, 1, 2, 1, 2,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,10, 3, 1, 2, 1, 2,
+				0, 0, 0, 0, 0, 0, 0, 0, 44, 7, 0, 0, 0, 0, 1, 2,
 				1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 0, 1, 2,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2,
@@ -411,6 +411,9 @@ AppStatus Scene::LoadLevel(int stage)
 	enemies->Release();
 
 	//Entities and objects
+	auto isCollected = [this](ObjectType type) {
+		return std::find(collectedObjects.begin(), collectedObjects.end(), type) != collectedObjects.end();
+	};
 	i = 0;
 	for (y = 0; y <= LEVEL_HEIGHT - 2; ++y) {
 		for (x = 0; x < LEVEL_WIDTH; ++x) {
@@ -424,18 +427,24 @@ AppStatus Scene::LoadLevel(int stage)
 				player->SetPos(pos);
 				map[i] = 0;
 			}
-			else if (tile == Tile::GOLDEN_KEY) {
-				pos.x = x * TILE_SIZE;
-				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
-				obj = new Object(pos, ObjectType::GOLDEN_KEY);
-				objects.push_back(obj);
+			else if (tile == Tile::GOLDEN_KEY)
+			{
+				if (!isCollected(ObjectType::GOLDEN_KEY)) {
+					pos.x = x * TILE_SIZE;
+					pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+					obj = new Object(pos, ObjectType::GOLDEN_KEY);
+					objects.push_back(obj);
+				}
 				map[i] = 0;
 			}
-			else if (tile == Tile::SILVER_KEY) {
-				pos.x = x * TILE_SIZE;
-				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
-				obj = new Object(pos, ObjectType::SILVER_KEY);
-				objects.push_back(obj);
+			else if (tile == Tile::SILVER_KEY)
+			{
+				if (!isCollected(ObjectType::SILVER_KEY)) {
+					pos.x = x * TILE_SIZE;
+					pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+					obj = new Object(pos, ObjectType::SILVER_KEY);
+					objects.push_back(obj);
+				}
 				map[i] = 0;
 			}
 			else if (tile == Tile::ZOMBIE) {
@@ -840,9 +849,9 @@ void Scene::CheckCollisions()
 		obj_box = (*it)->GetHitbox();
 		if (player_box.TestAABB(obj_box))
 		{
-			//player->IncrScore((*it)->Points());
 
-			//Delete the object
+			player->items.push_back((*it)->type);
+			collectedObjects.push_back((*it)->type);
 			delete* it;
 			//Erase the object from the vector and get the iterator to the next valid element
 			it = objects.erase(it);
@@ -961,6 +970,27 @@ void Scene::RenderGUI() const
 	font1->Draw(192, 1, TextFormat("%d%d", 0, 3));
 	font1->Draw(228, 1, TextFormat("%d%d", 0, 0));
 	font1->Draw(58, 1, TextFormat("%d", player->GetScore()));
+
+	const std::vector<ObjectType>& items = player->GetItems();
+
+	for (int i = 0; i < items.size(); ++i)
+	{
+		Vector2 pos;
+		if (items[i] == ObjectType::GOLDEN_KEY || items[i] == ObjectType::SILVER_KEY)
+		{
+			
+			pos = { static_cast<float>(146 + i * (OBJECT_FRAME_SIZE )), 13.0f };
+		}
+		else
+		{
+			
+			pos = { static_cast<float>(167 + i * (OBJECT_FRAME_SIZE + 1)), 12.0f };
+		}
+
+		// Dibuja el ítem en la interfaz
+		player->DrawItem(items[i], pos);
+	}
+
 }
 
 void Scene::UpdateBackground(int s)

@@ -39,6 +39,7 @@ private:
     void GenerateCandle();
     void GenerateFakeWall();
     void RenderGUI() const;
+    std::vector<ObjectType> collectedObjects;
 
     Player* player;
     TileMap* level;

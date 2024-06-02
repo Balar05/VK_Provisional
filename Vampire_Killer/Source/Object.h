@@ -16,8 +16,9 @@ public:
 	~Object();
 
 	void DrawDebug(const Color& col) const;
+	bool isCollected = false;
 	//int Points() const;
-
-private:
 	ObjectType type;
+private:
+
 };

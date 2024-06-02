@@ -8,6 +8,8 @@
 
 //#define E_HEALTH_BAR_WIDTH 4
 //#define E_HEALTH_BAR_HEIGHT 4
+#include "Object.h" 
+#include <vector>
 
 //Representation model size: 32x32
 #define PLAYER_FRAME_SIZE		32
@@ -96,11 +98,17 @@ public:
 
 	/*AABB GetHitbox() const { return AABB(pos, width, height); }*/
 
+	std::vector<ObjectType> items;
+    const std::vector<ObjectType>& GetItems() const { return items; }
 	const int totalFramesAttack = 3;
 	float currentFrameAttack = 0;
 	float framesCounter = 0;
 	float framesSpeed = 1;
-
+	void DrawItem(ObjectType type, Vector2 pos);
+	
+	Texture2D GetItemTexture(ObjectType type);
+	
+	
 
 	//Temporizador
 	void StartTimer(Timer* timer, float lifetime)
@@ -140,6 +148,7 @@ public:
 	//void CheckPosY(); //new
 
 	bool god;
+
 
 private:
 

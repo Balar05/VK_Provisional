@@ -320,6 +320,26 @@ void Player::ChangeAnimLeft()
 	case State::CLIMBING: SetAnimation((int)PlayerAnim::CLIMBING_LEFT); break;
 	}
 }
+
+void Player::DrawItem(ObjectType type, Vector2 pos)
+{
+	// Obtiene la textura del ítem basada en su tipo
+	Texture2D texture = GetItemTexture(type);
+
+	// Dibuja la textura en la posición dada
+	DrawTexture(texture, pos.x, pos.y, WHITE);
+}
+Texture2D Player::GetItemTexture(ObjectType type)
+{
+	// Obtiene la textura basada en el tipo de ítem
+	switch (type)
+	{
+	case ObjectType::GOLDEN_KEY:
+		return LoadTexture("images/Sprites/Golden_Key.png");
+	case ObjectType::SILVER_KEY:
+		return LoadTexture("images/Sprites/Silver_Key.png");
+	}
+}
 void Player::Update()
 {
 	if (state != State::RECOILING)
